@@ -251,3 +251,4 @@ Y me vas dar cada fragmento cada vez que te diga ok
 "# applt" 
 "# latribuapp" 
 "# latribuapp" 
+"# plantilla" 

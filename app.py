@@ -11,29 +11,19 @@ from sqlalchemy.exc import IntegrityError # NUEVO: Importar IntegrityError
 # --- Añade esta línea ---
 from auth_setup import oauth_bp, init_oauth
 
-# MODIFICADO: Se han eliminado las importaciones de los modelos que ya no se usarán.
-from models import db, bcrypt, migrate, User, AboutUs
+# MODIFICADO: Importa db, bcrypt, migrate y User desde models.py
+# ES CRUCIAL QUE EL MODELO USER Y LAS INSTANCIAS DE DB, BCRYPT Y MIGRATE
+# SE IMPORTEN ÚNICAMENTE DESDE models.py PARA EVITAR IMPORTACIONES CIRCULARES.
+from models import db, bcrypt, migrate, User,  AboutUs
 from contactos import contactos_bp
 from perfil import perfil_bp
-# from proyecto import proyecto_bp
-# from notas import notas_bp
-# from caminatas import caminatas_bp
-# from pagos import pagos_bp
-# from calendario import calendario_bp
-# from instrucciones import instrucciones_bp
-# from player import player_bp
-# from itinerario import itinerario_bp
 from aboutus import aboutus_bp
-# from rutas import rutas_bp
-from polizas import polizas_bp # <-- NUEVA LÍNEA
+# CORRECCIÓN: Importa Version desde version.py donde está definida
+from version import version_bp, Version
+from btns import btns_bp # Importa el Blueprint desde btns.py (ASUMIMOS QUE btns.py EXISTE)
 from flask_cors import CORS  # 1. Importar CORS
 from flask_mail import Mail, Message #pip install flask_mail
-# from intern import intern_bp
-# CORRECCIÓN: Importa Version desde version.py donde está definida
-from version import version_bp, Version 
-# from files import files_bp # Importa el Blueprint de Files
-from btns import btns_bp # Importa el Blueprint desde btns.py (ASUMIMOS QUE btns.py EXISTE)
-# from transporte import transporte_bp
+
 
 
 
@@ -73,18 +63,10 @@ mail.init_app(app) # <-- LÍNEA AÑADIDA PARA CORREGIR EL ERROR
 # y creamos las carpetas si no existen.
 # AHORA ESTAS LÍNEAS SE EJECUTAN DESPUÉS DE app.config.from_object(Config)
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs(app.config['PROJECT_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['NOTE_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs(app.config['CAMINATA_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PAGOS_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs(app.config['CALENDAR_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs(app.config['SONGS_UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs(app.config['PLAYLIST_COVER_UPLOAD_FOLDER'], exist_ok=True) # Asegurarse de que esta exista
 os.makedirs(app.config['INSTRUCTION_ATTACHMENT_FOLDER'], exist_ok=True)
-os.makedirs(app.config['MAP_FILES_UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs(app.config['COVERS_UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['ABOUTUS_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs(app.config['UPLOAD_FILES_FOLDER'], exist_ok=True)
 
 
 # Función auxiliar para verificar extensiones permitidas (ahora usando app.config)
@@ -92,16 +74,10 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'} # Usar set literal o definir en config
 
-# NUEVA: Función para verificar extensiones de música permitidas
-def allowed_music_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in {'mp3', 'wav', 'ogg'} # Usar set literal o definir en config
-
 
 # Adjuntando allowed_file y allowed_music_file al objeto 'app'
 # Esto permite que los Blueprints accedan a ellos a través de current_app
 app.allowed_file = allowed_file
-app.allowed_music_file = allowed_music_file
 
 
 # NUEVOS FILTROS DE JINJA2: Para formatear moneda y parsear JSON en las plantillas
@@ -168,7 +144,7 @@ def role_required(roles):
             if 'logged_in' not in session or not session['logged_in']:
                 flash('Por favor, inicia sesión para acceder a esta página.', 'info')
                 return redirect(url_for('login'))
-            
+
             user_role = session.get('role')
             if user_role not in roles:
                 flash('No tienes permiso para acceder a esta página.', 'danger')
@@ -227,7 +203,6 @@ def check_for_first_user():
 @app.route('/')
 @app.route('/home') # Añadido /home como ruta alternativa para la página de inicio
 def home():
-    # Redirige a la página 'Acerca de nosotros' como la nueva página de inicio
     return redirect(url_for('aboutus.ver_aboutus'))
 
 
@@ -267,8 +242,8 @@ def register():
         # Validaciones
         if not (username and password and confirm_password and nombre and primer_apellido and telefono):
             flash('Por favor, completa todos los campos obligatorios.', 'danger')
-            return render_template('register.html', 
-                                   provincia_opciones=provincia_opciones, 
+            return render_template('register.html',
+                                   provincia_opciones=provincia_opciones,
                                    tipo_sangre_opciones=tipo_sangre_opciones,
                                    actividad_opciones=actividad_opciones,
                                    capacidad_opciones=capacidad_opciones,
@@ -276,8 +251,8 @@ def register():
 
         if password != confirm_password:
             flash('Las contraseñas no coinciden.', 'danger')
-            return render_template('register.html', 
-                                   provincia_opciones=provincia_opciones, 
+            return render_template('register.html',
+                                   provincia_opciones=provincia_opciones,
                                    tipo_sangre_opciones=tipo_sangre_opciones,
                                    actividad_opciones=actividad_opciones,
                                    capacidad_opciones=capacidad_opciones,
@@ -285,8 +260,8 @@ def register():
 
         if len(password) < 6:
             flash('La contraseña debe tener al menos 6 caracteres.', 'danger')
-            return render_template('register.html', 
-                                   provincia_opciones=provincia_opciones, 
+            return render_template('register.html',
+                                   provincia_opciones=provincia_opciones,
                                    tipo_sangre_opciones=tipo_sangre_opciones,
                                    actividad_opciones=actividad_opciones,
                                    capacidad_opciones=capacidad_opciones,
@@ -294,8 +269,8 @@ def register():
 
         if User.query.filter_by(username=username).first():
             flash('El nombre de usuario ya existe. Por favor, elige otro.', 'danger')
-            return render_template('register.html', 
-                                   provincia_opciones=provincia_opciones, 
+            return render_template('register.html',
+                                   provincia_opciones=provincia_opciones,
                                    tipo_sangre_opciones=tipo_sangre_opciones,
                                    actividad_opciones=actividad_opciones,
                                    capacidad_opciones=capacidad_opciones,
@@ -304,8 +279,8 @@ def register():
         if email: # Solo validar email si se proporciona
             if User.query.filter_by(email=email.lower()).first():
                 flash('Ese correo electrónico ya está registrado. Por favor, usa otro.', 'danger')
-                return render_template('register.html', 
-                                       provincia_opciones=provincia_opciones, 
+                return render_template('register.html',
+                                       provincia_opciones=provincia_opciones,
                                        tipo_sangre_opciones=tipo_sangre_opciones,
                                        actividad_opciones=actividad_opciones,
                                        capacidad_opciones=capacidad_opciones,
@@ -313,13 +288,13 @@ def register():
 
             if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
                 flash('Formato de correo electrónico inválido.', 'danger')
-                return render_template('register.html', 
-                                       provincia_opciones=provincia_opciones, 
+                return render_template('register.html',
+                                       provincia_opciones=provincia_opciones,
                                        tipo_sangre_opciones=tipo_sangre_opciones,
                                        actividad_opciones=actividad_opciones,
                                        capacidad_opciones=capacidad_opciones,
                                        participacion_opciones=participacion_opciones)
-        
+
         # Hash de la contraseña
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
@@ -331,7 +306,7 @@ def register():
                 # Generar un nombre de archivo único
                 filename = secure_filename(avatar_file.filename)
                 unique_filename = str(uuid.uuid4()) + os.path.splitext(filename)[1]
-                
+
                 # Definir la ruta de guardado
                 upload_folder = app.config.get('UPLOAD_FOLDER')
                 if not upload_folder:
@@ -339,10 +314,10 @@ def register():
                     return redirect(url_for('register'))
 
                 os.makedirs(upload_folder, exist_ok=True)
-                
+
                 file_path = os.path.join(upload_folder, unique_filename)
                 avatar_file.save(file_path)
-                
+
                 # Actualizar la URL del avatar en el usuario
                 avatar_url = os.path.join('uploads', 'avatars', unique_filename).replace('\\', '/') # Ruta relativa para URL
             else:
@@ -360,16 +335,16 @@ def register():
                 fecha_cumpleanos = datetime.strptime(fecha_cumpleanos_str, '%Y-%m-%d').date()
             except ValueError:
                 flash('Formato de fecha de cumpleaños inválido. Usa YYYY-MM-DD.', 'danger')
-                return render_template('register.html', 
-                                       provincia_opciones=provincia_opciones, 
+                return render_template('register.html',
+                                       provincia_opciones=provincia_opciones,
                                        tipo_sangre_opciones=tipo_sangre_opciones,
                                        actividad_opciones=actividad_opciones,
                                        capacidad_opciones=capacidad_opciones,
                                        participacion_opciones=participacion_opciones)
-        
+
         # Asignar el rol por defecto de 'Usuario Regular'
         role = 'Usuario Regular'
-        
+
         # LÓGICA CLAVE PARA ASIGNAR EL ROL DE SUPERUSUARIO AL PRIMER USUARIO
         # current_app.config.get() es importante por si la bandera no existe (ej. en desarrollo local sin before_request)
         if current_app.config.get('first_user_registration_allowed', False):
@@ -378,7 +353,7 @@ def register():
                 if total_users_after_check == 0:
                     role = 'Superuser'
                     # Desactivar la bandera inmediatamente después de que se registre el primer superuser
-                    current_app.config['first_user_registration_allowed'] = False 
+                    current_app.config['first_user_registration_allowed'] = False
                     print(f"DEBUG: Registrando a {username} como Superuser (primer usuario).")
                 else:
                     print(f"DEBUG: Ya existen usuarios (verificación secundaria), {username} se registrará como Usuario Regular.")
@@ -389,7 +364,7 @@ def register():
         new_user = User(
             username=username,
             # CORRECCIÓN: Cambiado 'password_hash' a 'password'
-            password=hashed_password, 
+            password=hashed_password,
             nombre=nombre,
             primer_apellido=primer_apellido,
             segundo_apellido=segundo_apellido,
@@ -424,15 +399,15 @@ def register():
             db.session.rollback()
             flash(f'Error al registrar el usuario: {e}', 'danger')
             current_app.logger.error(f"Error al registrar usuario {username}: {e}")
-            return render_template('register.html', 
-                                   provincia_opciones=provincia_opciones, 
+            return render_template('register.html',
+                                   provincia_opciones=provincia_opciones,
                                    tipo_sangre_opciones=tipo_sangre_opciones,
                                    actividad_opciones=actividad_opciones,
                                    capacidad_opciones=capacidad_opciones,
                                    participacion_opciones=participacion_opciones)
 
-    return render_template('register.html', 
-                           provincia_opciones=provincia_opciones, 
+    return render_template('register.html',
+                           provincia_opciones=provincia_opciones,
                            tipo_sangre_opciones=tipo_sangre_opciones,
                            actividad_opciones=actividad_opciones,
                            capacidad_opciones=capacidad_opciones,
@@ -447,13 +422,13 @@ def login():
         user = User.query.filter((User.username == username_or_email) | (User.email == username_or_email.lower())).first()
 
         # CORRECCIÓN: Cambiado user.password_hash a user.password
-        if user and bcrypt.check_password_hash(user.password, password): 
+        if user and bcrypt.check_password_hash(user.password, password):
             session['logged_in'] = True
             session['user_id'] = user.id
             session['username'] = user.username
             session['role'] = user.role # Guardar el rol en la sesión
             flash(f'¡Bienvenido, {user.username}!', 'success')
-            return redirect(url_for('perfil.perfil')) # Redirigir al perfil después del login
+            return redirect(url_for('home'))
         else:
             flash('Nombre de usuario, correo electrónico o contraseña incorrectos.', 'danger')
     return render_template('login.html')
@@ -510,7 +485,7 @@ def reset_password(token):
     if not user:
         flash('El token es inválido o ha expirado.', 'warning')
         return redirect(url_for('request_password_reset'))
-    
+
     if request.method == 'POST':
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
@@ -524,7 +499,7 @@ def reset_password(token):
         db.session.commit()
         flash('Tu contraseña ha sido actualizada. Ahora puedes iniciar sesión.', 'success')
         return redirect(url_for('login'))
-        
+
     return render_template('reset_password.html', token=token)
 
 # --- FIN: RUTAS DE RECUPERACIÓN DE CONTRASEÑA ---
@@ -545,22 +520,9 @@ def internal_server_error(e):
 # REGISTRO DE BLUEPRINTS (DEBE IR DESPUÉS DE LA INICIALIZACIÓN DE EXTENSIONES)
 app.register_blueprint(contactos_bp)
 app.register_blueprint(perfil_bp, url_prefix='/perfil')
-# app.register_blueprint(caminatas_bp, url_prefix='/caminatas')
-# app.register_blueprint(proyecto_bp)
-# app.register_blueprint(notas_bp)
-# app.register_blueprint(pagos_bp, url_prefix='/pagos')
-# app.register_blueprint(instrucciones_bp, url_prefix='/instrucciones')
-# app.register_blueprint(calendario_bp, url_prefix='/calendario')
-# app.register_blueprint(player_bp)
-# app.register_blueprint(itinerario_bp, url_prefix='/itinerario')
 app.register_blueprint(aboutus_bp, url_prefix='/aboutus')
-# app.register_blueprint(rutas_bp, url_prefix='/rutas')
 app.register_blueprint(version_bp, url_prefix='/version')
-# app.register_blueprint(files_bp, url_prefix='/files')
 app.register_blueprint(btns_bp) # REGISTRO DEL BLUEPRINT DE BTNS
-app.register_blueprint(polizas_bp) # <-- NUEVA LÍNEA
-# app.register_blueprint(intern_bp, url_prefix='/intern')
-# app.register_blueprint(transporte_bp) # <-- AÑADIR ESTA LÍNEA
 
 
 # --- AÑADE ESTAS DOS LÍNEAS PARA CONECTAR OAUTH ---
@@ -573,85 +535,4 @@ if __name__ == '__main__':
     with app.app_context(): # Usar app_context para db.create_all()
         db.create_all()
     app.run(host='0.0.0.0', debug=True, port=3030)
-
-
-# Migraciones Cmder
-        # set FLASK_APP=app.py     <--Crea un directorio de migraciones
-        # flask db init             <--
-        # $ flask db stamp head
-        # $ flask db migrate
-        # $ flask db migrate -m "mensaje x"
-        # $ flask db upgrade
-        # ERROR [flask_migrate] Error: Target database is not up to date.
-        # $ flask db stamp head
-        # $ flask db migrate
-        # $ flask db upgrade
-        # git clone https://github.com/kerm1977/MI_APP_FLASK.git
-        # mysql> DROP DATABASE kenth1977$db; PYTHONANYWHATE
-# -----------------------
-
-# del db.db
-# rmdir /s /q migrations
-# flask db init
-# flask db migrate -m "Reinitial migration with all correct models"
-# flask db upgrade
-
-
-# -----------------------
-# Consola de pythonanywhere ante los errores de versiones
-# Error: Can't locate revision identified by '143967eb40c0'
-
-# flask db stamp head
-# flask db migrate
-# flask db upgrade
-
-# Database pythonanywhere
-# kenth1977$db
-# DROP TABLE alembic_version;
-# rm -rf migrations
-# flask db init
-# flask db migrate -m "Initial migration after reset"
-# flask db upgrade
-
-# 21:56 ~/LATRIBU1 (main)$ source env/Scripts/activate
-# (env) 21:57 ~/LATRIBU1 (main)$
-
-# En caso de que no sirva el env/Scripts/activate
-# remover en env
-# 05:48 ~/latribuapp (main)$ rm -rf env
-# Crear nuevo
-# 05:49 ~/latribuapp (main)$ python -m venv env
-# 05:51 ~/latribuapp (main)$ source env/bin/activate
-# (env) 05:52 ~/latribuapp (main)$ 
-
-
-
-# Cuando se cambia de repositorio
-# git remote -v
-# git remote add origin <URL_DEL_REPOSITORIO>
-# git remote set-url origin <NUEVA_URL_DEL_REPOSITORIO>
-# git branchgit remote -v
-# git push -u origin flet
-
-# -------------------------------------------
-#error error: remote origin already exists.usar lo siguiente
-#git push --set-upstream origin main
-#git push
-# -------------------------------------------
-
-# borrar base de datos y reconstruirla
-# pip install PyMySQL
-# SHOW TABLES;
-# 21:56 ~/LATRIBU1 (main)$ source env/Scripts/activate <-- Entra al entorno virtual
-# (env) 21:57 ~/LATRIBU1 (main)$
-# (env) 23:30 ~/LATRIBU1 (main)$ cd /home/kenth1977/LATRIBU1
-# (env) 23:31 ~/LATRIBU1 (main)$ rm -f instance/db.db
-# (env) 23:32 ~/LATRIBU1 (main)$ rm -rf migrations
-# (env) 23:32 ~/LATRIBU1 (main)$ flask db init
-# (env) 23:33 ~/LATRIBU1 (main)$ flask db migrate -m "Initial migration with all models"
-# (env) 23:34 ~/LATRIBU1 (main)$ flask db upgrade
-# (env) 23:34 ~/LATRIBU1 (main)$ ls -l instance/db
-
-
-
 

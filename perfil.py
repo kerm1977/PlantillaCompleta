@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, current_app, send_from_directory
-from models import db, bcrypt, User, SiteStats, Poliza # Asegúrate de importar tus modelos y db
+from models import db, bcrypt, User, SiteStats # Se eliminó la importación de 'Poliza'
 from functools import wraps
 import os
 import shutil
@@ -41,10 +41,10 @@ def perfil():
     stats = None
     if user and user.role == 'Superuser':
         total_users = User.query.count()
-        total_polizas = Poliza.query.count()
+        # Se eliminó la línea que contaba las pólizas
         stats = {
             'total_users': total_users,
-            'total_polizas': total_polizas,
+            # Se eliminó la estadística de pólizas de aquí
         }
     return render_template('perfil.html', user=user, stats=stats)
 

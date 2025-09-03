@@ -207,10 +207,6 @@
                 <div class="dashboard-section superuser-section">
                     <h3>Panel de Superusuario</h3>
                     <div class="dashboard-list">
-                        <a href="{{ url_for('polizas.ver_polizas') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-file-shield"></i>
-                            <span>Pólizas</span>
-                        </a>
                         <a href="{{ url_for('contactos.ver_contactos') }}" class="dashboard-link btn-warning">
                             <i class="fas fa-address-book"></i>
                             <span>Contactos</span>
@@ -234,10 +230,6 @@
                          <li class="list-group-item d-flex justify-content-between align-items-center">
                             Total de Usuarios
                             <span class="badge bg-primary rounded-pill">{{ stats.total_users }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Total de Pólizas
-                            <span class="badge bg-primary rounded-pill">{{ stats.total_polizas }}</span>
                         </li>
                     </ul>
                 </div>

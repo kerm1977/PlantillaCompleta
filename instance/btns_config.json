@@ -1,0 +1,14 @@
+{
+    "button_one": {
+        "is_visible": false,
+        "link": "",
+        "icon": "fa-link",
+        "visibility_state": "all"
+    },
+    "button_two": {
+        "is_visible": false,
+        "link": "",
+        "icon": "fa-file-pdf",
+        "visibility_state": "all"
+    }
+}

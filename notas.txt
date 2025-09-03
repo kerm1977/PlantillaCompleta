@@ -5,91 +5,73 @@ Solo se va a exportar lo necesario a app.py
 Todos los botones de borrar o eliminar tienen que ser construidos con Flask y Flash y el Modal con bootstrap
 las opciones de exportar a jpg, pdf, txt con utf-8 para que reconozca la ñ y las tildes (solo en caso de que existiera)
 cada archivo y cada vista vas a darmelo cuando te diga ok
-Permitir exporta a PDF, TXT, JPG, EXCEL 
+Permitir exporta a PDF, TXT, JPG, xls, png, docx
 Los cards no pueden contener sombras. los botones de crear deben tener color warning.
 Vas a generar todo el código en el canvas pero vas a crear cada enlace también con cada vista
-
-No mostrar en detalle_intern.html ni en ver_intern.html precios en 0 ni campos que tengan N/A ni divisiones en Cero
+Al exportar Nunca mostrar,  campos vacios, costos en 0, precios en 0 ni campos que tengan N/A ni divisiones en Cero
 Absolutamente todos los totales van a tener el precio en colon y en dolar multiplicado por la casilla llamada tipo de cambio
-Que esta app Cambie todo a CRC o a USD según el tipo de cambio 
+Que esta app Cambie todo a CRC o a USD según el tipo de cambio en caso de que tuviera tipo de cambio 
 
 las áreas que va a contener son:
-intern.py va a contener los modelos y absolutamente toda la lógica de esta área
-crear_intern.html
-editar_intern.html
-detalle_intern.html
-ver_intern.html
-
-
-
-Ahora en crear_intern.html va a estar lo siguiente
-TITULO DESTINO
-Flyer
-Nombre del viaje
-Precio del Viaje
-Capacidad S/G
-Capacidad C/G
-Cantidad de Días
-Tipo de Moneda 
-Tipo de Cambio
-Fecha del Viaje
-Fecha de Regreso
-País Select Destinos probables
-Panamá
-Nicaragua
-Honduras
-El Salvador
-Guatemala
-México
-Perú
-España
-
-Agregar un más para agregar un  nuevo pago con los siguientes campos
-Select llamado Tipo de Pago(Estadía, Transporte, Bancario, Guía, Operador, Agencia, Aéreo, Otro, Alimentación)
-Nombre del Contacto
-Otro botón con un + llamado Agregar Teléfono para ir agregando Teléfonos que tenga un select con las opciones (WHATSAPP, PERSONAL, EMPRESARIAS) SEGUIDO DEL CÓDIGO DE ÁREA SEGUIDO EL CAMPO DE TELÉFONO y Nombre del Contacto o Empresa
-Un botón con un + llamado Agregar Email para ir agregando Correos 
-Un botón con un + llamado Agregar Enlace URL para ir agregando Enlace URL
-Un botón con un + llamado Agregar Servicio para ir agreguando un campo llamado Descripción 
-Un botón con un + llamado Fechas para ir agregando Fechas con un Select y las siguientes opciones Fecha Declaración, Fecha Reserva, Fecha Entrada, Fecha Salida, Fecha de Regreso, Fecha de la Actividad) que agregue un datapicker con el nombre de la opción seleccionada en el select Fechas  y un espacio llamado Descripción
-Poliza (No Aplica, Si, NO)
-Cantidad de Días Evento
-Precio nuevo pago 
-Total Nuevo Pago == Precio nuevo pago *  Cantidad de Días Evento (Este total en texto Plano y que autosume)
-
-
-
-USD
-Precio General USD == Precio Individual USD * Capacidad S/G 
-Precio Individual USD == Precio General USD * Capacidad C/G / Capacidad S/G  o bien solamente el monto Individual Cuando no existe precio General USD
-
-CRC
-Precio General CRC ==  Precio General USD * Tipo de Cambio
-Precio Individual CRC == Precio Individual USD * Tipo de Cambio
-
-
-
-Que los siguientes Precio General US y Precio Individual USD  se vayan sumando automáticamente conforme se va agregando nuevo pago  en total Neto USD al igual se transforme en moneda CRC.....
+app.py va a contener únicamente lo necesario para la importar y cargar la lógica de viaje.py
+trasnporte.py va a contener los modelos y absolutamente toda la lógica de esta área. Las vistas que se utilizarán son y cada dato se almacenará en la base de datos
+crear_viaje.html
 
 
 
 
-Total Excedente Individual USD == Total Excedente General UDS  / Capacidad S/G
-Total Excedente General UDS == Precio del Viaje - Precio General USD 
-Total Excedente Individua CRC == Total Excedente Individual USD * Tipo de Cambio
-Total Excedente General CRC == Total Excedente General UDS  * Tipo de Cambio
+Ahora en crear_viaje.html va a estar lo siguiente
+Titulo. CREADOR DE CAMINATAS
 
+Agrega Nombre de etiqueta
+y que la etiqueta se vaya guardando en el selector Categoría
 
+select Categoría (Etapa 1a, Etapa 1b, Etapas 1a&1b, Etapa 2, Etapa 3, Etapa 4, Etapa 3&4   Etapa 5, Etapa 6, Etapa 7, Etapa 8, Etapa 9, Etapa 10, Etapa 11, Etapa 12, Etapa 13, Etapa 14, Etapa 15, Etapa 14&15, Etapa 16)
 
+si Categoría inicia con Etapa aparece un titulo llamado
+El Camino de Costa Rica 
 
+Nombre de Lugar: Etapa seleccionada
+Provincia: (Limón, Cartago, San José, Puntarenas, Alajuela, Heredia, Guanacaste)
+Fecha: (Si, NO)
+	si Fecha == Si agregar un datapicker para seleccionar la fecha
+	si Fecha == Si agregar un selector de hora.
+textarea llamado Nota:
+Se recogerá en;
+textárea que diga recogeremos en: y que cada salto de línea o - ponga un número consecutivo
+Esta siguiente área debe aceptar mapas de Google maps, waze, bing maps, Openstreetmaps
+Nombre de Entrega 
+Punto de entrega: 
+Agregar URL mapa: 
+Nombre Destino
+Punto de destino:
+Agregar URL mapa: 
 
+agrega la opción de editar la informacion aqui mismo
+y borrar la información agregada aqui mismo
+Guardar y redirigir a ver_viaje.html
+Permite Editar absolutamente todo el contenido ingresado en crear_viaje.html
 
-editar_intern.html
-Permitir editar absolutamente todo lo que se ingresó por medio de crear_intern.html
+detalle_viaje.html
+Muestra absolutamente toda la información ingresada en crear_viaje.html más el precio ingresado en ver_viaje.html
+y se muestra
+Titulo: La Categoría Seleccionada
+Provincia
+Fecha
+textarea
+Se recogerá en
+textárea
+Nombre de Entrega
+Punto de entrega:
+y la url seleccionada
+Nombre Destino
+Punto de destino
+y la url seleccionada
 
-detalle_intern.html
-Permite que vea toda la información detallada ingresada  por medio de crear_intern.html
+un botón flotante de editar y otro de borrar y compartir en pdf, png, jpg. 
 
+ver_viaje.html
+select Categoría (Etapa 1a, Etapa 1b, Etapas 1a&1b, Etapa 2, Etapa 3, Etapa 4, Etapa 3&4   Etapa 5, Etapa 6, Etapa 7, Etapa 8, Etapa 9, Etapa 10, Etapa 11, Etapa 12, Etapa 13, Etapa 14, Etapa 15, Etapa 14&15, Etapa 16) y las etiquetas que se crearon en crear_viaje.html, 
 
-ver_intern.html.html
-Permite ver la tarjeta con el País,  nombre del viaje, Flyer, precio y fecha
+Al seleccionar una categoría 
+permite ver toda su información ingresada en crear_viaje.html y agregar un campo numérico llamado Precio sin decimales y restringido a texto y un botón guardar que luego se pueda ver en detalle_viaje.html como texto plano 

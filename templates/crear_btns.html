@@ -1,186 +1,90 @@
 {% extends 'base.html' %}
+
 {% block title %}Configurar Botones Flotantes{% endblock %}
+
 {% block content %}
+<div class="container mt-5">
+    <h2>Configurar Botones Flotantes Dinámicos</h2>
+    <p class="text-muted">
+        Aquí puedes configurar los dos botones flotantes que aparecen en el sitio.
+        Puedes definir su enlace, el icono de Font Awesome que muestran y quién puede verlos.
+    </p>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
- 
-    /* Título del formulario */
-    h1 {
-        color: #333; /* Color de texto oscuro */
-        margin-bottom: 30px;
-        font-size: 1.8em; /* Tamaño de fuente relativo */
-    }
-
-    /* Contenedor para la configuración de cada botón (sin estilo de card) */
-    .button-config-section {
-        padding: 25px 0; /* Mantenemos padding vertical, removemos el horizontal */
-        margin-bottom: 30px;
-    }
-
-    .button-config-section h2 {
-        font-size: 1.4em;
-        color: #0056b3;
-        margin-top: 0;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #e0e0e0;
-        padding-bottom: 10px;
-    }
-
-    /* Grupo de formulario (label + input/radio) */
-    .form-group {
-        margin-bottom: 20px;
-        text-align: left; /* Alinea el texto a la izquierda dentro del grupo */
-    }
-
-    /* Etiquetas de los campos */
-    label {
-        display: block; /* Cada label en su propia línea */
-        margin-bottom: 8px;
-        color: #555;
-        font-weight: bold; /* Texto en negrita */
-    }
-
-    /* Estilo para inputs de texto y selectores */
-    input[type="text"],
-    select {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd; /* Borde suave */
-        border-radius: 8px; /* Esquinas redondeadas */
-        font-size: 1em;
-        box-sizing: border-box;
-        transition: border-color 0.3s; /* Transición suave para el color del borde */
-    }
-
-    /* Estilo al enfocar inputs */
-    input[type="text"]:focus,
-    select:focus {
-        border-color: #ffc107; /* Borde amarillo al enfocar */
-        outline: none; /* Elimina el contorno por defecto del navegador */
-    }
-
-    /* Grupo de botones de radio */
-    .radio-group {
-        display: flex;
-        flex-direction: column; /* Apila los radios verticalmente */
-        gap: 10px; /* Espacio entre los radios */
-        margin-top: 15px;
-    }
-
-    /* Etiquetas de los botones de radio */
-    .radio-group label {
-        display: flex;
-        align-items: center; /* Alinea el texto con el radio */
-        font-weight: normal; /* Texto normal, no negrita */
-        cursor: pointer; /* Cursor de puntero para indicar interactividad */
-    }
-
-    /* Estilo para los inputs de radio */
-    .radio-group input[type="radio"] {
-        margin-right: 10px;
-        transform: scale(1.2); /* Hace el radio un poco más grande */
-    }
-
-    /* Estilo del botón de envío */
-    button[type="submit"] {
-        background-color: #ffc107; /* Color de fondo warning (amarillo) */
-        color: #212529; /* Texto oscuro para buen contraste */
-        padding: 12px 25px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1.1em;
-        font-weight: bold;
-        transition: background-color 0.3s, transform 0.2s; /* Transiciones suaves */
-        width: 100%;
-    }
-
-    /* Efecto hover para el botón */
-    button[type="submit"]:hover {
-        background-color: #e0a800; /* Amarillo más oscuro al pasar el ratón */
-        transform: translateY(-2px); /* Pequeño desplazamiento hacia arriba */
-    }
-</style>
-</head>
-<body>
-    <div class="container">
-        <h1>Configurar Botones Flotantes</h1>
-
-        <form method="POST">
-            <!-- SECCIÓN PARA EL BOTÓN 1 (IZQUIERDO) -->
-            <div class="button-config-section">
-                <h2 class="text-warning">Botón 1 (Izquierdo)</h2>
-                <div class="form-group">
-                    <label for="enlace_1">Enlace del Botón:</label>
-                    <input type="text" id="enlace_1" name="enlace_1" value="{{ config.button_one.link }}" placeholder="Ej: https://ejemplo.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="icon_1">Icono (Clase de Font Awesome):</label>
-                    <input type="text" id="icon_1" name="icon_1" value="{{ config.button_one.icon }}" placeholder="Ej: fa-link, fa-file-pdf" required>
-                </div>
-                <div class="form-group">
-                    <label>Visibilidad del Botón:</label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="visibilidad_1" value="all" {% if config.button_one.visibility_state == 'all' %}checked{% endif %}>
-                            Todos (incluye usuarios no registrados)
-                        </label>
-                        <label>
-                            <input type="radio" name="visibilidad_1" value="regular" {% if config.button_one.visibility_state == 'regular' %}checked{% endif %}>
-                            Usuarios Regulares (requiere iniciar sesión)
-                        </label>
-                        <label>
-                            <input type="radio" name="visibilidad_1" value="superuser" {% if config.button_one.visibility_state == 'superuser' %}checked{% endif %}>
-                            Superusuarios (requiere iniciar sesión como superusuario)
-                        </label>
-                        <label>
-                            <input type="radio" name="visibilidad_1" value="disabled" {% if config.button_one.visibility_state == 'disabled' %}checked{% endif %}>
-                            Deshabilitado (ocultar botón)
-                        </label>
+    <form method="POST" action="{{ url_for('btns.crear_btns') }}">
+        <div class="row">
+            <!-- Configuración del Botón 1 (Izquierdo) -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header btn-warning">
+                        <h4 class="">Botón 1 (Izquierdo)</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="is_visible_one" name="is_visible_one" {% if config.button_one and config.button_one.is_visible %}checked{% endif %}>
+                            <label class="form-check-label" for="is_visible_one">Mostrar este botón</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="link_one" class="form-label">Enlace (URL)</label>
+                            <input type="text" class="form-control" id="link_one" name="link_one" value="{{ config.button_one.link if config.button_one else '' }}" placeholder="https://ejemplo.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="icon_one" class="form-label">Icono (Clase de Font Awesome)</label>
+                            <input type="text" class="form-control" id="icon_one" name="icon_one" value="{{ config.button_one.icon if config.button_one else '' }}" placeholder="ej. fa-home">
+                        </div>
+                        <div class="mb-3">
+                            <label for="visibility_state_one" class="form-label">Visibilidad</label>
+                            <select class="form-select" id="visibility_state_one" name="visibility_state_one">
+                                <option value="all" {% if config.button_one and config.button_one.visibility_state == 'all' %}selected{% endif %}>Todos los visitantes</option>
+                                <option value="regular" {% if config.button_one and config.button_one.visibility_state == 'regular' %}selected{% endif %}>Solo usuarios logueados</option>
+                                <option value="superuser" {% if config.button_one and config.button_one.visibility_state == 'superuser' %}selected{% endif %}>Solo Superusuarios</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SECCIÓN PARA EL BOTÓN 2 (DERECHO) -->
-            <div class="button-config-section">
-                <h2 class="text-warning">Botón 2 (Derecho)</h2>
-                <div class="form-group">
-                    <label for="enlace_2">Enlace del Botón:</label>
-                    <input type="text" id="enlace_2" name="enlace_2" value="{{ config.button_two.link }}" placeholder="Ej: /ruta/interna" required>
-                </div>
-                 <div class="form-group">
-                    <label for="icon_2">Icono (Clase de Font Awesome):</label>
-                    <input type="text" id="icon_2" name="icon_2" value="{{ config.button_two.icon }}" placeholder="Ej: fa-info-circle" required>
-                </div>
-                <div class="form-group">
-                    <label>Visibilidad del Botón:</label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="visibilidad_2" value="all" {% if config.button_two.visibility_state == 'all' %}checked{% endif %}>
-                            Todos (incluye usuarios no registrados)
-                        </label>
-                        <label>
-                            <input type="radio" name="visibilidad_2" value="regular" {% if config.button_two.visibility_state == 'regular' %}checked{% endif %}>
-                            Usuarios Regulares (requiere iniciar sesión)
-                        </label>
-                        <label>
-                            <input type="radio" name="visibilidad_2" value="superuser" {% if config.button_two.visibility_state == 'superuser' %}checked{% endif %}>
-                            Superusuarios (requiere iniciar sesión como superusuario)
-                        </label>
-                        <label>
-                            <input type="radio" name="visibilidad_2" value="disabled" {% if config.button_two.visibility_state == 'disabled' %}checked{% endif %}>
-                            Deshabilitado (ocultar botón)
-                        </label>
+            <!-- Configuración del Botón 2 (Derecho) -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header btn-warning">
+                        <h4 class="">Botón 2 (Derecho)</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="is_visible_two" name="is_visible_two" {% if config.button_two and config.button_two.is_visible %}checked{% endif %}>
+                            <label class="form-check-label" for="is_visible_two">Mostrar este botón</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="link_two" class="form-label">Enlace (URL)</label>
+                            <input type="text" class="form-control" id="link_two" name="link_two" value="{{ config.button_two.link if config.button_two else '' }}" placeholder="https://ejemplo.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="icon_two" class="form-label">Icono (Clase de Font Awesome)</label>
+                            <input type="text" class="form-control" id="icon_two" name="icon_two" value="{{ config.button_two.icon if config.button_two else '' }}" placeholder="ej. fa-info-circle">
+                        </div>
+                        <div class="mb-3">
+                            <label for="visibility_state_two" class="form-label">Visibilidad</label>
+                            <select class="form-select" id="visibility_state_two" name="visibility_state_two">
+                                <option value="all" {% if config.button_two and config.button_two.visibility_state == 'all' %}selected{% endif %}>Todos los visitantes</option>
+                                <option value="regular" {% if config.button_two and config.button_two.visibility_state == 'regular' %}selected{% endif %}>Solo usuarios logueados</option>
+                                <option value="superuser" {% if config.button_two and config.button_two.visibility_state == 'superuser' %}selected{% endif %}>Solo Superusuarios</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <button type="submit">Guardar Toda la Configuración</button>
-        </form>
-        <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
-            <a href="{{ url_for('caminatas.ver_caminatas') }}">Volver a la página principal</a>
-        </p>
+        </div>
+        
+        <div class="text-center">
+            <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+        </div>
+    </form>
+    
+    <div class="text-center mt-4">
+        <a href="{{ url_for('home') }}">Volver a la página principal</a>
     </div>
+</div>
 
+<!-- El script de validación ha sido eliminado para permitir guardar con la URL vacía. -->
 {% endblock %}
+

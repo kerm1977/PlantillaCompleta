@@ -6,9 +6,9 @@
         "icon": "fa-link"
     },
     "button_two": {
-        "link": "https://everardoherrera.com/",
+        "link": "#",
         "visibility_state": "all",
         "is_visible": true,
-        "icon": "fa-ticket "
+        "icon": "fa-file-pdf"
     }
 }

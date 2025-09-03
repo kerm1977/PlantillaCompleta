@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Editar Mi Perfil</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('perfil.editar_perfil') }}" enctype="multipart/form-data">
+                        
+                        <div class="text-center mb-4">
+                            {% if user.avatar_url %}
+                                <img src="{{ url_for('static', filename=user.avatar_url) }}" alt="Avatar de {{ user.username }}" class="img-thumbnail rounded-circle" width="150">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='uploads/avatars/default.png') }}" alt="Avatar por defecto" class="img-thumbnail rounded-circle" width="150">
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="avatar" class="form-label">Cambiar Avatar</label>
+                            <input class="form-control" type="file" id="avatar" name="avatar">
+                        </div>
+                        
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="username" class="form-label">Nombre de Usuario</label>
+                                <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email or '' }}">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" value="{{ user.nombre }}" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="primer_apellido" class="form-label">Primer Apellido</label>
+                                <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" value="{{ user.primer_apellido }}" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
+                                <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido" value="{{ user.segundo_apellido or '' }}">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefono" name="telefono" value="{{ user.telefono }}" required>
+                            </div>
+                             <div class="col-md-6 mb-3">
+                                <label for="cedula" class="form-label">Cédula</label>
+                                <input type="text" class="form-control" id="cedula" name="cedula" value="{{ user.cedula or '' }}">
+                            </div>
+                        </div>
+
+                        <hr>
+                        <h5 class="mt-4 mb-3">Información de Emergencia</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombre_emergencia" class="form-label">Nombre del Contacto de Emergencia</label>
+                                <input type="text" class="form-control" id="nombre_emergencia" name="nombre_emergencia" value="{{ user.nombre_emergencia or '' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="telefono_emergencia" class="form-label">Teléfono de Emergencia</label>
+                                <input type="tel" class="form-control" id="telefono_emergencia" name="telefono_emergencia" value="{{ user.telefono_emergencia or '' }}">
+                            </div>
+                        </div>
+
+                        <hr>
+                        <h5 class="mt-4 mb-3">Información Adicional</h5>
+
+                        <div class="row">
+                             <div class="col-md-6 mb-3">
+                                <label for="direccion" class="form-label">Provincia</label>
+                                <select class="form-select" id="direccion" name="direccion">
+                                    {% for provincia in provincia_opciones %}
+                                        <option value="{{ provincia }}" {% if user.direccion == provincia %}selected{% endif %}>{{ provincia }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_cumpleanos" class="form-label">Fecha de Cumpleaños</label>
+                                <input type="date" class="form-control" id="fecha_cumpleanos" name="fecha_cumpleanos" value="{{ user.fecha_cumpleanos.strftime('%Y-%m-%d') if user.fecha_cumpleanos else '' }}">
+                            </div>
+                        </div>
+
+                         <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="tipo_sangre" class="form-label">Tipo de Sangre</label>
+                                <select class="form-select" id="tipo_sangre" name="tipo_sangre">
+                                    {% for tipo in tipo_sangre_opciones %}
+                                        <option value="{{ tipo }}" {% if user.tipo_sangre == tipo %}selected{% endif %}>{{ tipo }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="empresa" class="form-label">Empresa</label>
+                                <input type="text" class="form-control" id="empresa" name="empresa" value="{{ user.empresa or '' }}">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="poliza" class="form-label">Póliza</label>
+                                <input type="text" class="form-control" id="poliza" name="poliza" value="{{ user.poliza or '' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="aseguradora" class="form-label">Aseguradora</label>
+                                <input type="text" class="form-control" id="aseguradora" name="aseguradora" value="{{ user.aseguradora or '' }}">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="alergias" class="form-label">Alergias</label>
+                            <textarea class="form-control" id="alergias" name="alergias" rows="2">{{ user.alergias or '' }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="enfermedades_cronicas" class="form-label">Enfermedades Crónicas</label>
+                            <textarea class="form-control" id="enfermedades_cronicas" name="enfermedades_cronicas" rows="2">{{ user.enfermedades_cronicas or '' }}</textarea>
+                        </div>
+
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary px-4">Guardar Cambios</button>
+                            <a href="{{ url_for('perfil.perfil') }}" class="btn btn-secondary px-4">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

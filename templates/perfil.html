@@ -35,13 +35,10 @@
     .fab-container-backup { bottom: 70px; right: 20px; }
     .fab-button-backup { background-color: #6f42c1; color: #ffffff; }
     .fab-button-backup:hover { background-color: #5a359a; }
-    .fab-container-stats { bottom: 140px; right: 20px; }
-    .fab-button-stats { background-color: #28a745; color: #ffffff; }
-    .fab-button-stats:hover { background-color: #218838; }
-    .fab-container-change-password { bottom: 210px; right: 20px; }
+    .fab-container-change-password { bottom: 140px; right: 20px; }
     .fab-button-change-password { background-color: #17a2b8; color: #ffffff; }
     .fab-button-change-password:hover { background-color: #117a8b; }
-    .fab-container-upload-db { bottom: 280px; right: 20px; }
+    .fab-container-upload-db { bottom: 210px; right: 20px; }
     .fab-button-upload-db { background-color: #ffc107; color: #212529; }
     .fab-button-upload-db:hover { background-color: #e0a800; }
 
@@ -144,9 +141,8 @@
     @media (max-width: 768px) {
         .fab-container-back { bottom: 60px; left: 15px; }
         .fab-container-backup { bottom: 60px; right: 15px; }
-        .fab-container-stats { bottom: calc(60px + 60px + 5px); right: 15px; }
-        .fab-container-change-password { bottom: calc(125px + 60px + 5px); right: 15px; }
-        .fab-container-upload-db { bottom: calc(190px + 60px + 5px); right: 15px; }
+        .fab-container-change-password { bottom: calc(60px + 60px + 5px); right: 15px; }
+        .fab-container-upload-db { bottom: calc(125px + 60px + 5px); right: 15px; }
     }
 </style>
 {% endblock %}
@@ -170,18 +166,6 @@
                 <div class="dashboard-section">
                     <h3>Navegación Rápida</h3>
                     <div class="dashboard-list">
-                        <a href="{{ url_for('caminatas.ver_caminatas') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-hiking"></i>
-                            <span>Caminatas</span>
-                        </a>
-                        <a href="{{ url_for('player.show_player') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-music"></i>
-                            <span>Música</span>
-                        </a>
-                        <a href="{{ url_for('rutas.ver_rutas') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Rutas</span>
-                        </a>
                         <a href="{{ url_for('aboutus.ver_aboutus') }}" class="dashboard-link btn-warning">
                             <i class="fas fa-info-circle"></i>
                             <span>Acerca de</span>
@@ -212,13 +196,6 @@
                             </a>
                         {% endif %}
 
-                        {% if session.get('role') == 'Superuser' %}
-                        <a href="{{ url_for('files.ver_files') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-folder"></i>
-                            <span>Mis Archivos</span>
-                        </a>
-                        {% endif %}
-
                         <a href="#" id="exportMyProfileJpgBtn" class="dashboard-link btn-warning">
                             <i class="fas fa-file-export"></i>
                             <span>Exportar Perfil (JPG)</span>
@@ -230,37 +207,13 @@
                 <div class="dashboard-section superuser-section">
                     <h3>Panel de Superusuario</h3>
                     <div class="dashboard-list">
-                        <a href="{{ url_for('pagos.ver_pagos') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <span>Pagos</span>
-                        </a>
                         <a href="{{ url_for('polizas.ver_polizas') }}" class="dashboard-link btn-warning">
                             <i class="fas fa-file-shield"></i>
                             <span>Pólizas</span>
                         </a>
-                        <a href="{{ url_for('calendario.ver_calendario') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span>Calendario</span>
-                        </a>
-                        <a href="{{ url_for('instrucciones.ver_instrucciones') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-list-ol"></i>
-                            <span>Instrucciones</span>
-                        </a>
                         <a href="{{ url_for('contactos.ver_contactos') }}" class="dashboard-link btn-warning">
                             <i class="fas fa-address-book"></i>
                             <span>Contactos</span>
-                        </a>
-                        <a href="{{ url_for('proyecto.ver_proyectos') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-project-diagram"></i>
-                            <span>Proyectos</span>
-                        </a>
-                        <a href="{{ url_for('notas.ver_notas') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-sticky-note"></i>
-                            <span>Notas</span>
-                        </a>
-                        <a href="{{ url_for('intern.ver_intern') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-globe-americas"></i>
-                            <span>Internacional</span>
                         </a>
                         <a href="{{ url_for('btns.crear_btns') }}" class="dashboard-link btn-warning">
                             <i class="fas fa-toggle-on"></i>
@@ -272,6 +225,23 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- NUEVA SECCIÓN DE ESTADÍSTICAS -->
+                {% if stats %}
+                <div class="dashboard-section superuser-section">
+                    <h3>Estadísticas del Sitio</h3>
+                    <ul class="list-group list-group-flush">
+                         <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total de Usuarios
+                            <span class="badge bg-primary rounded-pill">{{ stats.total_users }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total de Pólizas
+                            <span class="badge bg-primary rounded-pill">{{ stats.total_polizas }}</span>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
                 {% endif %}
 
                 <hr class="my-4">
@@ -429,13 +399,7 @@
         </button>
     </div>
     {% endif %}
-    {% if session.role == 'Superuser' %}
-    <div class="fab-container fab-container-stats">
-        <a href="{{ url_for('perfil.dashboard_stats') }}" class="fab-button fab-button-stats" title="Ver Estadísticas del Sitio">
-            <i class="fas fa-chart-bar"></i>
-        </a>
-    </div>
-    {% endif %}
+
     {% if session.get('logged_in') %}
     <div class="fab-container fab-container-change-password">
         <a href="{{ url_for('perfil.change_password') }}" class="fab-button fab-button-change-password" title="Cambiar Contraseña">
@@ -521,3 +485,4 @@
     }
 </script>
 {% endblock %}
+

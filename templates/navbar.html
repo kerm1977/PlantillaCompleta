@@ -142,12 +142,8 @@
         <div class="container-fluid">
             <!-- Contenedor para alinear logo y botón Cast -->
             <div class="navbar-brand-container">
-                {# Condición para cambiar el href del brand según el estado de la sesión #}
-                {% if session.logged_in %}
-                    <a class="navbar-brand" href="{{ url_for('home') }}">La Tribu</a>
-                {% else %}
-                    <a class="navbar-brand" href="{{ url_for('caminatas.ver_caminatas') }}">La Tribu</a>
-                {% endif %}
+                {# Se ha simplificado el enlace del brand para que siempre apunte a la página de inicio #}
+                <a class="navbar-brand" href="{{ url_for('home') }}">TRANSAVI</a>
                 
                 <!-- Botón de Chromecast añadido aquí -->
                 <google-cast-launcher></google-cast-launcher>
@@ -158,32 +154,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    {# El enlace de Caminatas siempre visible #}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('caminatas.ver_caminatas') }}">
-                            <i class="fas fa-hiking icon-only-mobile"></i> <!-- Icono de senderista -->
-                            <span class="text-only-desktop">Caminatas</span>
-                        </a>
-                    </li>
-                    {# Enlace para el reproductor de música #}
-                    <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('player.show_player') }}">
-                                <i class="fas fa-music icon-only-mobile"></i> <!-- Icono de nota musical -->
-                                <span class="text-only-desktop">Música</span>
-                            </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('rutas.ver_rutas') }}">
-                            <i class="fas fa-map-marker-alt icon-only-mobile"></i> <!-- Icono de geoposición -->
-                            <span class="text-only-desktop">Rutas</span>
-                        </a>
-                    </li>
+            
                      <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('aboutus.ver_aboutus') }}">
                             <i class="fas fa-info-circle icon-only-mobile"></i> <!-- Icono de acerca de -->
                             <span class="text-only-desktop">Acerca de Nosotros</span>
                         </a>
                     </li>
+            
                   
                            
                     {% if session.logged_in %}
@@ -194,23 +172,10 @@
                                     Más Opciones
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <!-- ENLACE NUEVO AÑADIDO -->
-                                    
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('pagos.ver_pagos') }}">Pagos</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('polizas.ver_polizas') }}">Pólizas</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('calendario.ver_calendario') }}">Calendario</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('instrucciones.ver_instrucciones') }}">Instrucciones</a></li>
                                     <li><a class="dropdown-item" href="{{ url_for('contactos.ver_contactos') }}">Ver Contactos</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('proyecto.ver_proyectos') }}">Gestor de Proyectos</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('notas.ver_notas') }}">Gestor de Notas</a></li>
-                                    <!-- LÍNEA CORREGIDA -->
-                                    <li><a class="dropdown-item" href="{{ url_for('intern.ver_intern') }}">Planificador Internacional</a></li>
                                     <li><a class="dropdown-item" href="{{ url_for('btns.crear_btns') }}">Configurar Botón Flotante</a></li>
                                     <li><a class="dropdown-item" href="https://www.pythonanywhere.com/user/kenth1977/">Pythonanywhere</a></li>
-                                    <li><a class="dropdown-item" href="https://gpx.studio/app#10.16/9.6134/-83.8223">GPX Studio</a></li>
-                                    <li><a class="dropdown-item" href="https://www.sinac.go.cr/ES/resvlinea/Paginas/default.aspx">Reservas Sinac</a></li>
-                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item text-danger fw-bold" href="{{ url_for('contactos.admin_manage_roles') }}">Administrar Roles</a></li>
                                 </ul>
                             </li>
@@ -295,3 +260,5 @@
         // No necesitamos JavaScript adicional para su funcionalidad básica de toggle.
     });
 </script>
+
+

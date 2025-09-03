@@ -18,17 +18,6 @@ note_viewers = db.Table('note_viewers',
     db.Column('note_id', db.Integer, db.ForeignKey('note.id'), primary_key=True),
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
 )
-
-caminata_participantes = db.Table('caminata_participantes',
-    db.Column('caminata_id', db.Integer, db.ForeignKey('caminata.id'), primary_key=True),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
-)
-
-playlist_songs = db.Table('playlist_songs',
-    db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.id'), primary_key=True),
-    db.Column('song_id', db.Integer, db.ForeignKey('song.id'), primary_key=True)
-)
-
 # --- MODELOS DE LA APLICACIÓN ---
 
 class User(db.Model):
@@ -143,77 +132,6 @@ class Note(db.Model):
     def __repr__(self):
         return f"Note('{self.title}', Creator ID: {self.creator_id}, Public: {self.is_public}, Color: {self.background_color})"
 
-class Caminata(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    finalizada = db.Column(db.Boolean, nullable=False, server_default='0')
-    imagen_caminata_url = db.Column(db.String(255), nullable=True)
-    actividad = db.Column(db.String(100), nullable=False)
-    etapa = db.Column(db.String(255), nullable=True)
-    nombre = db.Column(db.String(255), nullable=False)
-    moneda = db.Column(db.String(10), nullable=False, server_default='CRC', default='CRC')
-    precio = db.Column(db.Float, nullable=False)
-    fecha = db.Column(db.Date, nullable=False)
-    hora = db.Column(db.Time, nullable=True)
-    hora_salida = db.Column(db.Time, nullable=True)
-    hora_regreso = db.Column(db.Time, nullable=True)
-    costo_b = db.Column(db.Float, nullable=True)
-    costo_c = db.Column(db.Float, nullable=True)
-    costo_extranjeros = db.Column(db.Float, nullable=True)
-    lugar_salida = db.Column(db.String(255), nullable=True)
-    dificultad = db.Column(db.String(50), nullable=True)
-    distancia = db.Column(db.Float, nullable=True)
-    capacidad_minima = db.Column(db.String(50), nullable=True)
-    capacidad_maxima = db.Column(db.String(50), nullable=True)
-    nombre_guia = db.Column(db.String(255), nullable=True)
-    se_requiere = db.Column(db.String(100), nullable=True)
-    provincia = db.Column(db.String(50), nullable=True)
-    tipo_terreno = db.Column(db.Text, nullable=True)
-    otras_senas_terreno = db.Column(db.Text, nullable=True)
-    tipo_transporte = db.Column(db.Text, nullable=True)
-    incluye = db.Column(db.Text, nullable=True)
-    cuenta_con = db.Column(db.Text, nullable=True)
-    tipo_clima = db.Column(db.String(100), nullable=True)
-    altura_maxima = db.Column(db.Float, nullable=True)
-    altura_minima = db.Column(db.Float, nullable=True)
-    desnivel = db.Column(db.Float, nullable=True)
-    desnivel_positivo = db.Column(db.Float, nullable=True)
-    desnivel_negativo = db.Column(db.Float, nullable=True)
-    altura_positiva = db.Column(db.Float, nullable=True)
-    altura_negativa = db.Column(db.Float, nullable=True)
-    otros_datos = db.Column(db.Text, nullable=True)
-    duracion_horas = db.Column(db.Float, nullable=True)
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    fecha_modificacion = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=True)
-    participantes = db.relationship(
-        'User', secondary=caminata_participantes, lazy='subquery',
-        backref=db.backref('caminatas_participa', lazy=True)
-    )
-    abonos = db.relationship('AbonoCaminata', backref='caminata', lazy=True, cascade="all, delete-orphan")
-
-    def __repr__(self):
-        return f"Caminata('{self.nombre}', '{self.fecha}', '{self.actividad}')"
-
-    __table_args__ = (
-        db.Index('idx_caminata_fecha_desc', fecha.desc()),
-        db.Index('idx_caminata_actividad', actividad),
-    )
-
-class AbonoCaminata(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    caminata_id = db.Column(db.Integer, db.ForeignKey('caminata.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref='abonos_realizados')
-    opcion = db.Column(db.String(50), nullable=False)
-    cantidad_acompanantes = db.Column(db.Integer, default=0, nullable=False)
-    nombres_acompanantes = db.Column(db.Text, nullable=True)
-    monto_abono_crc = db.Column(db.Float, default=0)
-    monto_abono_usd = db.Column(db.Float, default=0)
-    tipo_cambio_bcr = db.Column(db.Float, nullable=True)
-    fecha_abono = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    periodo_cancela = db.Column(db.Date, nullable=True)
-
-    def __repr__(self):
-        return f"AbonoCaminata(Caminata: {self.caminata_id}, User: {self.user_id}, CRC: {self.monto_abono_crc}, USD: {self.monto_abono_usd})"
 
 class Pagos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -278,28 +196,9 @@ class Pagos(db.Model):
     def __repr__(self):
         return f'<Pagos {self.nombre_caminata}>'
 
-class CalendarEvent(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    flyer_imagen_url = db.Column(db.String(255), nullable=True)
-    nombre_actividad = db.Column(db.String(255), nullable=False)
-    fecha_actividad = db.Column(db.Date, nullable=False)
-    hora_actividad = db.Column(db.Time, nullable=True)
-    descripcion = db.Column(db.Text, nullable=True)
-    nombre_etiqueta = db.Column(db.String(50), nullable=False)
-    es_todo_el_dia = db.Column(db.Boolean, default=False, nullable=False)
-    correos_notificacion = db.Column(db.Text, nullable=True)
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    fecha_modificacion = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=True)
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    creator = db.relationship('User', backref='created_calendar_events', foreign_keys=[creator_id])
-
-    def __repr__(self):
-        return f"CalendarEvent('{self.nombre_actividad}', '{self.fecha_actividad}', '{self.hora_actividad}')"
-
 class Instruction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    caminata_id = db.Column(db.Integer, db.ForeignKey('caminata.id'), nullable=False)
-    caminata = db.relationship('Caminata', backref='instrucciones')
+    caminata_id = db.Column(db.Integer, nullable=False) # No longer a ForeignKey
     dificultad = db.Column(db.String(50), nullable=True)
     distancia = db.Column(db.Float, nullable=True)
     capacidad = db.Column(db.String(20), nullable=True)
@@ -333,39 +232,6 @@ class Instruction(db.Model):
     def __repr__(self):
         return f"Instruction(Caminata_ID: {self.caminata_id}, Fecha Caminata: {self.fecha_caminata})"
 
-class Song(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255), nullable=False)
-    artist = db.Column(db.String(255), nullable=True)
-    album = db.Column(db.String(255), nullable=True)
-    file_path = db.Column(db.String(500), unique=True, nullable=False)
-    cover_image_path = db.Column(db.String(500), nullable=True)
-    playlists = db.relationship('Playlist', secondary=playlist_songs, backref='songs')
-
-    def __repr__(self):
-        return f'<Song {self.title} by {self.artist}>'
-
-class Playlist(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False, unique=True)
-    
-    def __repr__(self):
-        return f'<Playlist {self.name}>'
-
-class Itinerario(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    caminata_id = db.Column(db.Integer, db.ForeignKey('caminata.id'), nullable=False)
-    caminata = db.relationship('Caminata', backref='itinerarios')
-    lugar_salida = db.Column(db.String(255), nullable=True)
-    hora_salida = db.Column(db.Time, nullable=True)
-    puntos_recogida = db.Column(db.Text, nullable=True)
-    contenido_itinerario = db.Column(db.Text, nullable=True)
-    pasaremos_a_comer = db.Column(db.String(20), nullable=True)
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    fecha_modificacion = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=True)
-
-    def __repr__(self):
-        return f"Itinerario(Caminata: {self.caminata.nombre}, Fecha: {self.caminata.fecha})"
 
 class AboutUs(db.Model):
     __tablename__ = 'about_us'
@@ -379,22 +245,6 @@ class AboutUs(db.Model):
 
     def __repr__(self):
         return f"<AboutUs {self.title}>"
-
-class Ruta(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(255), nullable=False)
-    provincia = db.Column(db.String(50), nullable=False) 
-    detalle = db.Column(db.Text, nullable=True)
-    enlace_video = db.Column(db.String(500), nullable=True)
-    fecha = db.Column(db.Date, nullable=True)
-    precio = db.Column(db.Float, nullable=True)
-    gpx_file_url = db.Column(db.String(255), nullable=True)
-    kml_file_url = db.Column(db.String(255), nullable=True)
-    kmz_file_url = db.Column(db.String(255), nullable=True)
-    dificultad = db.Column(db.String(50), nullable=False, default='Básico')
-
-    def __repr__(self):
-        return f"Ruta(Nombre: {self.nombre}, Categoría: {self.provincia}, Fecha: {self.fecha}, Precio: {self.precio})"
 
 class PushSubscription(db.Model):
     __tablename__ = 'push_subscriptions'
@@ -416,22 +266,6 @@ class PushSubscription(db.Model):
                 "auth": self.auth_key
             }
         }
-
-class File(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    original_filename = db.Column(db.String(255), nullable=False)
-    unique_filename = db.Column(db.String(255), unique=True, nullable=False)
-    file_path = db.Column(db.String(500), nullable=False)
-    file_type = db.Column(db.String(50), nullable=False)
-    mime_type = db.Column(db.String(100), nullable=False)
-    upload_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    uploader = db.relationship('User', backref='uploaded_files')
-    is_visible = db.Column(db.Boolean, default=True, nullable=False)
-    is_used = db.Column(db.Boolean, default=False, nullable=False)
-
-    def __repr__(self):
-        return f"<File {self.original_filename} ({self.file_type})>"
 
 class SiteStats(db.Model):
     __tablename__ = 'site_stats'

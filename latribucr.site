@@ -1,53 +1,29 @@
 https://ap.www.namecheap.com/Domains/DomainControlPanel/latribucr.site/advancedns
-
 Guía para Configurar un Dominio Personal en Namecheap para PythonAnywhere
-
 Para que tu dominio comprado en Namecheap (ej. www.tudominio.com) muestre el contenido de tu aplicación web de PythonAnywhere, necesitas configurar un registro CNAME en el DNS de tu dominio. Sigue estos pasos:
 Paso 1: Accede al Panel de Control de tu Dominio
-
     Inicia sesión en tu cuenta de Namecheap.
-
     En el menú de la izquierda, ve a "Domain List".
-
     Busca el dominio que quieres configurar y haz clic en el botón "Manage" que está a su lado.
-
 Paso 2: Ve a la Configuración de DNS Avanzada
-
     Dentro de la página de gestión de tu dominio, haz clic en la pestaña "Advanced DNS".
-
     Aquí verás la lista de registros DNS de tu dominio. Es posible que veas algunos registros por defecto creados por Namecheap.
-
 Paso 3: Añade el Registro CNAME para PythonAnywhere
-
 Para que tu dominio apunte a tu aplicación, solo necesitas configurar un registro CNAME.
-
     Busca si existe algún registro CNAME con www como Host y elimínalo. Haz lo mismo con cualquier registro A que tenga @ como Host (a menos que lo necesites para otra cosa, como el correo).
-
     Haz clic en el botón "ADD NEW RECORD".
-
     Selecciona "CNAME Record" como tipo.
-
     Rellena los campos de la siguiente manera:
-
         Host: www
-
         Value: webapp-2701700.pythonanywhere.com. (Usa el valor exacto que te proporcionó PythonAnywhere. ¡No olvides el punto al final!)
-
         TTL: Déjalo en Automatic.
-
     Haz clic en la marca de verificación verde para guardar el registro.
-
 Tu configuración de CNAME debería verse así:
 Paso 4: Configura el Dominio en PythonAnywhere
-
     Inicia sesión en tu cuenta de PythonAnywhere.
-
     Ve a la pestaña "Web" en el menú superior.
-
     Busca la sección "Web apps" y haz clic en tu nombre de dominio (ej. webapp-2701700.pythonanywhere.com) para editar la configuración.
-
     En el campo de texto, reemplaza el dominio de PythonAnywhere por tu dominio personalizado (ej. www.tudominio.com).
-
     Haz clic en el botón con la marca de verificación para guardar. PythonAnywhere verificará la configuración del CNAME y, si es correcta, configurará tu aplicación y el certificado SSL automáticamente.
-
 ¡Listo! Los cambios de DNS pueden tardar desde unos minutos hasta 48 horas en propagarse por todo el mundo, aunque normalmente es mucho más rápido. Una vez que se propaguen, tu dominio personalizado apuntará correctamente a tu aplicación web en PythonAnywhere.
+

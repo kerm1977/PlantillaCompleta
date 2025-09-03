@@ -1,128 +1,127 @@
-# btns.py
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, current_app, session
 import json
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
 
-# Crea un Blueprint para organizar las rutas relacionadas con los botones.
+# Define the blueprint
 btns_bp = Blueprint('btns', __name__)
 
-# Define el nombre del archivo donde se guardará la configuración de los botones.
-CONFIG_FILE = 'buttons_config.json'
+# --- Configuration File Handling ---
 
-def load_button_config():
-    """
-    Carga la configuración de ambos botones desde el archivo JSON.
-    Si el archivo no existe o está corrupto, devuelve una configuración por defecto.
-    """
-    default_config = {
-        "button_one": {"link": "#", "visibility_state": "all", "is_visible": True, "icon": "fa-link"},
-        "button_two": {"link": "#", "visibility_state": "disabled", "is_visible": False, "icon": "fa-file-pdf"}
-    }
-    if os.path.exists(CONFIG_FILE):
-        with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
-            try:
-                config = json.load(f)
-                # Asegurarse de que la configuración por defecto se aplique si faltan claves
-                for btn_key in ['button_one', 'button_two']:
-                    if btn_key not in config:
-                        config[btn_key] = default_config[btn_key]
-                    else:
-                        # Asegurar que las claves de visibilidad existan
-                        if 'visibility_state' not in config[btn_key]:
-                            config[btn_key]['visibility_state'] = default_config[btn_key]['visibility_state']
-                        config[btn_key]['is_visible'] = (config[btn_key]['visibility_state'] != 'disabled')
-                        if 'icon' not in config[btn_key]:
-                             config[btn_key]['icon'] = default_config[btn_key]['icon']
+def get_config_path():
+    """Constructs the absolute path to the configuration file."""
+    # Creates the path inside the 'instance' folder, e.g., /path/to/your/app/instance/btns_config.json
+    return os.path.join(current_app.instance_path, 'btns_config.json')
 
-                return config
-            except json.JSONDecodeError:
-                print(f"Advertencia: El archivo {CONFIG_FILE} está corrupto. Usando configuración por defecto.")
-                return default_config
-    return default_config
-
-def save_button_config(config):
+def load_config():
     """
-    Guarda la configuración de los botones en el archivo JSON.
+    Loads the button configuration from the JSON file.
+    Returns a default configuration if the file doesn't exist or is invalid.
     """
-    with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
-        json.dump(config, f, indent=4) # indent=4 para una mejor legibilidad del JSON
+    config_path = get_config_path()
+    try:
+        with open(config_path, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        # Default structure if file is missing or corrupt
+        return {
+            'button_one': {'is_visible': False, 'link': '', 'icon': 'fa-link', 'visibility_state': 'all'},
+            'button_two': {'is_visible': False, 'link': '', 'icon': 'fa-file-pdf', 'visibility_state': 'all'}
+        }
 
-@btns_bp.route('/crear_btns', methods=['GET', 'POST'])
+def save_config(config):
+    """
+    Saves the button configuration to the JSON file.
+    Returns True on success, False on failure.
+    """
+    config_path = get_config_path()
+    try:
+        # Ensure the instance folder exists before trying to write to it
+        os.makedirs(current_app.instance_path, exist_ok=True)
+        with open(config_path, 'w') as f:
+            json.dump(config, f, indent=4)
+        return True
+    except IOError as e:
+        current_app.logger.error(f"Error writing to config file {config_path}: {e}")
+        return False
+
+# --- Helper Functions ---
+
+def process_link(link_text):
+    """
+    Strips whitespace and adds 'https://' if no protocol is present.
+    Ignores internal links (starting with '/') or anchor links (starting with '#').
+    """
+    processed_link = link_text.strip()
+    if processed_link and not processed_link.startswith(('http://', 'https://', '/', '#')):
+        processed_link = 'https://' + processed_link
+    return processed_link
+
+# --- Routes ---
+
+@btns_bp.route('/btns/crear', methods=['GET', 'POST'])
+# @role_required('Superuser') # This should be uncommented if you have a role decorator
 def crear_btns():
     """
-    Maneja la lógica para el formulario de configuración de los botones.
+    Handles the creation and updating of the dynamic floating buttons.
     """
     if request.method == 'POST':
-        # Recoger datos para el botón 1
-        link1 = request.form.get('enlace_1', '#')
-        visibility_state1 = request.form.get('visibilidad_1', 'all')
-        icon1 = request.form.get('icon_1', 'fa-link')
-        is_visible1 = (visibility_state1 != 'disabled')
-
-        # Recoger datos para el botón 2
-        link2 = request.form.get('enlace_2', '#')
-        visibility_state2 = request.form.get('visibilidad_2', 'all')
-        icon2 = request.form.get('icon_2', 'fa-file-pdf')
-        is_visible2 = (visibility_state2 != 'disabled')
-
-        # Crear el nuevo diccionario de configuración
-        new_config = {
-            "button_one": {"link": link1, "visibility_state": visibility_state1, "is_visible": is_visible1, "icon": icon1},
-            "button_two": {"link": link2, "visibility_state": visibility_state2, "is_visible": is_visible2, "icon": icon2}
+        # --- Collect and process form data ---
+        form_data = {
+            'button_one': {
+                'is_visible': 'is_visible_one' in request.form,
+                'link': process_link(request.form.get('link_one', '')),
+                'icon': request.form.get('icon_one', 'fa-link').strip() or 'fa-link',
+                'visibility_state': request.form.get('visibility_state_one', 'all')
+            },
+            'button_two': {
+                'is_visible': 'is_visible_two' in request.form,
+                'link': process_link(request.form.get('link_two', '')),
+                'icon': request.form.get('icon_two', 'fa-file-pdf').strip() or 'fa-file-pdf',
+                'visibility_state': request.form.get('visibility_state_two', 'all')
+            }
         }
-        save_button_config(new_config)
 
-        flash('Configuración de los botones guardada con éxito!', 'success')
+        # --- Server-side Validation ---
+        has_errors = False
+        if form_data['button_one']['is_visible'] and not form_data['button_one']['link']:
+            flash('No se puede activar el Botón 1 sin proporcionar una URL.', 'danger')
+            has_errors = True
+
+        if form_data['button_two']['is_visible'] and not form_data['button_two']['link']:
+            flash('No se puede activar el Botón 2 sin proporcionar una URL.', 'danger')
+            has_errors = True
+
+        if has_errors:
+            # If validation fails, re-render the template with the submitted data so user doesn't lose their input
+            return render_template('crear_btns.html', config=form_data)
+
+        # --- Save configuration and redirect ---
+        if save_config(form_data):
+            flash('Configuración de botones guardada exitosamente.', 'success')
+        else:
+            flash('Error al guardar la configuración. Revise los permisos del servidor.', 'danger')
+
         return redirect(url_for('btns.crear_btns'))
-    
-    # Para GET, cargar la configuración y mostrar el formulario
-    config = load_button_config()
+
+    # For GET requests, load and display the current configuration
+    config = load_config()
     return render_template('crear_btns.html', config=config)
 
-@btns_bp.route('/get_btn_config')
-def get_btn_config():
-    """
-    Endpoint API para que el frontend obtenga la configuración actual de los botones.
-    """
-    return jsonify(load_button_config())
 
-@btns_bp.route('/get_session_status')
+@btns_bp.route('/api/btns/config')
+def get_btn_config():
+    """API endpoint to provide button configuration to the frontend script."""
+    return jsonify(load_config())
+
+
+@btns_bp.route('/api/session_status')
 def get_session_status():
     """
-    Endpoint API para que el frontend obtenga el estado actual de la sesión del usuario.
+    API endpoint to check the user's session status (logged in, role).
+    This helps the frontend decide whether to show buttons based on visibility rules.
     """
     return jsonify({
-        "logged_in": session.get('logged_in', False),
-        "is_superuser": session.get('role') == 'Superuser' # Comprobación más precisa del rol
+        'logged_in': session.get('logged_in', False),
+        'is_superuser': session.get('role') == 'Superuser'
     })
 
-# --- Simulación de Autenticación/Roles de Usuario ---
-# Estas rutas son para demostración y simulan el inicio y cierre de sesión.
-@btns_bp.route('/login/<role>')
-def login(role):
-    """
-    Simula el inicio de sesión de un usuario con un rol específico.
-    """
-    session.clear() # Limpia la sesión anterior
-
-    if role == 'regular':
-        session['logged_in'] = True
-        session['role'] = 'Regular'
-        flash('Has iniciado sesión como Usuario Regular.', 'info')
-    elif role == 'superuser':
-        session['logged_in'] = True
-        session['role'] = 'Superuser'
-        flash('Has iniciado sesión como Superusuario.', 'info')
-    else: # Cualquier otro valor o 'logout'
-        session['logged_in'] = False
-        session.pop('role', None)
-        flash('Has cerrado sesión.', 'info')
-    # Redirige a una página principal para ver el efecto
-    return redirect(url_for('home')) 
-
-@btns_bp.route('/index_test') # Ruta de prueba
-def index():
-    """
-    Ruta para una página de prueba que renderiza base.html.
-    """
-    return render_template('base.html')

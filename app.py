@@ -11,31 +11,29 @@ from sqlalchemy.exc import IntegrityError # NUEVO: Importar IntegrityError
 # --- Añade esta línea ---
 from auth_setup import oauth_bp, init_oauth
 
-# MODIFICADO: Importa db, bcrypt, migrate y User desde models.py
-# ES CRUCIAL QUE EL MODELO USER Y LAS INSTANCIAS DE DB, BCRYPT Y MIGRATE
-# SE IMPORTEN ÚNICAMENTE DESDE models.py PARA EVITAR IMPORTACIONES CIRCULARES.
-# CORRECCIÓN: Eliminado 'InternationalTravel' de la importación para resolver el conflicto.
-from models import db, bcrypt, migrate, User, Project, Note, Caminata, AbonoCaminata, caminata_participantes, Pagos, CalendarEvent, Instruction, Song, Playlist, Itinerario, AboutUs 
+# MODIFICADO: Se han eliminado las importaciones de los modelos que ya no se usarán.
+from models import db, bcrypt, migrate, User, AboutUs
 from contactos import contactos_bp
 from perfil import perfil_bp
-from proyecto import proyecto_bp
-from notas import notas_bp
-from caminatas import caminatas_bp
-from pagos import pagos_bp
-from calendario import calendario_bp
-from instrucciones import instrucciones_bp
-from player import player_bp
-from itinerario import itinerario_bp
+# from proyecto import proyecto_bp
+# from notas import notas_bp
+# from caminatas import caminatas_bp
+# from pagos import pagos_bp
+# from calendario import calendario_bp
+# from instrucciones import instrucciones_bp
+# from player import player_bp
+# from itinerario import itinerario_bp
 from aboutus import aboutus_bp
-from rutas import rutas_bp
+# from rutas import rutas_bp
 from polizas import polizas_bp # <-- NUEVA LÍNEA
 from flask_cors import CORS  # 1. Importar CORS
 from flask_mail import Mail, Message #pip install flask_mail
-from intern import intern_bp # <--- ASEGÚRATE DE QUE ESTA LÍNEA EXISTA Y NO ESTÉ COMENTADA
+# from intern import intern_bp
 # CORRECCIÓN: Importa Version desde version.py donde está definida
 from version import version_bp, Version 
-from files import files_bp # Importa el Blueprint de Files
+# from files import files_bp # Importa el Blueprint de Files
 from btns import btns_bp # Importa el Blueprint desde btns.py (ASUMIMOS QUE btns.py EXISTE)
+# from transporte import transporte_bp
 
 
 
@@ -229,16 +227,8 @@ def check_for_first_user():
 @app.route('/')
 @app.route('/home') # Añadido /home como ruta alternativa para la página de inicio
 def home():
-    # Obtener todas las caminatas (similar a como lo hace ver_caminatas en caminatas.py)
-    all_caminatas = Caminata.query.order_by(Caminata.fecha.desc()).all()
-    search_actividad = request.args.get('actividad')
-
-    if search_actividad:
-        caminatas = Caminata.query.filter_by(actividad=search_actividad).all()
-    else:
-        caminatas = Caminata.query.all()
-        
-    return render_template('ver_caminatas.html', caminatas=caminatas, search_actividad=search_actividad)
+    # Redirige a la página 'Acerca de nosotros' como la nueva página de inicio
+    return redirect(url_for('aboutus.ver_aboutus'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -463,7 +453,7 @@ def login():
             session['username'] = user.username
             session['role'] = user.role # Guardar el rol en la sesión
             flash(f'¡Bienvenido, {user.username}!', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('perfil.perfil')) # Redirigir al perfil después del login
         else:
             flash('Nombre de usuario, correo electrónico o contraseña incorrectos.', 'danger')
     return render_template('login.html')
@@ -555,21 +545,23 @@ def internal_server_error(e):
 # REGISTRO DE BLUEPRINTS (DEBE IR DESPUÉS DE LA INICIALIZACIÓN DE EXTENSIONES)
 app.register_blueprint(contactos_bp)
 app.register_blueprint(perfil_bp, url_prefix='/perfil')
-app.register_blueprint(proyecto_bp)
-app.register_blueprint(notas_bp)
-app.register_blueprint(caminatas_bp, url_prefix='/caminatas')
-app.register_blueprint(pagos_bp, url_prefix='/pagos')
-app.register_blueprint(calendario_bp, url_prefix='/calendario')
-app.register_blueprint(instrucciones_bp, url_prefix='/instrucciones')
-app.register_blueprint(player_bp)
-app.register_blueprint(itinerario_bp, url_prefix='/itinerario')
+# app.register_blueprint(caminatas_bp, url_prefix='/caminatas')
+# app.register_blueprint(proyecto_bp)
+# app.register_blueprint(notas_bp)
+# app.register_blueprint(pagos_bp, url_prefix='/pagos')
+# app.register_blueprint(instrucciones_bp, url_prefix='/instrucciones')
+# app.register_blueprint(calendario_bp, url_prefix='/calendario')
+# app.register_blueprint(player_bp)
+# app.register_blueprint(itinerario_bp, url_prefix='/itinerario')
 app.register_blueprint(aboutus_bp, url_prefix='/aboutus')
-app.register_blueprint(rutas_bp, url_prefix='/rutas')
+# app.register_blueprint(rutas_bp, url_prefix='/rutas')
 app.register_blueprint(version_bp, url_prefix='/version')
-app.register_blueprint(files_bp, url_prefix='/files')
+# app.register_blueprint(files_bp, url_prefix='/files')
 app.register_blueprint(btns_bp) # REGISTRO DEL BLUEPRINT DE BTNS
 app.register_blueprint(polizas_bp) # <-- NUEVA LÍNEA
-app.register_blueprint(intern_bp, url_prefix='/intern')
+# app.register_blueprint(intern_bp, url_prefix='/intern')
+# app.register_blueprint(transporte_bp) # <-- AÑADIR ESTA LÍNEA
+
 
 # --- AÑADE ESTAS DOS LÍNEAS PARA CONECTAR OAUTH ---
 init_oauth(app)
@@ -641,7 +633,11 @@ if __name__ == '__main__':
 # git branchgit remote -v
 # git push -u origin flet
 
-
+# -------------------------------------------
+#error error: remote origin already exists.usar lo siguiente
+#git push --set-upstream origin main
+#git push
+# -------------------------------------------
 
 # borrar base de datos y reconstruirla
 # pip install PyMySQL
@@ -655,3 +651,7 @@ if __name__ == '__main__':
 # (env) 23:33 ~/LATRIBU1 (main)$ flask db migrate -m "Initial migration with all models"
 # (env) 23:34 ~/LATRIBU1 (main)$ flask db upgrade
 # (env) 23:34 ~/LATRIBU1 (main)$ ls -l instance/db
+
+
+
+

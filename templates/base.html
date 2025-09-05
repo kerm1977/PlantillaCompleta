@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es">
+<!-- AÑADIDO: Atributo data-theme para manejar el tema con CSS y JS -->
+<html lang="es" data-theme="{{ session.get('theme', 'light') }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,134 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     {% block head_content %}{% endblock %} {# Bloque para contenido adicional en el head #}
+
+    <!-- === INICIO: ESTILOS PARA TEMAS OSCURO Y SEPIA === -->
+    <style>
+        /* Tema Claro (Por defecto) */
+        :root {
+            --bs-body-bg: #ffffff;
+            --bs-body-color: #212529;
+            --bs-secondary-bg: #f8f9fa;
+            --bs-tertiary-bg: #e9ecef;
+            --bs-border-color: #dee2e6;
+            --bs-link-color: #0d6efd;
+            --bs-link-hover-color: #0a58ca;
+            --navbar-bg: rgba(255, 193, 7, 0.8); /* Amarillo original */
+            --card-bg: #ffffff;
+            --modal-bg: #ffffff;
+        }
+
+        /* Tema Oscuro */
+        [data-theme="dark"] {
+            --bs-body-bg: #212529;
+            --bs-body-color: #dee2e6;
+            --bs-secondary-bg: #343a40;
+            --bs-tertiary-bg: #495057;
+            --bs-border-color: #495057;
+            --bs-link-color: #6ea8fe;
+            --bs-link-hover-color: #8bb9fe;
+            --navbar-bg: rgba(33, 37, 41, 0.85); /* Gris oscuro */
+            --card-bg: #343a40;
+            --modal-bg: #343a40;
+
+            /* Sobrescribir estilos de Bootstrap para componentes específicos */
+            --bs-list-group-bg: #343a40;
+            --bs-list-group-color: #dee2e6;
+            --bs-list-group-border-color: #495057;
+            --bs-table-bg: #212529;
+            --bs-table-color: #dee2e6;
+            --bs-table-border-color: #495057;
+            --bs-table-striped-bg: #2c3034;
+        }
+
+        /* Tema Sepia */
+        [data-theme="sepia"] {
+            --bs-body-bg: #f4e9d8;
+            --bs-body-color: #433422;
+            --bs-secondary-bg: #e9decc;
+            --bs-tertiary-bg: #e0d5c4;
+            --bs-border-color: #d3c5b4;
+            --bs-link-color: #9d6b2c;
+            --bs-link-hover-color: #7b5523;
+            --navbar-bg: rgba(211, 197, 180, 0.85); /* Tono sepia para navbar */
+            --card-bg: #fdf6ec;
+            --modal-bg: #fdf6ec;
+
+             /* Sobrescribir estilos de Bootstrap para componentes específicos */
+            --bs-list-group-bg: #fdf6ec;
+            --bs-list-group-color: #433422;
+            --bs-list-group-border-color: #d3c5b4;
+            --bs-table-bg: #f4e9d8;
+            --bs-table-color: #433422;
+            --bs-table-border-color: #d3c5b4;
+            --bs-table-striped-bg: #ede1ce;
+        }
+        
+        /* Aplicación de variables a elementos */
+        body {
+            background-color: var(--bs-body-bg);
+            color: var(--bs-body-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .custom-navbar {
+            background-color: var(--navbar-bg) !important;
+        }
+
+        .card, .modal-content, .list-group-item, .accordion-item {
+            background-color: var(--card-bg) !important;
+            color: var(--bs-body-color) !important;
+            border-color: var(--bs-border-color) !important;
+        }
+        
+        /* Asegurarse que los inputs también cambien de color */
+        .form-control, .form-select {
+            background-color: var(--card-bg) !important;
+            color: var(--bs-body-color) !important;
+            border-color: var(--bs-border-color) !important;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            color: var(--bs-body-color);
+            background-color: var(--bs-body-bg);
+            border-color: var(--bs-link-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-link-color-rgb), .25);
+        }
+
+        .table {
+            --bs-table-bg: var(--bs-table-bg);
+            --bs-table-color: var(--bs-table-color);
+            --bs-table-border-color: var(--bs-table-border-color);
+            --bs-table-striped-bg: var(--bs-table-striped-bg);
+        }
+
+        a {
+            color: var(--bs-link-color);
+        }
+        a:hover {
+            color: var(--bs-link-hover-color);
+        }
+
+        /* Ajustes específicos para que los componentes se vean bien en todos los temas */
+        .dropdown-menu {
+            background-color: var(--bs-secondary-bg);
+        }
+        .dropdown-item {
+            color: var(--bs-body-color);
+        }
+        .dropdown-item:hover {
+            background-color: var(--bs-tertiary-bg);
+            color: var(--bs-body-color);
+        }
+
+        /* Invertir el color del navbar-toggler en modo oscuro y sepia para mayor visibilidad */
+        [data-theme="dark"] .navbar-toggler-icon,
+        [data-theme="sepia"] .navbar-toggler-icon {
+           filter: invert(1);
+        }
+    </style>
+    <!-- === FIN: ESTILOS PARA TEMAS === -->
 
     <style>
         /* Ajuste para el contenido principal para evitar que el navbar fijo lo cubra */
@@ -396,7 +525,7 @@
                 
                 // Abrir en nueva pestaña si es un enlace externo, o si es un archivo
                 const isExternal = buttonConfig.link.startsWith('http');
-                const isFile = ['.pdf', '.jpg', '.png', '.mp3', '.mp4', '.txt', '.gpx', '.kml', '.kmz'].some(ext => buttonConfig.link.toLowerCase().endsWith(ext));
+                const isFile = ['.pdf', '.jpg', '.png', '.mp3', '.mp4', 'txt', '.gpx', '.kml', '.kmz'].some(ext => buttonConfig.link.toLowerCase().endsWith(ext));
                 if (isExternal || isFile) {
                     buttonLink.target = '_blank';
                 }
@@ -434,6 +563,69 @@
     });
     </script>
     <!-- === FIN: LÓGICA === -->
+    
+    <!-- === INICIO: SCRIPT PARA MANEJAR EL CAMBIO DE TEMA === -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const themeSwitchers = document.querySelectorAll('.theme-switcher');
+        const activeThemeIcon = document.getElementById('active-theme-icon');
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+
+        // Función para actualizar el icono del tema activo en el botón principal del dropdown
+        function updateActiveIcon(theme) {
+            if (activeThemeIcon) {
+                let iconClass = 'fa-sun'; // Por defecto, el icono de sol para 'light'
+                if (theme === 'dark') {
+                    iconClass = 'fa-moon';
+                } else if (theme === 'sepia') {
+                    iconClass = 'fa-book-open'; // O fa-coffee, etc.
+                }
+                activeThemeIcon.className = 'fas ' + iconClass;
+            }
+        }
+
+        // Establecer el icono correcto al cargar la página
+        updateActiveIcon(currentTheme);
+
+        // Función para cambiar el tema
+        function setTheme(theme) {
+            // 1. Cambiar el atributo en el HTML
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            // 2. Actualizar el icono activo
+            updateActiveIcon(theme);
+
+            // 3. Enviar el cambio al servidor para guardarlo en la sesión
+            fetch("{{ url_for('set_theme') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ theme: theme })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log('Theme saved to session:', data.theme);
+                } else {
+                    console.error('Failed to save theme.');
+                }
+            })
+            .catch(error => {
+                console.error('Error setting theme:', error);
+            });
+        }
+
+        // Añadir event listeners a cada botón del dropdown
+        themeSwitchers.forEach(switcher => {
+            switcher.addEventListener('click', function(event) {
+                event.preventDefault();
+                const newTheme = this.dataset.theme;
+                setTheme(newTheme);
+            });
+        });
+    });
+    </script>
+    <!-- === FIN: SCRIPT DE TEMA === -->
 </body>
 </html>
-    

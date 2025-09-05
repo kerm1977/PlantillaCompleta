@@ -4,7 +4,7 @@
 
 {% block head_content %}
 <style>
-    /* --- ESTILOS DEL PERFIL DETALLADO (DE TU ARCHIVO) --- */
+    /* ... (Estilos existentes) ... */
     .hidden-for-capture {
         visibility: hidden !important;
     }
@@ -35,15 +35,12 @@
     .fab-container-backup { bottom: 70px; right: 20px; }
     .fab-button-backup { background-color: #6f42c1; color: #ffffff; }
     .fab-button-backup:hover { background-color: #5a359a; }
-    .fab-container-change-password { bottom: 140px; right: 20px; }
-    .fab-button-change-password { background-color: #17a2b8; color: #ffffff; }
-    .fab-button-change-password:hover { background-color: #117a8b; }
-    .fab-container-upload-db { bottom: 210px; right: 20px; }
+    .fab-container-upload-db { bottom: 140px; right: 20px; }
     .fab-button-upload-db { background-color: #ffc107; color: #212529; }
     .fab-button-upload-db:hover { background-color: #e0a800; }
 
     #profile-details-card {
-        background-color: transparent; /* Fondo transparente */
+        background-color: transparent;
         padding: 0;
         box-shadow: none !important;
         border: none !important;
@@ -65,17 +62,12 @@
     .list-group-item:not(:last-child) {
         border-bottom: 1px dotted #e9ecef !important;
     }
-    #export-buttons-container {
-        margin-bottom: 80px;
-    }
     .img-thumbnail {
         border: none !important;
     }
     body {
         padding-top: 70px;
     }
-
-    /* --- NUEVOS ESTILOS PARA EL DASHBOARD DE ENLACES --- */
     .dashboard-header {
         text-align: center;
         margin-bottom: 2.5rem;
@@ -92,11 +84,11 @@
     .dashboard-list {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem; /* Espacio reducido entre enlaces */
+        gap: 0.5rem;
     }
     .dashboard-link {
-        display: flex; /* Cambiado a flex para alinear icono y texto */
-        align-items: center; /* Alinear verticalmente */
+        display: flex;
+        align-items: center;
         padding: 0.75rem 1rem;
         background-color: #f8f9fa;
         border: 1px solid transparent;
@@ -117,9 +109,9 @@
         color: #212529;
     }
     .dashboard-link i {
-        font-size: 1em; /* Icono más pequeño */
-        margin-right: 1rem; /* Espacio entre icono y texto */
-        width: 20px; /* Ancho fijo para alineación */
+        font-size: 1em;
+        margin-right: 1rem;
+        width: 20px;
         text-align: center;
         color: #6c757d;
     }
@@ -137,12 +129,20 @@
     .superuser-section h3 {
         color: #c82333;
     }
+    
+    /* Estilos del Modal */
+    .modal-header.bg-warning .modal-title,
+    .modal-header.bg-warning .btn-close {
+        color: #000;
+    }
+    .modal-body, .modal-body label {
+        color: #000;
+    }
 
     @media (max-width: 768px) {
         .fab-container-back { bottom: 60px; left: 15px; }
         .fab-container-backup { bottom: 60px; right: 15px; }
-        .fab-container-change-password { bottom: calc(60px + 60px + 5px); right: 15px; }
-        .fab-container-upload-db { bottom: calc(125px + 60px + 5px); right: 15px; }
+        .fab-container-upload-db { bottom: calc(60px + 60px + 5px); right: 15px; }
     }
 </style>
 {% endblock %}
@@ -177,11 +177,38 @@
                 <div class="dashboard-section" id="personal-actions-section">
                     <h3>Acciones Personales</h3>
                     <div class="dashboard-list">
-                        <a href="{{ url_for('perfil.editar_perfil') }}" class="dashboard-link btn-warning">
+                        <a href="#" class="dashboard-link btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                             <i class="fas fa-user-edit"></i>
-                            <span>Editar mi Información</span>
+                            <span>Editar mi Información y Seguridad</span>
+                        </a>
+                        <a href="{{ url_for('perfil.change_password') }}" class="dashboard-link btn-warning">
+                            <i class="fas fa-key"></i>
+                            <span>Cambiar Contraseña</span>
                         </a>
                         
+                        {# --- INICIO: Lógica para mensaje de WhatsApp --- #}
+                        {% set whatsapp_message = [] %}
+                        {% set _ = whatsapp_message.append('--- Información de Contacto ---') %}
+                        {% if user.telefono %}{% set _ = whatsapp_message.append('Teléfono: ' + user.telefono) %}{% endif %}
+                        {% if user.email %}{% set _ = whatsapp_message.append('Email: ' + user.email) %}{% endif %}
+                        {% if user.telefono_emergencia %}{% set _ = whatsapp_message.append('Tel. Emergencia: ' + user.telefono_emergencia) %}{% endif %}
+                        {% if user.nombre_emergencia %}{% set _ = whatsapp_message.append('Contacto Emergencia: ' + user.nombre_emergencia) %}{% endif %}
+                        {% if user.direccion %}{% set _ = whatsapp_message.append('Provincia: ' + user.direccion) %}{% endif %}
+                        
+                        {% set _ = whatsapp_message.append('') %}
+                        {% set _ = whatsapp_message.append('--- Información Adicional ---') %}
+                        {% if user.cedula %}{% set _ = whatsapp_message.append('Cédula: ' + user.cedula) %}{% endif %}
+                        {% if user.empresa %}{% set _ = whatsapp_message.append('Empresa: ' + user.empresa) %}{% endif %}
+                        {% if user.fecha_cumpleanos %}{% set _ = whatsapp_message.append('Cumpleaños: ' + user.fecha_cumpleanos.strftime('%d/%m/%Y')) %}{% endif %}
+                        {% if user.tipo_sangre %}{% set _ = whatsapp_message.append('Tipo de Sangre: ' + user.tipo_sangre) %}{% endif %}
+                        {% if user.poliza %}{% set _ = whatsapp_message.append('Póliza: ' + user.poliza) %}{% endif %}
+                        {% if user.aseguradora %}{% set _ = whatsapp_message.append('Aseguradora: ' + user.aseguradora) %}{% endif %}
+                        {% if user.alergias %}{% set _ = whatsapp_message.append('Alergias: ' + user.alergias) %}{% endif %}
+                        {% if user.enfermedades_cronicas %}{% set _ = whatsapp_message.append('Enf. Crónicas: ' + user.enfermedades_cronicas) %}{% endif %}
+
+                        {% set final_message = whatsapp_message|join('\n') %}
+                        {# --- FIN: Lógica para mensaje de WhatsApp --- #}
+
                         {% set first_digit = user.telefono[0] if user.telefono else '' %}
                         {% set disable_whatsapp = first_digit in ['1', '2', '3', '4', '5', '9', '0'] %}
                         {% if disable_whatsapp %}
@@ -190,7 +217,7 @@
                                 <span>Compartir por WhatsApp</span>
                             </a>
                         {% else %}
-                            <a href="https://wa.me/{{ user.telefono }}?text={{ ('Hola, te comparto tu información de perfil: ' + user.nombre + ' ' + user.primer_apellido + ((' ' + user.segundo_apellido) if user.segundo_apellido else '') + '. Tu teléfono es ' + user.telefono + '.')|urlencode }}" target="_blank" class="dashboard-link btn-warning">
+                            <a href="https://wa.me/?text={{ final_message|urlencode }}" target="_blank" class="dashboard-link btn-warning">
                                 <i class="fab fa-whatsapp"></i>
                                 <span>Compartir por WhatsApp</span>
                             </a>
@@ -221,8 +248,6 @@
                         </a>
                     </div>
                 </div>
-
-                <!-- NUEVA SECCIÓN DE ESTADÍSTICAS -->
                 {% if stats %}
                 <div class="dashboard-section superuser-section">
                     <h3>Estadísticas del Sitio</h3>
@@ -238,243 +263,287 @@
 
                 <hr class="my-4">
 
-                <!-- INFORMACIÓN DETALLADA DEL PERFIL -->
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <h4 class="text-warning mb-3">Información de Contacto</h4>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <strong>Teléfono:</strong>
-                                <span>{{ user.telefono }}</span>
-                            </li>
-                            {% if user.email %}
-                            <li class="list-group-item">
-                                <strong>Email:</strong>
-                                <span>{{ user.email }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.telefono_emergencia %}
-                            <li class="list-group-item">
-                                <strong>Tel. Emergencia:</strong>
-                                <span>{{ user.telefono_emergencia }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.nombre_emergencia %}
-                            <li class="list-group-item">
-                                <strong>Contacto Emergencia:</strong>
-                                <span>{{ user.nombre_emergencia }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.direccion %}
-                            <li class="list-group-item">
-                                <strong>Provincia:</strong>
-                                <span>{{ user.direccion }}</span>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
+                <!-- MODIFICADO: Contenedor para la información exportable -->
+                <div id="exportable-info-card" class="p-3 bg-white">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h4 class="text-warning mb-3">Información de Contacto</h4>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Teléfono:</strong>
+                                    <span>{{ user.telefono }}</span>
+                                </li>
+                                {% if user.email %}
+                                <li class="list-group-item">
+                                    <strong>Email:</strong>
+                                    <span>{{ user.email }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.telefono_emergencia %}
+                                <li class="list-group-item">
+                                    <strong>Tel. Emergencia:</strong>
+                                    <span>{{ user.telefono_emergencia }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.nombre_emergencia %}
+                                <li class="list-group-item">
+                                    <strong>Contacto Emergencia:</strong>
+                                    <span>{{ user.nombre_emergencia }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.direccion %}
+                                <li class="list-group-item">
+                                    <strong>Provincia:</strong>
+                                    <span>{{ user.direccion }}</span>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
 
-                    <div class="col-md-6 mb-4">
-                        <h4 class="text-warning mb-3">Información Adicional</h4>
-                        <ul class="list-group list-group-flush">
-                            {% if user.cedula %}
-                            <li class="list-group-item">
-                                <strong>Cédula:</strong>
-                                <span>{{ user.cedula }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.empresa %}
-                            <li class="list-group-item">
-                                <strong>Empresa:</strong>
-                                <span>{{ user.empresa }}</span>
-                            </li>
-                            {% endif %}
-                            {% if session.role == 'Superuser' and user.actividad %}
-                            <li class="list-group-item">
-                                <strong>Actividad:</strong>
-                                <span>{{ user.actividad }}</span>
-                            </li>
-                            {% endif %}
-                            {% if session.role == 'Superuser' and user.capacidad %}
-                            <li class="list-group-item">
-                                <strong>Capacidad:</strong>
-                                <span>{{ user.capacidad }}</span>
-                            </li>
-                            {% endif %}
-                            {% if session.role == 'Superuser' and user.participacion %}
-                            <li class="list-group-item">
-                                <strong>Participación:</strong>
-                                <span>{{ user.participacion }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.fecha_cumpleanos %}
-                            <li class="list-group-item">
-                                <strong>Cumpleaños:</strong>
-                                <span>{{ user.fecha_cumpleanos.strftime('%d/%m/%Y') }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.tipo_sangre %}
-                            <li class="list-group-item">
-                                <strong>Tipo de Sangre:</strong>
-                                <span>{{ user.tipo_sangre }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.poliza %}
-                            <li class="list-group-item">
-                                <strong>Póliza:</strong>
-                                <span>{{ user.poliza }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.aseguradora %}
-                            <li class="list-group-item">
-                                <strong>Aseguradora:</strong>
-                                <span>{{ user.aseguradora }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.alergias %}
-                            <li class="list-group-item">
-                                <strong>Alergias:</strong>
-                                <span>{{ user.alergias }}</span>
-                            </li>
-                            {% endif %}
-                            {% if user.enfermedades_cronicas %}
-                            <li class="list-group-item">
-                                <strong>Enf. Crónicas:</strong>
-                                <span>{{ user.enfermedades_cronicas }}</span>
-                            </li>
-                            {% endif %}
-                             <li class="list-group-item">
-                                <strong>Fecha de Registro:</strong>
-                                <span>
-                                    {% set reg_date = user.fecha_registro | to_datetime %}
-                                    {% if reg_date %}
-                                        {{ reg_date.strftime('%d/%m/%Y %H:%M') }}
-                                    {% else %}
-                                        Fecha inválida
-                                    {% endif %}
-                                </span>
-                            </li>
-                            {% if user.fecha_actualizacion %}
-                            <li class="list-group-item">
-                                <strong>Última Actualización:</strong>
-                                <span>
-                                    {% set upd_date = user.fecha_actualizacion | to_datetime %}
-                                    {% if upd_date %}
-                                        {{ upd_date.strftime('%d/%m/%Y %H:%M') }}
-                                    {% else %}
-                                        Fecha inválida
-                                    {% endif %}
-                                </span>
-                            </li>
-                            {% endif %}
-                        </ul>
+                        <div class="col-md-6 mb-4">
+                            <h4 class="text-warning mb-3">Información Adicional</h4>
+                            <ul class="list-group list-group-flush">
+                                {% if user.cedula %}
+                                <li class="list-group-item">
+                                    <strong>Cédula:</strong>
+                                    <span>{{ user.cedula }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.empresa %}
+                                <li class="list-group-item">
+                                    <strong>Empresa:</strong>
+                                    <span>{{ user.empresa }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.fecha_cumpleanos %}
+                                <li class="list-group-item">
+                                    <strong>Cumpleaños:</strong>
+                                    <span>{{ user.fecha_cumpleanos.strftime('%d/%m/%Y') }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.tipo_sangre %}
+                                <li class="list-group-item">
+                                    <strong>Tipo de Sangre:</strong>
+                                    <span>{{ user.tipo_sangre }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.poliza %}
+                                <li class="list-group-item">
+                                    <strong>Póliza:</strong>
+                                    <span>{{ user.poliza }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.aseguradora %}
+                                <li class="list-group-item">
+                                    <strong>Aseguradora:</strong>
+                                    <span>{{ user.aseguradora }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.alergias %}
+                                <li class="list-group-item">
+                                    <strong>Alergias:</strong>
+                                    <span>{{ user.alergias }}</span>
+                                </li>
+                                {% endif %}
+                                {% if user.enfermedades_cronicas %}
+                                <li class="list-group-item">
+                                    <strong>Enf. Crónicas:</strong>
+                                    <span>{{ user.enfermedades_cronicas }}</span>
+                                </li>
+                                {% endif %}
+                                 <li class="list-group-item">
+                                    <strong>Fecha de Registro:</strong>
+                                    <span>{{ user.fecha_registro.strftime('%d/%m/%Y %H:%M') if user.fecha_registro else 'N/A' }}</span>
+                                </li>
+                                {% if user.fecha_actualizacion %}
+                                <li class="list-group-item">
+                                    <strong>Última Actualización:</strong>
+                                    <span>{{ user.fecha_actualizacion.strftime('%d/%m/%Y %H:%M') }}</span>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     </div>
-                </div>
-
-                <div class="d-flex flex-wrap justify-content-center gap-2 mt-4" id="export-buttons-container" style="display: none !important;">
-                    <!-- Este contenedor ahora está oculto y solo se usa como referencia para el script de captura -->
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- BOTONES FLOTANTES -->
-    <div class="fab-container fab-container-back">
-        <a href="{{ url_for('home') }}" class="fab-button fab-button-back" title="Volver a Inicio">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-    </div>
-    {% if session.get('role') == 'Superuser' %}
-    <div class="fab-container fab-container-backup">
-        <button type="button" class="fab-button fab-button-backup" title="Hacer Backup de la Base de Datos" onclick="performBackup()">
-            <i class="fas fa-database"></i>
-        </button>
-    </div>
-    {% endif %}
-
-    {% if session.get('logged_in') %}
-    <div class="fab-container fab-container-change-password">
-        <a href="{{ url_for('perfil.change_password') }}" class="fab-button fab-button-change-password" title="Cambiar Contraseña">
-            <i class="fas fa-key"></i>
-        </a>
-    </div>
-    {% endif %}
-    {% if session.get('role') == 'Superuser' %}
-    <div class="fab-container fab-container-upload-db">
-        <button type="button" class="fab-button fab-button-upload-db" title="Subir y Reemplazar Base de Datos" onclick="triggerDbUpload()">
-            <i class="fas fa-upload"></i>
-        </button>
-        <input type="file" id="dbUploadInput" accept=".db" style="display: none;">
-    </div>
-    {% endif %}
-
 </div>
+
+<!-- Modal para Editar Perfil -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="editProfileModalLabel">Editar Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('perfil.perfil') }}">
+                    <h5 class="mb-3">Información Personal</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ user.nombre }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="primer_apellido" class="form-label">Primer Apellido</label>
+                            <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" value="{{ user.primer_apellido }}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
+                            <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido" value="{{ user.segundo_apellido or '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="telefono" name="telefono" value="{{ user.telefono }}" pattern="[0-9]*" inputmode="numeric" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ user.email or '' }}">
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="mb-3">Información de Emergencia</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="nombre_emergencia" class="form-label">Nombre de Contacto</label>
+                            <input type="text" class="form-control" id="nombre_emergencia" name="nombre_emergencia" value="{{ user.nombre_emergencia or '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefono_emergencia" class="form-label">Teléfono de Contacto</label>
+                            <input type="tel" class="form-control" id="telefono_emergencia" name="telefono_emergencia" value="{{ user.telefono_emergencia or '' }}" pattern="[0-9]*" inputmode="numeric">
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="mb-3">Configuración de Seguridad</h5>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="autoLogoutSwitch" name="auto_logout_enabled" {% if user.auto_logout_enabled %}checked{% endif %}>
+                        <label class="form-check-label" for="autoLogoutSwitch">Activar cierre de sesión automático por inactividad</label>
+                    </div>
+                    <div id="logoutTimeoutSelector" class="mb-3 {% if not user.auto_logout_enabled %}d-none{% endif %}">
+                        <label for="auto_logout_minutes" class="form-label">Selecciona el tiempo de inactividad:</label>
+                        <select class="form-select" id="auto_logout_minutes" name="auto_logout_minutes">
+                            {% set timeout_options = [5, 10, 15, 20, 30, 40, 50, 60, 120, 240] %}
+                            <option value="0" {% if user.auto_logout_minutes == 0 %}selected{% endif %}>Desactivado</option>
+                            {% for option in timeout_options %}
+                                <option value="{{ option }}" {% if user.auto_logout_minutes == option %}selected{% endif %}>{{ option }} minutos</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- BOTONES FLOTANTES -->
+<div class="fab-container fab-container-back">
+    <a href="{{ url_for('home') }}" class="fab-button fab-button-back" title="Volver a Inicio">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+</div>
+{% if session.get('role') == 'Superuser' %}
+<div class="fab-container fab-container-backup">
+    <button type="button" class="fab-button fab-button-backup" title="Hacer Backup de la Base de Datos" onclick="performBackup()">
+        <i class="fas fa-database"></i>
+    </button>
+</div>
+<div class="fab-container fab-container-upload-db">
+    <button type="button" class="fab-button fab-button-upload-db" title="Subir y Reemplazar Base de Datos" onclick="triggerDbUpload()">
+        <i class="fas fa-upload"></i>
+    </button>
+    <input type="file" id="dbUploadInput" accept=".db" style="display: none;">
+</div>
+{% endif %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const exportMyProfileJpgBtn = document.getElementById('exportMyProfileJpgBtn');
-        const profileElement = document.getElementById('profile-details-card');
-        const actionButtons = document.getElementById('personal-actions-section');
+document.addEventListener('DOMContentLoaded', function() {
+    // Lógica para exportar a JPG
+    const exportMyProfileJpgBtn = document.getElementById('exportMyProfileJpgBtn');
+    // MODIFICADO: Apuntar al nuevo contenedor exportable
+    const profileElement = document.getElementById('exportable-info-card');
 
-        if (exportMyProfileJpgBtn && profileElement && actionButtons) {
-            exportMyProfileJpgBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                actionButtons.classList.add('hidden-for-capture');
-                
-                setTimeout(() => {
-                    html2canvas(profileElement, {
-                        scale: 2,
-                        useCORS: true,
-                        logging: false
-                    }).then(function(canvas) {
-                        actionButtons.classList.remove('hidden-for-capture');
-                        const link = document.createElement('a');
-                        link.download = 'mi_perfil_{{ user.username }}.jpg';
-                        link.href = canvas.toDataURL('image/jpeg', 0.9);
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    }).catch(err => {
-                        console.error('Error al generar la imagen JPG del perfil:', err);
-                        actionButtons.classList.remove('hidden-for-capture');
-                    });
-                }, 50);
+    if (exportMyProfileJpgBtn && profileElement) {
+        exportMyProfileJpgBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            html2canvas(profileElement, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff' // Fondo blanco para la imagen
+            }).then(function(canvas) {
+                const link = document.createElement('a');
+                link.download = 'perfil_contacto_{{ user.username }}.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }).catch(err => {
+                console.error('Error al generar la imagen JPG del perfil:', err);
             });
-        }
-    });
-
-    function performBackup() {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '{{ url_for("perfil.backup_database") }}';
-        document.body.appendChild(form);
-        form.submit();
+        });
     }
 
-    function triggerDbUpload() {
-        const dbUploadInput = document.getElementById('dbUploadInput');
-        dbUploadInput.click();
-        dbUploadInput.onchange = function() {
-            if (dbUploadInput.files.length > 0) {
-                const file = dbUploadInput.files[0];
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '{{ url_for("perfil.upload_database") }}';
-                form.enctype = 'multipart/form-data';
-                const fileInputHidden = document.createElement('input');
-                fileInputHidden.type = 'file';
-                fileInputHidden.name = 'db_file';
-                fileInputHidden.style.display = 'none';
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                fileInputHidden.files = dataTransfer.files;
-                form.appendChild(fileInputHidden);
-                document.body.appendChild(form);
-                form.submit();
+    // Lógica del interruptor y selector de tiempo en el modal
+    const autoLogoutSwitch = document.getElementById('autoLogoutSwitch');
+    const logoutTimeoutSelector = document.getElementById('logoutTimeoutSelector');
+    if(autoLogoutSwitch && logoutTimeoutSelector){
+        autoLogoutSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                logoutTimeoutSelector.classList.remove('d-none');
+            } else {
+                logoutTimeoutSelector.classList.add('d-none');
             }
-        };
+        });
     }
+});
+
+function performBackup() {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '{{ url_for("perfil.backup_database") }}';
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function triggerDbUpload() {
+    const dbUploadInput = document.getElementById('dbUploadInput');
+    dbUploadInput.click();
+    dbUploadInput.onchange = function() {
+        if (dbUploadInput.files.length > 0) {
+            const file = dbUploadInput.files[0];
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ url_for("perfil.upload_database") }}';
+            form.enctype = 'multipart/form-data';
+            const fileInputHidden = document.createElement('input');
+            fileInputHidden.type = 'file';
+            fileInputHidden.name = 'db_file';
+            fileInputHidden.style.display = 'none';
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInputHidden.files = dataTransfer.files;
+            form.appendChild(fileInputHidden);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    };
+}
 </script>
 {% endblock %}
 

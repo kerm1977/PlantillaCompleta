@@ -78,6 +78,19 @@
     .social-icon.google { background-color: #DB4437; }
     .social-icon.facebook { background-color: #4267B2; }
     /* --- FIN: Estilos para iconos sociales circulares --- */
+
+    /* --- INICIO: Estilos para el enlace de contraseña olvidada --- */
+    .forgot-password-link {
+        color: #6c757d; /* Un color gris sutil */
+        text-decoration: none;
+        font-size: 0.9em;
+        transition: color 0.2s ease-in-out;
+    }
+    .forgot-password-link:hover {
+        color: #343a40; /* Un color más oscuro al pasar el ratón */
+        text-decoration: underline;
+    }
+    /* --- FIN: Estilos para el enlace de contraseña olvidada --- */
 </style>
 
 <div class="row justify-content-center">
@@ -100,13 +113,21 @@
                         </button>
                     </div>
                 </div>
+                
+                <!-- INICIO: Casilla de verificación "Mantener sesión iniciada" -->
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
+                    <label class="form-check-label" for="remember_me">Mantener sesión iniciada</label>
+                </div>
+                <!-- FIN: Casilla de verificación -->
+
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-warning" style="border-radius: 0 !important;">Iniciar Sesión</button>
                 </div>
             </form>
 
             <!-- --- INICIO: Contenido de OAuth con iconos --- -->
-            <div class="oauth-divider">o ingresa con</div>
+            <!-- <div class="oauth-divider">   </div> -->
 
 
 
@@ -135,8 +156,12 @@
 
             <!-- --- FIN: Contenido de OAuth con iconos --- -->
 
-            <p class="text-center mt-4">¿No tienes una cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
-            <p><a href="{{ url_for('request_password_reset') }}">¿Olvidaste tu contraseña?</a></p> <!-- AÑADIDO -->
+            <p class="text-center mt-4 oauth-divider">¿No tienes una cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
+            
+            <!-- MODIFICACIÓN: Enlace centrado y estilizado -->
+            <div class="text-center mt-3">
+                <a href="{{ url_for('request_password_reset') }}" class="forgot-password-link">¿Olvidaste tu contraseña?</a>
+            </div>
 
         </div>
     </div>

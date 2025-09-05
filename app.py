@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, current_app
+from flask import Flask, render_template, request, redirect, url_for, flash, session, current_app, jsonify
 from config import Config
 import os
 from werkzeug.utils import secure_filename # Para nombres de archivo seguros
-from datetime import datetime, date # Importar date para manejar fechas
+from datetime import datetime, date, timedelta # MODIFICADO: Importar timedelta
 import re # Para validación de email
 import json # NUEVA: Importa json para los filtros de Jinja2
 from functools import wraps # Importar wraps para decoradores
@@ -10,20 +10,15 @@ import uuid # Importar uuid para generar nombres de archivo únicos
 from sqlalchemy.exc import IntegrityError # NUEVO: Importar IntegrityError
 # --- Añade esta línea ---
 from auth_setup import oauth_bp, init_oauth
-
-# MODIFICADO: Importa db, bcrypt, migrate y User desde models.py
-# ES CRUCIAL QUE EL MODELO USER Y LAS INSTANCIAS DE DB, BCRYPT Y MIGRATE
-# SE IMPORTEN ÚNICAMENTE DESDE models.py PARA EVITAR IMPORTACIONES CIRCULARES.
-from models import db, bcrypt, migrate, User,  AboutUs
+# MODIFICADO: Se han eliminado las importaciones de los modelos que ya no se usarán.
+from models import db, bcrypt, migrate, User, AboutUs
 from contactos import contactos_bp
 from perfil import perfil_bp
 from aboutus import aboutus_bp
-# CORRECCIÓN: Importa Version desde version.py donde está definida
-from version import version_bp, Version
-from btns import btns_bp # Importa el Blueprint desde btns.py (ASUMIMOS QUE btns.py EXISTE)
 from flask_cors import CORS  # 1. Importar CORS
 from flask_mail import Mail, Message #pip install flask_mail
-
+from version import version_bp, Version
+from btns import btns_bp # Importa el Blueprint desde btns.py (ASUMIMOS QUE btns.py EXISTE)
 
 
 
@@ -40,6 +35,9 @@ app.config.from_object(Config)
 app.config['GITHUB_CLIENT_ID'] = 'TU_CLIENT_ID_DE_GITHUB'
 app.config['GITHUB_CLIENT_SECRET'] = 'TU_CLIENT_SECRET_DE_GITHUB'
 # ... (y las de Google, Facebook, etc.)
+
+# AÑADIDO: Define la duración de la sesión permanente
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 # Asegurarse de que la carpeta 'instance' exista
 if not os.path.exists(app.instance_path):
@@ -63,10 +61,18 @@ mail.init_app(app) # <-- LÍNEA AÑADIDA PARA CORREGIR EL ERROR
 # y creamos las carpetas si no existen.
 # AHORA ESTAS LÍNEAS SE EJECUTAN DESPUÉS DE app.config.from_object(Config)
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['PROJECT_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['NOTE_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['CAMINATA_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PAGOS_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['CALENDAR_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['SONGS_UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['PLAYLIST_COVER_UPLOAD_FOLDER'], exist_ok=True) # Asegurarse de que esta exista
 os.makedirs(app.config['INSTRUCTION_ATTACHMENT_FOLDER'], exist_ok=True)
+os.makedirs(app.config['MAP_FILES_UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['COVERS_UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['ABOUTUS_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['UPLOAD_FILES_FOLDER'], exist_ok=True)
 
 
 # Función auxiliar para verificar extensiones permitidas (ahora usando app.config)
@@ -74,10 +80,16 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'} # Usar set literal o definir en config
 
+# NUEVA: Función para verificar extensiones de música permitidas
+def allowed_music_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in {'mp3', 'wav', 'ogg'} # Usar set literal o definir en config
+
 
 # Adjuntando allowed_file y allowed_music_file al objeto 'app'
 # Esto permite que los Blueprints accedan a ellos a través de current_app
 app.allowed_file = allowed_file
+app.allowed_music_file = allowed_music_file
 
 
 # NUEVOS FILTROS DE JINJA2: Para formatear moneda y parsear JSON en las plantillas
@@ -203,6 +215,7 @@ def check_for_first_user():
 @app.route('/')
 @app.route('/home') # Añadido /home como ruta alternativa para la página de inicio
 def home():
+    # Redirige a la página 'Acerca de nosotros' como la nueva página de inicio
     return redirect(url_for('aboutus.ver_aboutus'))
 
 
@@ -418,17 +431,23 @@ def login():
     if request.method == 'POST':
         username_or_email = request.form['username_or_email']
         password = request.form['password']
+        remember_me = request.form.get('remember_me') # AÑADIDO: Captura el valor del checkbox
 
         user = User.query.filter((User.username == username_or_email) | (User.email == username_or_email.lower())).first()
 
         # CORRECCIÓN: Cambiado user.password_hash a user.password
         if user and bcrypt.check_password_hash(user.password, password):
+            # AÑADIDO: Lógica para sesión permanente
+            if remember_me:
+                session.permanent = True
+
             session['logged_in'] = True
             session['user_id'] = user.id
             session['username'] = user.username
             session['role'] = user.role # Guardar el rol en la sesión
+            session['theme'] = 'light'  # <<< AÑADIDO: Establecer tema por defecto
             flash(f'¡Bienvenido, {user.username}!', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('perfil.perfil')) # Redirigir al perfil después del login
         else:
             flash('Nombre de usuario, correo electrónico o contraseña incorrectos.', 'danger')
     return render_template('login.html')
@@ -440,10 +459,21 @@ def logout():
     session.pop('user_id', None)
     session.pop('username', None)
     session.pop('role', None) # Eliminar el rol de la sesión
+    session.pop('theme', None) # <<< AÑADIDO: Eliminar el tema de la sesión
     flash('Has cerrado sesión exitosamente.', 'info')
     return redirect(url_for('login'))
 
 
+# <<< INICIO: NUEVA RUTA PARA CAMBIAR EL TEMA >>>
+@app.route('/set_theme', methods=['POST'])
+def set_theme():
+    data = request.get_json()
+    theme = data.get('theme')
+    if theme in ['light', 'dark', 'sepia']:
+        session['theme'] = theme
+        return jsonify({'status': 'success', 'theme': theme})
+    return jsonify({'status': 'error', 'message': 'Invalid theme'}), 400
+# <<< FIN: NUEVA RUTA >>>
 
 
 # --- INICIO: RUTAS DE RECUPERACIÓN DE CONTRASEÑA ---
@@ -536,3 +566,76 @@ if __name__ == '__main__':
         db.create_all()
     app.run(host='0.0.0.0', debug=True, port=3030)
 
+
+# Migraciones Cmder
+        # set FLASK_APP=app.py     <--Crea un directorio de migraciones
+        # flask db init             <--
+        # $ flask db stamp head
+        # $ flask db migrate
+        # $ flask db migrate -m "mensaje x"
+        # $ flask db upgrade
+        # ERROR [flask_migrate] Error: Target database is not up to date.
+        # $ flask db stamp head
+        # $ flask db migrate
+        # $ flask db upgrade
+        # git clone https://github.com/kerm1977/MI_APP_FLASK.git
+        # mysql> DROP DATABASE kenth1977$db; PYTHONANYWHATE
+# -----------------------
+
+# del db.db
+# rmdir /s /q migrations
+# flask db init
+# flask db migrate -m "Reinitial migration with all correct models"
+# flask db upgrade
+
+
+# -----------------------
+# Consola de pythonanywhere ante los errores de versiones
+# Error: Can't locate revision identified by '143967eb40c0'
+
+# flask db stamp head
+# flask db migrate
+# flask db upgrade
+
+# Database pythonanywhere
+# kenth1977$db
+# DROP TABLE alembic_version;
+# rm -rf migrations
+# flask db init
+# flask db migrate -m "Initial migration after reset"
+# flask db upgrade
+
+# 21:56 ~/LATRIBU1 (main)$ source env/Scripts/activate
+# (env) 21:57 ~/LATRIBU1 (main)$
+
+# En caso de que no sirva el env/Scripts/activate
+# remover en env
+# 05:48 ~/latribuapp (main)$ rm -rf env
+# Crear nuevo
+# 05:49 ~/latribuapp (main)$ python -m venv env
+# 05:51 ~/latribuapp (main)$ source env/bin/activate
+# (env) 05:52 ~/latribuapp (main)$
+
+
+
+# Cuando se cambia de repositorio
+# git remote -v
+# git remote add origin <URL_DEL_REPOSITORIO>
+# git remote set-url origin <NUEVA_URL_DEL_REPOSITORIO>
+# git branchgit remote -v
+# git push -u origin flet
+
+
+
+# borrar base de datos y reconstruirla
+# pip install PyMySQL
+# SHOW TABLES;
+# 21:56 ~/LATRIBU1 (main)$ source env/Scripts/activate <-- Entra al entorno virtual
+# (env) 21:57 ~/LATRIBU1 (main)$
+# (env) 23:30 ~/LATRIBU1 (main)$ cd /home/kenth1977/LATRIBU1
+# (env) 23:31 ~/LATRIBU1 (main)$ rm -f instance/db.db
+# (env) 23:32 ~/LATRIBU1 (main)$ rm -rf migrations
+# (env) 23:32 ~/LATRIBU1 (main)$ flask db init
+# (env) 23:33 ~/LATRIBU1 (main)$ flask db migrate -m "Initial migration with all models"
+# (env) 23:34 ~/LATRIBU1 (main)$ flask db upgrade
+# (env) 23:34 ~/LATRIBU1 (main)$ ls -l instance/db

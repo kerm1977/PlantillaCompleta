@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, current_app, send_from_directory
-from models import db, bcrypt, User, SiteStats # Se eliminó la importación de 'Poliza'
+from models import db, bcrypt, User
 from functools import wraps
 import os
 import shutil
@@ -34,30 +34,13 @@ def role_required(roles):
         return decorated_function
     return decorator
 
-@perfil_bp.route('/')
+@perfil_bp.route('/', methods=['GET', 'POST'])
 @login_required
 def perfil():
     user = User.query.get(session['user_id'])
-    stats = None
-    if user and user.role == 'Superuser':
-        total_users = User.query.count()
-        # Se eliminó la línea que contaba las pólizas
-        stats = {
-            'total_users': total_users,
-            # Se eliminó la estadística de pólizas de aquí
-        }
-    return render_template('perfil.html', user=user, stats=stats)
-
-@perfil_bp.route('/editar', methods=['GET', 'POST'])
-@login_required
-def editar_perfil():
-    user = User.query.get(session['user_id'])
-    # Opciones para los campos de selección
-    provincia_opciones = ["Cartago", "Limón", "Puntarenas", "San José", "Heredia", "Guanacaste", "Alajuela"]
-    tipo_sangre_opciones = ["Seleccionar Tipo", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
     
     if request.method == 'POST':
-        # Actualizar campos
+        # Lógica para actualizar el perfil
         user.nombre = request.form['nombre']
         user.primer_apellido = request.form['primer_apellido']
         user.segundo_apellido = request.form.get('segundo_apellido')
@@ -65,18 +48,33 @@ def editar_perfil():
         user.email = request.form.get('email')
         user.telefono_emergencia = request.form.get('telefono_emergencia')
         user.nombre_emergencia = request.form.get('nombre_emergencia')
-        user.direccion = request.form.get('direccion')
+        
+        # Lógica para la configuración de seguridad
+        user.auto_logout_enabled = 'auto_logout_enabled' in request.form
+        if user.auto_logout_enabled:
+            user.auto_logout_minutes = int(request.form.get('auto_logout_minutes', 15))
+        else:
+            user.auto_logout_minutes = 0
         
         db.session.commit()
         flash('Perfil actualizado con éxito.', 'success')
         return redirect(url_for('perfil.perfil'))
-        
-    return render_template('editar_perfil.html', user=user, provincia_opciones=provincia_opciones, tipo_sangre_opciones=tipo_sangre_opciones)
+
+    # Lógica para mostrar el perfil (GET request)
+    stats = None
+    if user and user.role == 'Superuser':
+        total_users = User.query.count()
+        stats = {
+            'total_users': total_users,
+        }
+    return render_template('perfil.html', user=user, stats=stats)
+
 
 @perfil_bp.route('/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password():
     if request.method == 'POST':
+        # CORRECCIÓN DEFINITIVA: Nombres de campo estandarizados
         current_password = request.form['current_password']
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
@@ -140,7 +138,6 @@ def upload_database():
         upload_path = os.path.join(current_app.instance_path, filename)
         file.save(upload_path)
         
-        # Cierra la conexión actual a la BD antes de reemplazar el archivo
         db.session.remove()
         db.engine.dispose()
         
@@ -148,7 +145,6 @@ def upload_database():
         shutil.move(upload_path, db_path)
         
         flash('Base de datos reemplazada. La aplicación se reiniciará.', 'success')
-        # Forzar el reinicio del servidor (esto puede variar dependiendo del entorno de producción)
         os._exit(0)
         
     except Exception as e:

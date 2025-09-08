@@ -1,0 +1,505 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-09-08 22:00-0600\n"
+"PO-Revision-Date: 2025-09-08 22:01-0600\n"
+"Last-Translator: \n"
+"Language: en\n"
+"Language-Team: en LL@li.org\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: 404.html:3
+msgid "Página No Encontrada"
+msgstr "Page Not Found"
+
+#: 404.html:7
+msgid "¡Oops! Página No Encontrada"
+msgstr "Oops! Page Not Found"
+
+#: 404.html:8
+msgid ""
+"La URL solicitada no se encontró en el servidor. Si ingresaste la URL "
+"manualmente, por favor, verifica la ortografía e inténtalo de nuevo."
+msgstr ""
+"The requested URL was not found on the server. If you entered the URL "
+"manually, please check your spelling and try again."
+
+#: 500.html:3
+msgid "Error del Servidor (500)"
+msgstr "Server Error (500)"
+
+#: 500.html:7
+msgid "Error Interno del Servidor"
+msgstr "Internal Server Error"
+
+#: 500.html:8
+msgid "Lo sentimos, algo salió mal en nuestro servidor."
+msgstr "We're sorry, something went wrong on our server."
+
+#: 500.html:9
+msgid ""
+"Estamos trabajando para solucionar el problema. Por favor, inténtalo de "
+"nuevo más tarde."
+msgstr "We are working to fix the problem. Please try again later."
+
+#: admin_roles.html:3
+msgid "Administración de Roles"
+msgstr "Role Management"
+
+#: admin_roles.html:13
+msgid "Administración de Roles de Usuario"
+msgstr "User Role Management"
+
+#: admin_roles.html:14
+msgid ""
+"Aquí puedes gestionar los roles de todos los usuarios. Solo los "
+"Superusuarios tienen acceso a esta sección."
+msgstr ""
+"Here you can manage the roles of all users. Only Superusers have access to "
+"this section."
+
+#: admin_roles.html:15
+msgid "Recordatorio: Solo puede haber hasta 2 Superusuarios en el sistema."
+msgstr "Reminder: There can only be up to 2 Superusers in the system."
+
+#: admin_roles.html:18
+msgid "Superusuarios y Administradores"
+msgstr "Superusers and Administrators"
+
+#: admin_roles.html:29
+#: editar_contacto.html:200
+msgid "Usuario Regular"
+msgstr "Regular User"
+
+#: admin_roles.html:30
+#: editar_contacto.html:201
+msgid "Administrador"
+msgstr "Administrator"
+
+#: admin_roles.html:31
+#: editar_contacto.html:202
+msgid "Superuser"
+msgstr "Superuser"
+
+#: admin_roles.html:37
+msgid "Actualizar"
+msgstr "Update"
+
+#: admin_roles.html:36
+msgid "No puedes cambiar tu propio rol de Superuser."
+msgstr "You cannot change your own Superuser role."
+
+#: admin_roles.html:43
+msgid "No hay Superusuarios o Administradores registrados."
+msgstr "There are no Superusers or Administrators registered."
+
+#: admin_roles.html:48
+msgid "Buscar y Asignar Roles a Usuarios Regulares"
+msgstr "Search and Assign Roles to Regular Users"
+
+#: admin_roles.html:49
+msgid ""
+"Usa el buscador para encontrar usuarios con el rol "Usuario Regular" y "
+"asignarles un nuevo rol."
+msgstr ""
+"Use the search to find users with the "Regular User" role and assign them "
+"a new one."
+
+#: admin_roles.html:53
+msgid "Buscar usuario regular por nombre de usuario, nombre, apellido o email..."
+msgstr "Search regular user by username, name, last name or email..."
+
+#: admin_roles.html:54
+#: ver_contactos.html:245
+msgid "Buscar"
+msgstr "Search"
+
+#: admin_roles.html:81
+msgid "No se encontraron usuarios regulares para "%(query)s"."
+msgstr "No regular users found for "%(query)s"."
+
+#: admin_roles.html:85
+msgid "Realiza una búsqueda para encontrar usuarios regulares."
+msgstr "Perform a search to find regular users."
+
+#: base.html:236
+msgid "Volver atrás"
+msgstr "Go back"
+
+#: base.html:241
+msgid "Hecho con ❤️ Por La Tribu de Los Libres - 2025"
+msgstr "Made with ❤️ By The Tribe of the Free - 2025"
+
+#: base.html:241
+msgid "Versión"
+msgstr "Version"
+
+#: change_password.html:3
+#: perfil.html:160
+msgid "Cambiar Contraseña"
+msgstr "Change Password"
+
+#: change_password.html:19
+msgid "Contraseña Actual"
+msgstr "Current Password"
+
+#: change_password.html:27
+#: reset_password.html:15
+msgid "Nueva Contraseña"
+msgstr "New Password"
+
+#: change_password.html:35
+#: reset_password.html:23
+msgid "Confirmar Nueva Contraseña"
+msgstr "Confirm New Password"
+
+#: change_password.html:42
+msgid "Actualizar Contraseña"
+msgstr "Update Password"
+
+#: crear_aboutus.html:2
+msgid "Crear Acerca de Nosotros"
+msgstr "Create About Us"
+
+#: crear_aboutus.html:40
+msgid "Crear Sección "Acerca de Nosotros""
+msgstr "Create "About Us" Section"
+
+#: crear_aboutus.html:44
+msgid "Imagen del Logo (JPG, PNG)"
+msgstr "Logo Image (JPG, PNG)"
+
+#: crear_aboutus.html:46
+msgid "Selecciona una imagen para el logo."
+msgstr "Select an image for the logo."
+
+#: crear_aboutus.html:47
+msgid "Evite caracteres especiales en el nombre del archivo."
+msgstr "Avoid special characters in the file name."
+
+#: crear_aboutus.html:50
+#: editar_aboutus.html:59
+msgid "Información del Logo"
+msgstr "Logo Information"
+
+#: crear_aboutus.html:51
+msgid "Describe brevemente el logo..."
+msgstr "Briefly describe the logo..."
+
+#: crear_aboutus.html:54
+#: crear_version.html:11
+#: editar_aboutus.html:63
+#: editar_version.html:11
+msgid "Título"
+msgstr "Title"
+
+#: crear_aboutus.html:55
+msgid "Ej: Nuestra Historia"
+msgstr "Ex: Our History"
+
+#: crear_aboutus.html:58
+#: editar_aboutus.html:68
+msgid "Detalle (Contenido Principal)"
+msgstr "Detail (Main Content)"
+
+#: crear_aboutus.html:61
+#: crear_aboutus.html:67
+msgid "Crear Sección"
+msgstr "Create Section"
+
+#: crear_btns.html:3
+msgid "Configurar Botones Flotantes"
+msgstr "Configure Floating Buttons"
+
+#: crear_btns.html:7
+msgid "Define el enlace, icono y visibilidad para los botones flotantes del sitio."
+msgstr "Define the link, icon, and visibility for the site's floating buttons."
+
+#: crear_btns.html:15
+msgid "Botón 1 (Izquierdo)"
+msgstr "Button 1 (Left)"
+
+#: crear_btns.html:19
+#: crear_btns.html:48
+msgid "Mostrar este botón"
+msgstr "Show this button"
+
+#: crear_btns.html:22
+#: crear_btns.html:51
+msgid "Enlace (URL)"
+msgstr "Link (URL)"
+
+#: crear_btns.html:26
+#: crear_btns.html:55
+msgid "Icono (Font Awesome)"
+msgstr "Icon (Font Awesome)"
+
+#: crear_btns.html:30
+#: crear_btns.html:59
+msgid "Visibilidad"
+msgstr "Visibility"
+
+#: crear_btns.html:32
+#: crear_btns.html:61
+msgid "Todos"
+msgstr "All"
+
+#: crear_btns.html:33
+#: crear_btns.html:62
+msgid "Usuarios logueados"
+msgstr "Logged in users"
+
+#: crear_btns.html:34
+#: crear_btns.html:63
+msgid "Superusuarios"
+msgstr "Superusers"
+
+#: crear_btns.html:44
+msgid "Botón 2 (Derecho)"
+msgstr "Button 2 (Right)"
+
+#: crear_btns.html:75
+#: editar_contacto.html:236
+#: editar_perfil.html:191
+#: editar_version.html:41
+msgid "Guardar Cambios"
+msgstr "Save Changes"
+
+#: crear_version.html:3
+#: ver_versiones.html:180
+msgid "Crear Nueva Versión"
+msgstr "Create New Version"
+
+#: crear_version.html:15
+#: editar_version.html:15
+msgid "Párrafo"
+msgstr "Paragraph"
+
+#: crear_version.html:21
+#: editar_version.html:21
+msgid "Nombre de la Versión"
+msgstr "Version Name"
+
+#: crear_version.html:25
+#: editar_version.html:25
+msgid "Número de la Versión"
+msgstr "Version Number"
+
+#: crear_version.html:29
+#: editar_version.html:29
+msgid "Descripción de la Versión"
+msgstr "Version Description"
+
+#: crear_version.html:33
+#: editar_version.html:33
+msgid "Pendiente"
+msgstr "Pending"
+
+#: crear_version.html:37
+msgid "Guardar Versión"
+msgstr "Save Version"
+
+#: detalle_contactos.html:3
+msgid "Detalles de Contacto"
+msgstr "Contact Details"
+
+#: detalle_contactos.html:41
+msgid "Avatar de %(username)s"
+msgstr "Avatar of %(username)s"
+
+#: detalle_contactos.html:50
+#: perfil.html:112
+msgid "Información de Contacto"
+msgstr "Contact Information"
+
+#: detalle_contactos.html:51
+#: editar_contacto.html:115
+#: editar_perfil.html:75
+#: perfil.html:113
+#: ver_contactos.html:314
+msgid "Teléfono"
+msgstr "Phone"
+
+#: detalle_contactos.html:51
+#: perfil.html:113
+#: ver_contactos.html:318
+msgid "Email"
+msgstr "Email"
+
+#: detalle_contactos.html:51
+#: editar_contacto.html:127
+#: editar_perfil.html:146
+#: perfil.html:113
+msgid "Empresa"
+msgstr "Company"
+
+#: detalle_contactos.html:52
+#: perfil.html:114
+msgid "Dirección (Provincia)"
+msgstr "Address (Province)"
+
+#: detalle_contactos.html:52
+#: perfil.html:114
+msgid "Rol"
+msgstr "Role"
+
+#: detalle_contactos.html:52
+#: editar_contacto.html:131
+#: editar_perfil.html:79
+#: perfil.html:114
+#: ver_contactos.html:322
+msgid "Cédula"
+msgstr "ID Card"
+
+#: detalle_contactos.html:55
+#: editar_perfil.html:105
+#: perfil.html:117
+msgid "Información Adicional"
+msgstr "Additional Information"
+
+#: detalle_contactos.html:56
+#: perfil.html:118
+msgid "Fecha de Registro"
+msgstr "Registration Date"
+
+#: detalle_contactos.html:57
+msgid "Última Actualización"
+msgstr "Last Update"
+
+#: detalle_contactos.html:58
+#: editar_contacto.html:143
+#: editar_perfil.html:122
+#: perfil.html:119
+msgid "Fecha de Cumpleaños"
+msgstr "Birthday"
+
+#: detalle_contactos.html:59
+#: editar_contacto.html:147
+#: editar_perfil.html:129
+#: perfil.html:122
+msgid "Tipo de Sangre"
+msgstr "Blood Type"
+
+#: detalle_contactos.html:59
+#: editar_contacto.html:151
+#: editar_perfil.html:150
+#: perfil.html:122
+msgid "Póliza"
+msgstr "Policy"
+
+#: detalle_contactos.html:59
+#: editar_contacto.html:155
+#: editar_perfil.html:154
+#: perfil.html:122
+msgid "Aseguradora"
+msgstr "Insurer"
+
+#: detalle_contactos.html:60
+#: editar_contacto.html:167
+msgid "Actividad"
+msgstr "Activity"
+
+#: detalle_contactos.html:60
+#: editar_contacto.html:173
+msgid "Capacidad"
+msgstr "Capacity"
+
+#: detalle_contactos.html:60
+#: editar_contacto.html:179
+msgid "Participación"
+msgstr "Participation"
+
+#: detalle_contactos.html:63
+msgid "Notas Médicas"
+msgstr "Medical Notes"
+
+#: detalle_contactos.html:64
+#: editar_contacto.html:159
+#: editar_perfil.html:159
+#: perfil.html:123
+msgid "Alergias"
+msgstr "Allergies"
+
+#: detalle_contactos.html:64
+#: editar_contacto.html:163
+#: editar_perfil.html:164
+#: perfil.html:123
+msgid "Enfermedades Crónicas"
+msgstr "Chronic Diseases"
+
+#: detalle_contactos.html:67
+#: perfil.html:126
+msgid "Contacto de Emergencia"
+msgstr "Emergency Contact"
+
+#: detalle_contactos.html:68
+#: editar_perfil.html:57
+#: perfil.html:127
+msgid "Nombre"
+msgstr "Name"
+
+#: detalle_contactos.html:79
+#: ver_aboutus.html:119
+msgid "Editar"
+msgstr "Edit"
+
+#: detalle_contactos.html:82
+#: detalle_contactos.html:98
+#: ver_aboutus.html:120
+#: ver_aboutus.html:132
+#: ver_versiones.html:143
+msgid "Eliminar"
+msgstr "Delete"
+
+#: detalle_contactos.html:91
+#: ver_aboutus.html:128
+#: ver_versiones.html:135
+msgid "Confirmar Eliminación"
+msgstr "Confirm Deletion"
+
+#: detalle_contactos.html:95
+msgid ""
+"¿Estás seguro de que quieres eliminar a %(nombre)s? Esta acción no se puede "
+"deshacer."
+msgstr ""
+"Are you sure you want to delete %(nombre)s? This action cannot be undone."
+
+#: detalle_contactos.html:97
+#: ver_aboutus.html:131
+#: ver_versiones.html:142
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: detalle_contactos.html:106
+msgid "Exportar vCard"
+msgstr "Export vCard"
+
+#: detalle_contactos.html:108
+msgid "Exportar como JPG"
+msgstr "Export as JPG"
+
+#: detalle_contactos.html:109
+msgid "Exportar como PDF"
+msgstr "Export as PDF"
+
+#: detalle_version.html:3
+msgid "Detalle de Versión"
+msgstr "Version Detail"
+
+#: detalle_version.html:24
+msgid "Descripción"
+msgstr "Description"
+
+#: detalle_version.html:33
+#: ver_versiones.html:120
+msgid "Fecha de Creación"
+msgstr "Creation Date"
+
+#: detalle_version.html:38
+msgid "Última Modificación"
+msgstr "Last Modified"

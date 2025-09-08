@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- AÑADIDO: Atributo data-theme para manejar el tema con CSS y JS -->
-<html lang="es" data-theme="{{ session.get('theme', 'light') }}">
+<!-- AÑADIDO: Atributo lang dinámico y data-theme para manejar el tema con CSS y JS -->
+<html lang="{{ session.get('lang', 'es') }}" data-theme="{{ session.get('theme', 'light') }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -292,6 +292,27 @@
                 });
             });
             updateActiveIcon(document.documentElement.getAttribute('data-theme'));
+
+            // LÓGICA DE CAMBIO DE IDIOMA
+            const langSwitchers = document.querySelectorAll('.lang-switcher');
+            function setLang(lang) {
+                // Asume que tienes un endpoint '/set_lang' en Flask
+                fetch("/set_lang", { // CORREGIDO: Se usa una ruta estática para evitar el error de build.
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lang: lang })
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.reload(); // Recarga la página para aplicar el idioma
+                    }
+                }).catch(console.error);
+            }
+            langSwitchers.forEach(switcher => {
+                switcher.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    setLang(this.dataset.lang);
+                });
+            });
 
             // LÓGICA PARA CERRAR NAVBAR (MOVIDO DESDE NAVBAR.HTML)
             const navbarCollapseElement = document.getElementById('navbarNav');

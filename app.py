@@ -1,65 +1,66 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, current_app, jsonify
 from config import Config
 import os
-from werkzeug.utils import secure_filename # Para nombres de archivo seguros
-from datetime import datetime, date, timedelta # MODIFICADO: Importar timedelta
-import re # Para validación de email
-import json # NUEVA: Importa json para los filtros de Jinja2
-from functools import wraps # Importar wraps para decoradores
-import uuid # Importar uuid para generar nombres de archivo únicos
-from sqlalchemy.exc import IntegrityError # NUEVO: Importar IntegrityError
-# --- Añade esta línea ---
+from werkzeug.utils import secure_filename
+from datetime import datetime, date, timedelta
+import re
+import json
+from functools import wraps
+import uuid
+from sqlalchemy.exc import IntegrityError
 from auth_setup import oauth_bp, init_oauth
-# MODIFICADO: Se han eliminado las importaciones de los modelos que ya no se usarán.
 from models import db, bcrypt, migrate, User, AboutUs
 from contactos import contactos_bp
 from perfil import perfil_bp
 from aboutus import aboutus_bp
-from flask_cors import CORS  # 1. Importar CORS
-from flask_mail import Mail, Message #pip install flask_mail
+from flask_cors import CORS
+from flask_mail import Mail, Message
 from version import version_bp, Version
-from btns import btns_bp # Importa el Blueprint desde btns.py (ASUMIMOS QUE btns.py EXISTE)
+from btns import btns_bp
+from flask_babel import Babel
 
-
-
-# --- Instanciar las extensiones globalmente, sin la app ---
+# --- Instanciar las extensiones globalmente ---
 mail = Mail()
+babel = Babel()
 
 app = Flask(__name__, instance_relative_config=True)
-CORS(app)  # Habilitar CORS para toda la aplicación
+CORS(app)
 
-
-# ¡IMPORTANTE! Cargar la configuración ANTES de usar app.config
+# --- Cargar configuración ---
 app.config.from_object(Config)
-# --- Configuración de las credenciales de OAuth ---
-app.config['GITHUB_CLIENT_ID'] = 'TU_CLIENT_ID_DE_GITHUB'
-app.config['GITHUB_CLIENT_SECRET'] = 'TU_CLIENT_SECRET_DE_GITHUB'
-# ... (y las de Google, Facebook, etc.)
-
-# AÑADIDO: Define la duración de la sesión permanente
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
-# Asegurarse de que la carpeta 'instance' exista
+# --- Función para obtener el idioma seleccionado ---
+LANGUAGES = ['es', 'en']
+
+# NOTA: EL DECORADOR @babel.localeselector SE HA ELIMINADO
+def get_locale():
+    lang = session.get('lang')
+    if lang in LANGUAGES:
+        return lang
+    return request.accept_languages.best_match(LANGUAGES)
+
+# --- Asegurarse de que la carpeta 'instance' exista ---
 if not os.path.exists(app.instance_path):
     os.makedirs(app.instance_path)
 
-# Inicializar extensiones con la aplicación Flask
-# ESTO DEBE IR ANTES DEL REGISTRO DE BLUEPRINTS SI LOS BLUEPRINTS DEPENDEN DE ELLOS
+# --- Inicializar extensiones ---
 db.init_app(app)
 bcrypt.init_app(app)
 migrate.init_app(app, db)
-mail.init_app(app) # <-- LÍNEA AÑADIDA PARA CORREGIR EL ERROR
+mail.init_app(app)
+# --- ¡CAMBIO CLAVE Y DEFINITIVO! ---
+# Se registra la función 'get_locale' directamente aquí.
+babel.init_app(app, locale_selector=get_locale)
 
-
-
-
-
-
+# --- El resto de tu archivo app.py sin cambios ---
+# ... (todo el código desde la creación de carpetas hasta el final)
 # Configuración para subida de archivos (usando app.config directamente desde el principio)
 # Asegúrate de que estas rutas sean absolutas y que el usuario que ejecuta la app tenga permisos de escritura.
 # Estas rutas ya deberían estar definidas en config.py, aquí solo las aseguramos
 # y creamos las carpetas si no existen.
-# AHORA ESTAS LÍNEAS SE EJECUTAN DESPUÉS DE app.config.from_object(Config)
+# AHORA ESTAS LÍNES SE EJECUTAN DESPUÉS DE app.config.from_object(Config)
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PROJECT_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['NOTE_IMAGE_UPLOAD_FOLDER'], exist_ok=True)
@@ -160,7 +161,7 @@ def role_required(roles):
             user_role = session.get('role')
             if user_role not in roles:
                 flash('No tienes permiso para acceder a esta página.', 'danger')
-                return redirect(url_for('home')) # O a una página de "Acceso Denegado"
+                return redirect(url_for('home')) # O a una página de "Acceso Denigado"
             return f(*args, **kwargs)
         return decorated_function
     return decorator
@@ -460,6 +461,7 @@ def logout():
     session.pop('username', None)
     session.pop('role', None) # Eliminar el rol de la sesión
     session.pop('theme', None) # <<< AÑADIDO: Eliminar el tema de la sesión
+    session.pop('lang', None) # <<< AÑADIDO: Eliminar el idioma de la sesión
     flash('Has cerrado sesión exitosamente.', 'info')
     return redirect(url_for('login'))
 
@@ -473,6 +475,18 @@ def set_theme():
         session['theme'] = theme
         return jsonify({'status': 'success', 'theme': theme})
     return jsonify({'status': 'error', 'message': 'Invalid theme'}), 400
+# <<< FIN: NUEVA RUTA >>>
+
+
+# <<< INICIO: NUEVA RUTA PARA CAMBIAR EL IDIOMA >>>
+@app.route('/set_lang', methods=['POST'])
+def set_lang():
+    data = request.get_json()
+    lang = data.get('lang')
+    if lang in LANGUAGES:
+        session['lang'] = lang
+        return jsonify({'status': 'success', 'lang': lang})
+    return jsonify({'status': 'error', 'message': 'Invalid language'}), 400
 # <<< FIN: NUEVA RUTA >>>
 
 
@@ -638,4 +652,5 @@ if __name__ == '__main__':
 # (env) 23:32 ~/LATRIBU1 (main)$ flask db init
 # (env) 23:33 ~/LATRIBU1 (main)$ flask db migrate -m "Initial migration with all models"
 # (env) 23:34 ~/LATRIBU1 (main)$ flask db upgrade
-# (env) 23:34 ~/LATRIBU1 (main)$ ls -l instance/db
+# (env) 23:34 ~/LAT
+

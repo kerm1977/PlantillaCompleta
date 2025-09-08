@@ -14,8 +14,8 @@
         
                  <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('aboutus.ver_aboutus') }}">
-                        <i class="fas fa-info-circle icon-only-mobile"></i> <!-- Icono de acerca de -->
-                        <span class="text-only-desktop">Acerca de Nosotros</span>
+                        <i class="fas fa-info-circle icon-only-mobile"></i>
+                        <span class="text-only-desktop">{{ _('Acerca de Nosotros') }}</span>
                     </a>
                 </li>
         
@@ -25,14 +25,14 @@
                     {% if session.role == 'Superuser' %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Más Opciones
+                                {{ _('Más Opciones') }}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('contactos.ver_contactos') }}">Ver Contactos</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('btns.crear_btns') }}">Configurar Botón Flotante</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('contactos.ver_contactos') }}">{{ _('Ver Contactos') }}</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('btns.crear_btns') }}">{{ _('Configurar Botón Flotante') }}</a></li>
                                 <li><a class="dropdown-item" href="https://www.pythonanywhere.com/user/kenth1977/">Pythonanywhere</a></li>
-                                <li><a class="dropdown-item text-danger fw-bold" href="{{ url_for('contactos.admin_manage_roles') }}">Administrar Roles</a></li>
+                                <li><a class="dropdown-item text-danger fw-bold" href="{{ url_for('contactos.admin_manage_roles') }}">{{ _('Administrar Roles') }}</a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -44,36 +44,56 @@
                         </a>
                     </li>
                     
-                    <!-- === INICIO: NUEVO INTERRUPTOR DE TEMA CON DROPDOWN === -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="themeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i id="active-theme-icon" class="fas fa-sun"></i> <!-- Icono cambiará dinámicamente -->
+                            <i id="active-theme-icon" class="fas fa-sun"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="themeDropdown">
                             <li>
                                 <a class="dropdown-item theme-switcher" href="#" data-theme="light">
-                                    <i class="fas fa-sun me-2"></i> Claro
+                                    <i class="fas fa-sun me-2"></i> {{ _('Claro') }}
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item theme-switcher" href="#" data-theme="dark">
-                                    <i class="fas fa-moon me-2"></i> Oscuro
+                                    <i class="fas fa-moon me-2"></i> {{ _('Oscuro') }}
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item theme-switcher" href="#" data-theme="sepia">
-                                    <i class="fas fa-book-open me-2"></i> Sepia
+                                    <i class="fas fa-book-open me-2"></i> {{ _('Sepia') }}
                                 </a>
                             </li>
                         </ul>
                     </li>
-                    <!-- === FIN: NUEVO INTERRUPTOR DE TEMA === -->
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                           {% if session.get('lang') == 'en' %}
+                                <span>🇬🇧</span><span class="d-none d-lg-inline ms-1">{{ _('English') }}</span>
+                           {% else %}
+                                <span>🇪🇸</span><span class="d-none d-lg-inline ms-1">{{ _('Español') }}</span>
+                           {% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                            <li>
+                                <a class="dropdown-item lang-switcher" href="#" data-lang="es">
+                                    <span class="me-2">🇪🇸</span> {{ _('Español') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item lang-switcher" href="#" data-lang="en">
+                                    <span class="me-2">🇬🇧</span> {{ _('English') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
                     <li class="nav-item">
                         <hr class="mobile-separator d-lg-none">
                         <a class="nav-link" href="{{ url_for('logout') }}">
                             <i class="fas fa-sign-out-alt icon-only-mobile"></i>
-                            <span class="text-only-desktop">Cerrar Sesión</span>
+                            <span class="text-only-desktop">{{ _('Cerrar Sesión') }}</span>
                         </a>
                     </li>
                 {% else %}
@@ -81,7 +101,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('login') }}">
                             <i class="fas fa-user icon-only-mobile"></i>
-                            <span class="text-only-desktop">Iniciar Sesión</span>
+                            <span class="text-only-desktop">{{ _('Iniciar Sesión') }}</span>
                         </a>
                     </li>
 

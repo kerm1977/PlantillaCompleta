@@ -6,43 +6,31 @@
     <title>Sin Conexión - La Tribu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-        }
+        body, html { height: 100%; margin: 0; }
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #f8f9fa;
             text-align: center;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: system-ui, sans-serif;
             color: #343a40;
         }
-        .container {
-            max-width: 600px;
-            padding: 2rem;
-        }
-        .icon {
-            font-size: 4rem;
-            color: #6c757d;
-            margin-bottom: 1rem;
-        }
+        .container { max-width: 600px; padding: 2rem; }
+        .icon { font-size: 4rem; color: #6c757d; margin-bottom: 1rem; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="icon">
-            <!-- Icono de nube con una barra, un símbolo común para "sin conexión" -->
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-cloud-slash-fill" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M3.164 7.525a.5.5 0 0 0 .316.316l.06.012a.5.5 0 0 0 .316-.316L3.87 7.5l.012-.06a.5.5 0 0 0-.316-.316L3.5 7.112l-.06.012a.5.5 0 0 0-.316.316l.012.06.012.06zM2.5 8a.5.5 0 0 1 .5-.5h.793l.06-.012a.5.5 0 0 1 .316.316l-.012.06-.012.06a.5.5 0 0 1-.316.316l-.06.012H3a.5.5 0 0 1-.5-.5zm1.518 1.482a.5.5 0 0 0 .316.316l.06.012a.5.5 0 0 0 .316-.316l.012-.06.012-.06a.5.5 0 0 0-.316-.316l-.06-.012a.5.5 0 0 0-.316.316l-.012.06-.012.06z"/>
               <path d="M3.734 11.978a.5.5 0 0 1 .448.273l.012.06.012.06a.5.5 0 0 1-.448.727l-.06-.012a.5.5 0 0 1-.448-.273l-.012-.06-.012-.06a.5.5 0 0 1 .448-.727zm1.443-1.443a.5.5 0 0 1 .634.03l.041.051.041.051a.5.5 0 0 1-.03.634l-.051.041-.051.041a.5.5 0 0 1-.634-.03l-.041-.051-.041-.051a.5.5 0 0 1 .03-.634z"/>
               <path d="M13.405 4.027a5.001 5.001 0 0 0-9.499-1.004A3.5 3.5 0 1 0 3.5 10H13a3 3 0 0 0 .405-5.973zM.904 14.32a.5.5 0 0 1 .707-.707l13-13a.5.5 0 0 1 .707.707l-13 13a.5.5 0 0 1-.707 0z"/>
             </svg>
         </div>
         <h1 class="mt-4 fw-bold">Estás sin conexión</h1>
         <p class="lead">
-            Parece que no tienes conexión a internet. El contenido que intentas ver no está disponible en este momento.
+            Parece que no tienes conexión a internet.
         </p>
         <p>Por favor, revisa tu conexión y vuelve a intentarlo.</p>
     </div>

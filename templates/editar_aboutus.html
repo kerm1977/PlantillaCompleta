@@ -1,182 +1,87 @@
 {% extends 'base.html' %}
-{% block title %}Editar Acerca de Nosotros{% endblock %} {# Título actualizado para reflejar la edición #}
+{% block title %}Editar Acerca de Nosotros{% endblock %}
+
 {% block head_content %}
     <style>
-
-        /* Estilos para el botón flotante (FAB) de guardar (replicado de editar_nota.html) */
         .fab-container-save {
             position: fixed;
-            bottom: 70px; /* Distancia desde abajo */
-            right: 20px; /* Distancia desde la derecha */
-            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+            bottom: 70px;
+            z-index: 1000;
+            right: 20px;
+        }
+
+        .fab-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: none;
+        }
+        .fab-button:hover {
+            transform: scale(1.05);
+            filter: brightness(90%);
         }
         .fab-button-save {
-            width: 60px; /* Tamaño del botón */
-            height: 60px; /* Tamaño del botón */
-            border-radius: 50%; /* Hacerlo circular */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem; /* Tamaño del icono */
-            transition: all 0.3s ease;
-            background-color: #ffc107; /* Color de fondo warning (naranja) */
-            color: #212529; /* Color de texto oscuro para contraste */
-            border: none; /* Asegurar que no haya borde */
-            text-decoration: none; /* Eliminar el subrayado */
-        }
-        .fab-button-save:hover {
-            transform: scale(1.05); /* Pequeño efecto al pasar el ratón */
-            background-color: #e0a800; /* Tono más oscuro al pasar el ratón */
-        }
-
-        /* Estilos específicos para el botón flotante (FAB) de volver atrás (replicado de editar_nota.html) */
-        .fab-container-back {
-            position: fixed;
-            bottom: 70px; /* Distancia desde abajo */
-            left: 20px; /* Distancia desde la izquierda */
-            right: auto; /* Anula la distancia derecha */
-            z-index: 1000; /* Asegura que esté por encima de otros elementos */
-        }
-        .fab-button-back {
-            width: 60px; /* Tamaño del botón */
-            height: 60px; /* Tamaño del botón */
-            border-radius: 50%; /* Hacerlo circular */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem; /* Tamaño del icono */
-            transition: all 0.3s ease;
-            background-color: #007bff; /* Color de fondo primary */
-            color: #ffffff; /* Color de texto blanco */
-            border: none; /* Asegurar que no haya borde */
-            text-decoration: none; /* Eliminar el subrayado */
-        }
-        .fab-button-back:hover {
-            transform: scale(1.05); /* Pequeño efecto al pasar el ratón */     
-            background-color: #0056b3; /* Tono más oscuro al pasar el ratón */
-        }
-
-        /* Estilo para el contenedor del editor CKEditor */
-        #editor-container-detail {
-            /* CKEditor maneja su propio estilo, pero podemos darle un alto mínimo */
-            min-height: 300px;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
+            background-color: var(--bs-warning);
+            color: var(--bs-dark);
         }
     </style>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <h1 class="text-center text-3xl font-bold mb-5 text-gray-800">Editar Sección "Acerca de Nosotros"</h1>
+        <h1 class="text-center mb-5">Editar Sección "Acerca de Nosotros"</h1>
 
-        {# INICIO: Bloque para mostrar mensajes flash #}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show rounded-lg" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        {# FIN: Bloque para mostrar mensajes flash #}
-
-        <div class="p-5 bg-white">
-            {# AÑADIDO: enctype="multipart/form-data" para permitir la subida de archivos #}
+        <div class="p-4" style="background-color: var(--card-bg);">
             <form method="POST" enctype="multipart/form-data" id="editAboutUsForm">
                 <div class="mb-4">
-                    <label for="logo" class="form-label text-gray-700 font-semibold">Imagen del Logo (JPG, PNG, JPEG)</label>
+                    <label for="logo" class="form-label">Imagen del Logo (JPG, PNG)</label>
                     <input type="file" class="form-control" id="logo" name="logo" accept=".jpg, .jpeg, .png">
-                    <small class="form-text text-muted">Deja este campo vacío si no deseas cambiar el logo actual.</small>
-                    {# NUEVO: Advertencia sobre caracteres especiales en el nombre del archivo #}
-                    <small class="form-text text-danger">Evite caracteres especiales en el nombre del archivo: # &lt; &gt; ! $ % &amp; / = ? ¡ ' " ¿ ° |</small>
+                    <small class="form-text text-muted">Deja vacío si no deseas cambiar el logo actual.</small>
                     {% if about_us_entry.logo_filename %}
-                        <p class="mt-2">Logo actual: <a href="{{ url_for('static', filename='uploads/aboutus_images/' + about_us_entry.logo_filename) }}" target="_blank">{{ about_us_entry.logo_filename }}</a></p>
+                        <p class="mt-2">Logo actual:</p>
                         <img src="{{ url_for('static', filename='uploads/aboutus_images/' + about_us_entry.logo_filename) }}" alt="Logo actual" class="img-thumbnail mt-2" style="max-width: 150px;">
-                    {% else %}
-                        <p class="mt-2">No hay logo actual.</p>
                     {% endif %}
                 </div>
                 <div class="mb-4">
-                    <label for="logo_info" class="form-label text-gray-700 font-semibold">Información del Logo</label>
-                    <textarea class="form-control" id="logo_info" name="logo_info" rows="3" placeholder="Describe brevemente el logo o su significado...">{{ about_us_entry.logo_info }}</textarea>
+                    <label for="logo_info" class="form-label">Información del Logo</label>
+                    <textarea class="form-control" id="logo_info" name="logo_info" rows="3">{{ about_us_entry.logo_info }}</textarea>
                 </div>
                 <div class="mb-4">
-                    <label for="title" class="form-label text-gray-700 font-semibold">Título</label>
+                    <label for="title" class="form-label">Título</label>
                     <input type="text" class="form-control" id="title" name="title" value="{{ about_us_entry.title }}" required>
                 </div>
                 
-                {# Contenedor para CKEditor #}
                 <div class="mb-4">
-                    <label for="editor" class="form-label text-gray-700 font-semibold">Detalle (Contenido Principal)</label>
-                    {# El editor de CKEditor se adjuntará a este textarea #}
+                    <label for="editor" class="form-label">Detalle (Contenido Principal)</label>
                     <textarea name="detail" id="editor">{{ about_us_entry.detail | safe }}</textarea>
                 </div>
 
-                {# Botones de submit originales ocultos, se activarán con los FABs #}
-                <button type="submit" class="btn btn-primary w-full py-2 rounded-lg text-lg font-semibold d-none">Actualizar Sección</button>
-                <a href="{{ url_for('aboutus.ver_aboutus') }}" class="btn btn-secondary w-full py-2 rounded-lg text-lg font-semibold mt-3 d-none">Cancelar</a>
+                <button type="submit" class="d-none">Actualizar Sección</button>
             </form>
         </div>
     </div>
 
-    {# CKEditor 4 CDN - Versión Full #}
-    <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar CKEditor 4 en el textarea con id 'editor'
-            CKEDITOR.replace( 'editor', {
-                // La build 'full' de CKEditor 4 ya incluye la mayoría de los plugins.
-                // Puedes personalizar la barra de herramientas si quieres un orden específico
-                // o eliminar botones, pero 'full' ya trae muchas opciones, incluyendo alineación.
-                toolbar: [
-                    { name: 'document', items: [ 'Source', '-', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
-                    { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
-                    { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
-                    { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
-                    '/',
-                    { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
-                    { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
-                    { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
-                    { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
-                    '/',
-                    { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
-                    { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-                    { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
-                    { name: 'others', items: [ '-' ] },
-                    { name: 'about', items: [ 'About' ] }
-                ],
-                // El plugin 'justify' es parte de la build 'full', no necesita ser extraPlugins.
-                language: 'es' // Establece el idioma del editor a español
-            });
-
-            // Cuando el formulario se envía, CKEditor 4 actualiza automáticamente el textarea
-            document.querySelector('form').addEventListener('submit', function() {
-                // No se necesita lógica adicional aquí para obtener el contenido,
-                // CKEditor 4 se encarga de que el textarea tenga el contenido actualizado.
-            });
-        });
-    </script>
-
-
-    {# Botón flotante para guardar cambios #}
+    <!-- Botón flotante para guardar cambios -->
     {% if session.role == 'Superuser' %}
         <div class="fab-container-save">
-            <a href="#" class="fab-button-save" title="Actualizar Sección" onclick="document.getElementById('editAboutUsForm').submit(); return false;">
-                <i class="fas fa-save" style="color: black;"></i>
+            <a href="#" class="fab-button fab-button-save" title="Actualizar Sección" onclick="document.getElementById('editAboutUsForm').submit(); return false;">
+                <i class="fas fa-save"></i>
             </a>
         </div>
     {% endif %}
+{% endblock %}
 
-    {# Botón flotante para volver atrás #}
-    {% if session.role == 'Superuser' %}
-        <div class="fab-container-back">
-            <a href="{{ url_for('aboutus.ver_aboutus') }}" class="fab-button-back" title="Volver a Acerca de Nosotros">
-                <i class="fas fa-arrow-left"></i> {# Icono de flecha izquierda #}
-            </a>
-        </div>
-    {% endif %}
+{% block scripts %}
+<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        CKEDITOR.replace('editor', { language: 'es' });
+    });
+</script>
 {% endblock %}

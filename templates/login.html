@@ -2,45 +2,25 @@
 
 {% block title %}Iniciar Sesión{% endblock %}
 
-{% block content %}
+{% block head_content %}
 <style>
-    /* Estilos existentes del usuario */
-    .card.shadow.p-4 {
-        box-shadow: none !important;
-        border: none !important;
+    .login-card {
         background-color: transparent !important;
-    }
-    .input-group > .form-control {
-        border-right: none !important;
-    }
-    .form-control {
-        border-radius: 0 !important;
-        border: 1px solid #ced4da;
-    }
-    .input-group .btn {
-        border-radius: 0 !important;
+        border: none !important;
         box-shadow: none !important;
-        border: 1px solid #ced4da;
-        border-left: none !important;
     }
-    .input-group .btn-outline-secondary {
-        border-top-left-radius: 0 !important;
-        border-bottom-left-radius: 0 !important;
-    }
-
-    /* --- INICIO: Estilos para iconos sociales circulares --- */
     .oauth-divider {
         display: flex;
         align-items: center;
         text-align: center;
-        color: #888;
+        color: var(--bs-secondary);
         margin: 25px 0;
     }
     .oauth-divider::before,
     .oauth-divider::after {
         content: '';
         flex: 1;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid var(--bs-border-color);
     }
     .oauth-divider:not(:empty)::before { margin-right: .25em; }
     .oauth-divider:not(:empty)::after { margin-left: .25em; }
@@ -48,60 +28,43 @@
     .social-icons-container {
         display: flex;
         justify-content: center;
-        align-items: center;
-        gap: 25px; /* Espacio entre los iconos */
+        gap: 25px;
         margin-top: 15px;
     }
-
     .social-icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         width: 50px;
         height: 50px;
-        border-radius: 50%; /* Círculo perfecto */
-        text-decoration: none;
-        font-size: 1.5rem; /* Tamaño del icono interior */
-        color: #fff; /* Color del icono */
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        border: none !important; /* Sobrescribe otros estilos de borde */
+        border-radius: 50%;
+        font-size: 1.5rem;
+        color: #fff;
+        transition: transform 0.2s ease-in-out;
         box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
-
-    .social-icon:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-    }
-
-    /* Colores específicos para cada red social */
+    .social-icon:hover { transform: scale(1.1); }
     .social-icon.github { background-color: #333; }
     .social-icon.google { background-color: #DB4437; }
     .social-icon.facebook { background-color: #4267B2; }
-    /* --- FIN: Estilos para iconos sociales circulares --- */
 
-    /* --- INICIO: Estilos para el enlace de contraseña olvidada --- */
     .forgot-password-link {
-        color: #6c757d; /* Un color gris sutil */
+        color: var(--bs-secondary);
         text-decoration: none;
         font-size: 0.9em;
-        transition: color 0.2s ease-in-out;
     }
-    .forgot-password-link:hover {
-        color: #343a40; /* Un color más oscuro al pasar el ratón */
-        text-decoration: underline;
-    }
-    /* --- FIN: Estilos para el enlace de contraseña olvidada --- */
 </style>
+{% endblock %}
 
+{% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
-        <div class="card shadow p-4 mt-5">
+        <div class="login-card p-4 mt-5">
             <h2 class="text-center mb-4">Iniciar Sesión</h2>
             
-            <!-- Formulario de login tradicional -->
             <form method="POST" action="{{ url_for('login') }}">
                 <div class="mb-3">
-                    <label for="username_or_email" class="form-label">Nombre de Usuario o Correo Electrónico</label>
+                    <label for="username_or_email" class="form-label">Usuario o Correo</label>
                     <input type="text" class="form-control" id="username_or_email" name="username_or_email" required>
                 </div>
                 <div class="mb-3">
@@ -114,72 +77,49 @@
                     </div>
                 </div>
                 
-                <!-- INICIO: Casilla de verificación "Mantener sesión iniciada" -->
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
                     <label class="form-check-label" for="remember_me">Mantener sesión iniciada</label>
                 </div>
-                <!-- FIN: Casilla de verificación -->
 
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-warning" style="border-radius: 0 !important;">Iniciar Sesión</button>
+                    <button type="submit" class="btn btn-warning">Iniciar Sesión</button>
                 </div>
             </form>
 
-            <!-- --- INICIO: Contenido de OAuth con iconos --- -->
-            <!-- <div class="oauth-divider">   </div> -->
+            <div class="text-center mt-4 oauth-divider">o</div>
 
+            <div class="social-icons-container">
+                <!-- Descomentar para activar OAuth -->
+                <!--
+                <a href="{{ url_for('oauth_bp.login', provider='github') }}" class="social-icon github"><i class="fab fa-github"></i></a>
+                <a href="{{ url_for('oauth_bp.login', provider='google') }}" class="social-icon google"><i class="fab fa-google"></i></a>
+                <a href="{{ url_for('oauth_bp.login', provider='facebook') }}" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+                -->
+            </div>
 
-
-
-            <!-- descomentar los botones de ingreso -->
-
-
-
-
-              <!--   <div class="social-icons-container">
-                    <a href="{{ url_for('oauth_bp.login', provider='github') }}" class="social-icon github" title="Continuar con GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="{{ url_for('oauth_bp.login', provider='google') }}" class="social-icon google" title="Continuar con Google">
-                        <i class="fab fa-google"></i>
-                    </a>
-                    <a href="{{ url_for('oauth_bp.login', provider='facebook') }}" class="social-icon facebook" title="Continuar con Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                </div> -->
-
-
-
-
-
-
-            <!-- --- FIN: Contenido de OAuth con iconos --- -->
-
-            <p class="text-center mt-4 oauth-divider">¿No tienes una cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
+            <p class="text-center mt-4">¿No tienes una cuenta? <a href="{{ url_for('register') }}">Regístrate</a></p>
             
-            <!-- MODIFICACIÓN: Enlace centrado y estilizado -->
             <div class="text-center mt-3">
                 <a href="{{ url_for('request_password_reset') }}" class="forgot-password-link">¿Olvidaste tu contraseña?</a>
             </div>
-
         </div>
     </div>
 </div>
+{% endblock %}
 
-{# Script JavaScript para la funcionalidad de mostrar/ocultar contraseña #}
+{% block scripts %}
 <script>
-    const togglePassword = document.querySelector('#togglePassword');
-    const password = document.querySelector('#password');
-
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
     if (togglePassword && password) {
-        togglePassword.addEventListener('click', function (e) {
+        togglePassword.addEventListener('click', function () {
             const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
             password.setAttribute('type', type);
-            this.querySelector('i').classList.toggle('fa-eye');
             this.querySelector('i').classList.toggle('fa-eye-slash');
         });
     }
+});
 </script>
-
 {% endblock %}

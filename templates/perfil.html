@@ -4,145 +4,84 @@
 
 {% block head_content %}
 <style>
-    /* ... (Estilos existentes) ... */
-    .hidden-for-capture {
-        visibility: hidden !important;
+    /* Estilos para la tarjeta de detalles del perfil */
+    .profile-details-container {
+        padding: 2rem;
+        background-color: var(--bs-tertiary-bg);
+        border-radius: 12px;
+        border: 1px solid var(--bs-border-color);
     }
-    .fab-container {
-        position: fixed;
-        z-index: 1000;
-    }
-    .fab-button {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        transition: all 0.3s ease;
-        border: none;
-        text-decoration: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .fab-button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
-    .fab-container-back { bottom: 70px; left: 20px; }
-    .fab-button-back { background-color: #007bff; color: #ffffff; }
-    .fab-button-back:hover { background-color: #0056b3; }
-    .fab-container-backup { bottom: 70px; right: 20px; }
-    .fab-button-backup { background-color: #6f42c1; color: #ffffff; }
-    .fab-button-backup:hover { background-color: #5a359a; }
-    .fab-container-upload-db { bottom: 140px; right: 20px; }
-    .fab-button-upload-db { background-color: #ffc107; color: #212529; }
-    .fab-button-upload-db:hover { background-color: #e0a800; }
-
-    #profile-details-card {
-        background-color: transparent;
-        padding: 0;
-        box-shadow: none !important;
-        border: none !important;
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 2rem;
     }
     .profile-avatar {
         width: 120px;
         height: 120px;
         object-fit: cover;
         border-radius: 50%;
-        border: 4px solid #ffc107 !important;
+        border: 4px solid var(--bs-warning);
     }
-    .list-group-item {
-        border: none !important;
-        padding: 8px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    /* Estilos para las secciones de información */
+    .section-title {
+        color: var(--bs-warning);
+        font-weight: bold;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--bs-warning);
     }
-    .list-group-item:not(:last-child) {
-        border-bottom: 1px dotted #e9ecef !important;
+    .detail-item {
+        margin-bottom: 1rem;
     }
-    .img-thumbnail {
-        border: none !important;
+    .detail-item strong {
+        display: block;
+        color: var(--bs-secondary);
+        font-weight: 600;
+        font-size: 0.9em;
     }
-    body {
-        padding-top: 70px;
+    .detail-item span {
+        display: block;
+        font-size: 1.05em;
     }
-    .dashboard-header {
-        text-align: center;
-        margin-bottom: 2.5rem;
+
+    /* Estilos para la sección de botones de acción */
+    .actions-section {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px dashed var(--bs-border-color);
     }
-    .dashboard-section {
-        margin-bottom: 2.5rem;
-    }
-    .dashboard-section h3 {
+    .actions-section h3 {
         text-align: center;
         margin-bottom: 1.5rem;
         font-weight: 600;
-        color: #343a40;
     }
     .dashboard-list {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.75rem;
     }
     .dashboard-link {
         display: flex;
         align-items: center;
-        padding: 0.75rem 1rem;
-        background-color: #f8f9fa;
-        border: 1px solid transparent;
+        padding: 0.85rem 1.25rem;
+        background-color: var(--bs-secondary-bg);
+        border: 1px solid var(--bs-border-color);
         border-radius: 8px;
         text-decoration: none;
-        color: #212529;
+        color: var(--bs-body-color);
         font-weight: 500;
-        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-        text-align: left;
+        transition: background-color 0.2s ease, transform 0.2s ease;
     }
-    .dashboard-link.btn-warning {
-        background-color: transparent;
-        border: 1px solid #ffc107;
-        color: #212529;
-    }
-    .dashboard-link.btn-warning:hover {
-        background-color: #ffc107;
-        color: #212529;
+    .dashboard-link:hover {
+        transform: translateY(-2px);
     }
     .dashboard-link i {
-        font-size: 1em;
+        font-size: 1.1em;
         margin-right: 1rem;
-        width: 20px;
+        width: 24px;
         text-align: center;
-        color: #6c757d;
-    }
-    .dashboard-link.btn-warning i {
-        color: #e0a800;
-    }
-    .dashboard-link span {
-        font-size: 1rem;
-    }
-    .superuser-section {
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 2px dashed #ffc107;
-    }
-    .superuser-section h3 {
-        color: #c82333;
-    }
-    
-    /* Estilos del Modal */
-    .modal-header.bg-warning .modal-title,
-    .modal-header.bg-warning .btn-close {
-        color: #000;
-    }
-    .modal-body, .modal-body label {
-        color: #000;
-    }
-
-    @media (max-width: 768px) {
-        .fab-container-back { bottom: 60px; left: 15px; }
-        .fab-container-backup { bottom: 60px; right: 15px; }
-        .fab-container-upload-db { bottom: calc(60px + 60px + 5px); right: 15px; }
+        color: var(--bs-warning);
     }
 </style>
 {% endblock %}
@@ -150,400 +89,86 @@
 {% block content %}
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
-        <div class="col-md-9 col-lg-8">
-            <div id="profile-details-card" class="p-4">
+        <div class="col-md-10 col-lg-9">
+            <div class="profile-details-container">
+                <!-- CABECERA DEL PERFIL -->
                 <div class="dashboard-header">
-                    {% if user.avatar_url %}
-                        <img src="{{ url_for('static', filename=user.avatar_url) }}" alt="Avatar de {{ user.username }}" class="profile-avatar">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='uploads/avatars/default.png') }}" alt="Avatar por defecto" class="profile-avatar">
-                    {% endif %}
+                    <img src="{{ url_for('static', filename=user.avatar_url if user.avatar_url else 'uploads/avatars/default.png') }}" alt="Avatar de {{ user.username }}" class="profile-avatar">
                     <h1 class="h3 mt-3">Bienvenido, {{ user.username }}</h1>
                     <p class="text-muted">@{{ user.username }}</p>
                 </div>
 
-                <!-- SECCIÓN DE NAVEGACIÓN RÁPIDA -->
-                <div class="dashboard-section">
-                    <h3>Navegación Rápida</h3>
-                    <div class="dashboard-list">
-                        <a href="{{ url_for('aboutus.ver_aboutus') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-info-circle"></i>
-                            <span>Acerca de</span>
-                        </a>
-                    </div>
-                </div>
+                <!-- SECCIONES DE INFORMACIÓN DETALLADA -->
+                {% set sections = {
+                    "Información de Contacto": [
+                        ("Teléfono", user.telefono), ("Email", user.email), ("Empresa", user.empresa),
+                        ("Dirección (Provincia)", user.direccion), ("Rol", user.role), ("Cédula", user.cedula)
+                    ],
+                    "Información Adicional": [
+                        ("Fecha de Registro", user.fecha_registro.strftime('%d/%m/%Y %H:%M') if user.fecha_registro else None),
+                        ("Fecha de Cumpleaños", user.fecha_cumpleanos.strftime('%d/%m/%Y') if user.fecha_cumpleanos else None)
+                    ],
+                    "Información de Salud": [
+                        ("Tipo de Sangre", user.tipo_sangre), ("Póliza", user.poliza), ("Aseguradora", user.aseguradora),
+                        ("Alergias", user.alergias), ("Enfermedades Crónicas", user.enfermedades_cronicas)
+                    ],
+                    "Contacto de Emergencia": [
+                        ("Nombre", user.nombre_emergencia), ("Teléfono", user.telefono_emergencia)
+                    ]
+                } %}
 
-                <!-- SECCIÓN DE ACCIONES PERSONALES -->
-                <div class="dashboard-section" id="personal-actions-section">
-                    <h3>Acciones Personales</h3>
-                    <div class="dashboard-list">
-                        <a href="#" class="dashboard-link btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                            <i class="fas fa-user-edit"></i>
-                            <span>Editar mi Información y Seguridad</span>
-                        </a>
-                        <a href="{{ url_for('perfil.change_password') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-key"></i>
-                            <span>Cambiar Contraseña</span>
-                        </a>
-                        
-                        {# --- INICIO: Lógica para mensaje de WhatsApp --- #}
-                        {% set whatsapp_message = [] %}
-                        {% set _ = whatsapp_message.append('--- Información de Contacto ---') %}
-                        {% if user.telefono %}{% set _ = whatsapp_message.append('Teléfono: ' + user.telefono) %}{% endif %}
-                        {% if user.email %}{% set _ = whatsapp_message.append('Email: ' + user.email) %}{% endif %}
-                        {% if user.telefono_emergencia %}{% set _ = whatsapp_message.append('Tel. Emergencia: ' + user.telefono_emergencia) %}{% endif %}
-                        {% if user.nombre_emergencia %}{% set _ = whatsapp_message.append('Contacto Emergencia: ' + user.nombre_emergencia) %}{% endif %}
-                        {% if user.direccion %}{% set _ = whatsapp_message.append('Provincia: ' + user.direccion) %}{% endif %}
-                        
-                        {% set _ = whatsapp_message.append('') %}
-                        {% set _ = whatsapp_message.append('--- Información Adicional ---') %}
-                        {% if user.cedula %}{% set _ = whatsapp_message.append('Cédula: ' + user.cedula) %}{% endif %}
-                        {% if user.empresa %}{% set _ = whatsapp_message.append('Empresa: ' + user.empresa) %}{% endif %}
-                        {% if user.fecha_cumpleanos %}{% set _ = whatsapp_message.append('Cumpleaños: ' + user.fecha_cumpleanos.strftime('%d/%m/%Y')) %}{% endif %}
-                        {% if user.tipo_sangre %}{% set _ = whatsapp_message.append('Tipo de Sangre: ' + user.tipo_sangre) %}{% endif %}
-                        {% if user.poliza %}{% set _ = whatsapp_message.append('Póliza: ' + user.poliza) %}{% endif %}
-                        {% if user.aseguradora %}{% set _ = whatsapp_message.append('Aseguradora: ' + user.aseguradora) %}{% endif %}
-                        {% if user.alergias %}{% set _ = whatsapp_message.append('Alergias: ' + user.alergias) %}{% endif %}
-                        {% if user.enfermedades_cronicas %}{% set _ = whatsapp_message.append('Enf. Crónicas: ' + user.enfermedades_cronicas) %}{% endif %}
-
-                        {% set final_message = whatsapp_message|join('\n') %}
-                        {# --- FIN: Lógica para mensaje de WhatsApp --- #}
-
-                        {% set first_digit = user.telefono[0] if user.telefono else '' %}
-                        {% set disable_whatsapp = first_digit in ['1', '2', '3', '4', '5', '9', '0'] %}
-                        {% if disable_whatsapp %}
-                            <a href="#" class="dashboard-link btn-warning disabled" title="Este número de teléfono no es compatible con WhatsApp.">
-                                <i class="fab fa-whatsapp"></i>
-                                <span>Compartir por WhatsApp</span>
-                            </a>
-                        {% else %}
-                            <a href="https://wa.me/?text={{ final_message|urlencode }}" target="_blank" class="dashboard-link btn-warning">
-                                <i class="fab fa-whatsapp"></i>
-                                <span>Compartir por WhatsApp</span>
-                            </a>
-                        {% endif %}
-
-                        <a href="#" id="exportMyProfileJpgBtn" class="dashboard-link btn-warning">
-                            <i class="fas fa-file-export"></i>
-                            <span>Exportar Perfil (JPG)</span>
-                        </a>
-                    </div>
-                </div>
-
-                {% if session.role == 'Superuser' %}
-                <div class="dashboard-section superuser-section">
-                    <h3>Panel de Superusuario</h3>
-                    <div class="dashboard-list">
-                        <a href="{{ url_for('contactos.ver_contactos') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-address-book"></i>
-                            <span>Contactos</span>
-                        </a>
-                        <a href="{{ url_for('btns.crear_btns') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-toggle-on"></i>
-                            <span>Botones Flotantes</span>
-                        </a>
-                        <a href="{{ url_for('contactos.admin_manage_roles') }}" class="dashboard-link btn-warning">
-                            <i class="fas fa-user-shield"></i>
-                            <span>Administrar Roles</span>
-                        </a>
-                    </div>
-                </div>
-                {% if stats %}
-                <div class="dashboard-section superuser-section">
-                    <h3>Estadísticas del Sitio</h3>
-                    <ul class="list-group list-group-flush">
-                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Total de Usuarios
-                            <span class="badge bg-primary rounded-pill">{{ stats.total_users }}</span>
-                        </li>
-                    </ul>
-                </div>
-                {% endif %}
-                {% endif %}
-
-                <hr class="my-4">
-
-                <!-- MODIFICADO: Contenedor para la información exportable -->
-                <div id="exportable-info-card" class="p-3 bg-white">
+                {% for title, items in sections.items() %}
+                    <h4 class="section-title">{{ title }}</h4>
                     <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <h4 class="text-warning mb-3">Información de Contacto</h4>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <strong>Teléfono:</strong>
-                                    <span>{{ user.telefono }}</span>
-                                </li>
-                                {% if user.email %}
-                                <li class="list-group-item">
-                                    <strong>Email:</strong>
-                                    <span>{{ user.email }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.telefono_emergencia %}
-                                <li class="list-group-item">
-                                    <strong>Tel. Emergencia:</strong>
-                                    <span>{{ user.telefono_emergencia }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.nombre_emergencia %}
-                                <li class="list-group-item">
-                                    <strong>Contacto Emergencia:</strong>
-                                    <span>{{ user.nombre_emergencia }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.direccion %}
-                                <li class="list-group-item">
-                                    <strong>Provincia:</strong>
-                                    <span>{{ user.direccion }}</span>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </div>
+                        {% for label, value in items %}
+                            {% if value %}
+                            <div class="col-md-6 detail-item">
+                                <strong>{{ label }}:</strong>
+                                <span>{{ value }}</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
 
-                        <div class="col-md-6 mb-4">
-                            <h4 class="text-warning mb-3">Información Adicional</h4>
-                            <ul class="list-group list-group-flush">
-                                {% if user.cedula %}
-                                <li class="list-group-item">
-                                    <strong>Cédula:</strong>
-                                    <span>{{ user.cedula }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.empresa %}
-                                <li class="list-group-item">
-                                    <strong>Empresa:</strong>
-                                    <span>{{ user.empresa }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.fecha_cumpleanos %}
-                                <li class="list-group-item">
-                                    <strong>Cumpleaños:</strong>
-                                    <span>{{ user.fecha_cumpleanos.strftime('%d/%m/%Y') }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.tipo_sangre %}
-                                <li class="list-group-item">
-                                    <strong>Tipo de Sangre:</strong>
-                                    <span>{{ user.tipo_sangre }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.poliza %}
-                                <li class="list-group-item">
-                                    <strong>Póliza:</strong>
-                                    <span>{{ user.poliza }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.aseguradora %}
-                                <li class="list-group-item">
-                                    <strong>Aseguradora:</strong>
-                                    <span>{{ user.aseguradora }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.alergias %}
-                                <li class="list-group-item">
-                                    <strong>Alergias:</strong>
-                                    <span>{{ user.alergias }}</span>
-                                </li>
-                                {% endif %}
-                                {% if user.enfermedades_cronicas %}
-                                <li class="list-group-item">
-                                    <strong>Enf. Crónicas:</strong>
-                                    <span>{{ user.enfermedades_cronicas }}</span>
-                                </li>
-                                {% endif %}
-                                 <li class="list-group-item">
-                                    <strong>Fecha de Registro:</strong>
-                                    <span>{{ user.fecha_registro.strftime('%d/%m/%Y %H:%M') if user.fecha_registro else 'N/A' }}</span>
-                                </li>
-                                {% if user.fecha_actualizacion %}
-                                <li class="list-group-item">
-                                    <strong>Última Actualización:</strong>
-                                    <span>{{ user.fecha_actualizacion.strftime('%d/%m/%Y %H:%M') }}</span>
-                                </li>
-                                {% endif %}
-                            </ul>
+                <!-- SECCIÓN DE BOTONES DE ACCIÓN -->
+                <div class="actions-section">
+                    <div id="personal-actions-section">
+                        <h3>Acciones Personales</h3>
+                        <div class="dashboard-list">
+                            <a href="{{ url_for('perfil.editar_perfil') }}" class="dashboard-link">
+                                <i class="fas fa-user-edit"></i>
+                                <span>Editar mi Información</span>
+                            </a>
+                            <a href="{{ url_for('perfil.change_password') }}" class="dashboard-link">
+                                <i class="fas fa-key"></i>
+                                <span>Cambiar Contraseña</span>
+                            </a>
                         </div>
                     </div>
+
+                    {% if session.role == 'Superuser' %}
+                    <div class="superuser-section mt-4 pt-4">
+                        <h3>Panel de Superusuario</h3>
+                        <div class="dashboard-list">
+                            <a href="{{ url_for('contactos.ver_contactos') }}" class="dashboard-link">
+                                <i class="fas fa-address-book"></i>
+                                <span>Ver Contactos</span>
+                            </a>
+                            <a href="{{ url_for('btns.crear_btns') }}" class="dashboard-link">
+                                <i class="fas fa-toggle-on"></i>
+                                <span>Botones Flotantes</span>
+                            </a>
+                            <a href="{{ url_for('contactos.admin_manage_roles') }}" class="dashboard-link">
+                                <i class="fas fa-user-shield"></i>
+                                <span>Administrar Roles</span>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Modal para Editar Perfil -->
-<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-warning">
-                <h5 class="modal-title" id="editProfileModalLabel">Editar Perfil</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ url_for('perfil.perfil') }}">
-                    <h5 class="mb-3">Información Personal</h5>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ user.nombre }}" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="primer_apellido" class="form-label">Primer Apellido</label>
-                            <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" value="{{ user.primer_apellido }}" required>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
-                            <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido" value="{{ user.segundo_apellido or '' }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" id="telefono" name="telefono" value="{{ user.telefono }}" pattern="[0-9]*" inputmode="numeric" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ user.email or '' }}">
-                    </div>
-
-                    <hr class="my-4">
-
-                    <h5 class="mb-3">Información de Emergencia</h5>
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label for="nombre_emergencia" class="form-label">Nombre de Contacto</label>
-                            <input type="text" class="form-control" id="nombre_emergencia" name="nombre_emergencia" value="{{ user.nombre_emergencia or '' }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="telefono_emergencia" class="form-label">Teléfono de Contacto</label>
-                            <input type="tel" class="form-control" id="telefono_emergencia" name="telefono_emergencia" value="{{ user.telefono_emergencia or '' }}" pattern="[0-9]*" inputmode="numeric">
-                        </div>
-                    </div>
-
-                    <hr class="my-4">
-
-                    <h5 class="mb-3">Configuración de Seguridad</h5>
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" role="switch" id="autoLogoutSwitch" name="auto_logout_enabled" {% if user.auto_logout_enabled %}checked{% endif %}>
-                        <label class="form-check-label" for="autoLogoutSwitch">Activar cierre de sesión automático por inactividad</label>
-                    </div>
-                    <div id="logoutTimeoutSelector" class="mb-3 {% if not user.auto_logout_enabled %}d-none{% endif %}">
-                        <label for="auto_logout_minutes" class="form-label">Selecciona el tiempo de inactividad:</label>
-                        <select class="form-select" id="auto_logout_minutes" name="auto_logout_minutes">
-                            {% set timeout_options = [5, 10, 15, 20, 30, 40, 50, 60, 120, 240] %}
-                            <option value="0" {% if user.auto_logout_minutes == 0 %}selected{% endif %}>Desactivado</option>
-                            {% for option in timeout_options %}
-                                <option value="{{ option }}" {% if user.auto_logout_minutes == option %}selected{% endif %}>{{ option }} minutos</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-warning">Guardar Cambios</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- BOTONES FLOTANTES -->
-<div class="fab-container fab-container-back">
-    <a href="{{ url_for('home') }}" class="fab-button fab-button-back" title="Volver a Inicio">
-        <i class="fas fa-arrow-left"></i>
-    </a>
-</div>
-{% if session.get('role') == 'Superuser' %}
-<div class="fab-container fab-container-backup">
-    <button type="button" class="fab-button fab-button-backup" title="Hacer Backup de la Base de Datos" onclick="performBackup()">
-        <i class="fas fa-database"></i>
-    </button>
-</div>
-<div class="fab-container fab-container-upload-db">
-    <button type="button" class="fab-button fab-button-upload-db" title="Subir y Reemplazar Base de Datos" onclick="triggerDbUpload()">
-        <i class="fas fa-upload"></i>
-    </button>
-    <input type="file" id="dbUploadInput" accept=".db" style="display: none;">
-</div>
-{% endif %}
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Lógica para exportar a JPG
-    const exportMyProfileJpgBtn = document.getElementById('exportMyProfileJpgBtn');
-    // MODIFICADO: Apuntar al nuevo contenedor exportable
-    const profileElement = document.getElementById('exportable-info-card');
-
-    if (exportMyProfileJpgBtn && profileElement) {
-        exportMyProfileJpgBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            html2canvas(profileElement, {
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff' // Fondo blanco para la imagen
-            }).then(function(canvas) {
-                const link = document.createElement('a');
-                link.download = 'perfil_contacto_{{ user.username }}.jpg';
-                link.href = canvas.toDataURL('image/jpeg', 0.9);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }).catch(err => {
-                console.error('Error al generar la imagen JPG del perfil:', err);
-            });
-        });
-    }
-
-    // Lógica del interruptor y selector de tiempo en el modal
-    const autoLogoutSwitch = document.getElementById('autoLogoutSwitch');
-    const logoutTimeoutSelector = document.getElementById('logoutTimeoutSelector');
-    if(autoLogoutSwitch && logoutTimeoutSelector){
-        autoLogoutSwitch.addEventListener('change', function() {
-            if (this.checked) {
-                logoutTimeoutSelector.classList.remove('d-none');
-            } else {
-                logoutTimeoutSelector.classList.add('d-none');
-            }
-        });
-    }
-});
-
-function performBackup() {
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '{{ url_for("perfil.backup_database") }}';
-    document.body.appendChild(form);
-    form.submit();
-}
-
-function triggerDbUpload() {
-    const dbUploadInput = document.getElementById('dbUploadInput');
-    dbUploadInput.click();
-    dbUploadInput.onchange = function() {
-        if (dbUploadInput.files.length > 0) {
-            const file = dbUploadInput.files[0];
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '{{ url_for("perfil.upload_database") }}';
-            form.enctype = 'multipart/form-data';
-            const fileInputHidden = document.createElement('input');
-            fileInputHidden.type = 'file';
-            fileInputHidden.name = 'db_file';
-            fileInputHidden.style.display = 'none';
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file);
-            fileInputHidden.files = dataTransfer.files;
-            form.appendChild(fileInputHidden);
-            document.body.appendChild(form);
-            form.submit();
-        }
-    };
-}
-</script>
 {% endblock %}
-

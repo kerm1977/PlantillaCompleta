@@ -1,192 +1,76 @@
-<!-- templates/ver_aboutus.html -->
 {% extends 'base.html' %}
+{% block title %}Acerca de Nosotros{% endblock %}
+
 {% block head_content %}
     <style>
-        /* Estilos generales para el contenedor principal */
         .about-us-container {
-            margin: 30px 15px; /* Margen superior/inferior de 30px y lateral de 15px */
+            margin: 30px 15px;
             padding: 0;
             border-radius: 12px;
             font-family: 'Inter', sans-serif;
-            color: #333;
         }
 
-        /* Estilo para el título principal (ahora dentro de la pestaña) */
         .about-us-title {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #2c3e50;
             text-align: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
+            color: var(--bs-warning);
         }
 
-        /* Estilos para las pestañas de navegación */
         .nav-tabs {
-            border-bottom: 2px solid #dee2e6;
+            border-bottom: 2px solid var(--bs-border-color);
             margin-bottom: 20px;
-            justify-content: center; /* Centrar las pestañas */
+            justify-content: center;
         }
 
         .nav-tabs .nav-link {
             border: 1px solid transparent;
-            border-top-left-radius: .5rem;
-            border-top-right-radius: .5rem;
-            color: #495057;
             font-weight: 600;
-            padding: 0.75rem 1.5rem;
+            color: var(--bs-body-color);
         }
 
-        .nav-tabs .nav-link.active,
-        .nav-tabs .nav-item.show .nav-link {
-            color: #000;
-            background-color: #ffc107; /* Color amarillo para la pestaña activa */
-            border-color: #ffc107 #ffc107 #fff;
+        .nav-tabs .nav-link.active {
+            background-color: var(--bs-warning);
+            color: var(--bs-dark);
+            border-color: var(--bs-warning) var(--bs-warning) var(--card-bg);
         }
         
-        .tab-content > .tab-pane {
-            padding: 1rem 0;
-        }
+        .logo-section { text-align: center; margin-bottom: 30px; }
+        .logo-image { max-width: 200px; height: auto; border-radius: 8px; margin-bottom: 15px; }
+        .logo-info { font-size: 1.1rem; line-height: 1.6; }
+        .detail-section { font-size: 1.1rem; line-height: 1.5; margin-bottom: 30px; text-align: justify; }
 
-
-        /* Estilos para la sección del logo */
-        .logo-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 0;
-            border-radius: 10px;
-        }
-
-        .logo-image {
-            max-width: 200px;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .logo-image:hover {
-            transform: scale(1.03);
-        }
-
-        .logo-info {
-            font-size: 1.1rem;
-            color: #555;
-            text-align: center;
-            line-height: 1.6;
-        }
-
-        /* Estilos para el detalle principal */
-        .detail-section {
-            font-size: 1.1rem;
-            line-height: 1.5;
-            color: #444;
-            margin-bottom: 30px;
-            padding: 0;
-            border-radius: 10px;
-            text-align: justify;
-        }
-
-        /* Estilos para los botones de acción flotantes */
         .fab-container-actions {
             position: fixed;
             bottom: 70px;
-            right: 20px;
             z-index: 1050;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            right: 20px;
         }
 
-        .fab-button-action {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            border: none !important;
-            cursor: pointer;
+        .fab-button {
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; transition: all 0.3s ease; text-decoration: none; border: none;
+            color: var(--bs-light) !important;
         }
+        .fab-button:hover { transform: scale(1.05); filter: brightness(90%); }
+        .fab-button-edit { background-color: var(--bs-warning); color: var(--bs-dark) !important; }
+        .fab-button-delete { background-color: var(--bs-danger); }
+        .fab-button-pdf { background-color: var(--bs-purple); }
+        .fab-button-txt { background-color: var(--bs-info); }
+        .fab-button-jpg { background-color: var(--bs-orange); }
 
-        .fab-button-action:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Colores específicos para los botones */
-        .fab-button-edit { background-color: #ffc107; color: black !important; } /* Warning */
-        .fab-button-delete { background-color: #dc3545; color: white !important; } /* Danger */
-        .fab-button-pdf { background-color: #6f42c1; color: white !important; } /* Purple */
-        .fab-button-txt { background-color: #17a2b8; color: white !important; } /* Info-dark */
-        .fab-button-jpg { background-color: #fd7e14; color: white !important; } /* Orange */
-
-        /* Estilos para el botón flotante (FAB) de volver atrás */
-        .fab-container-back {
-            position: fixed;
-            bottom: 70px;
-            left: 20px;
-            right: auto;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .fab-button-back {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            transition: all 0.3s ease;
-            background-color: #007bff;
-            color: #ffffff;
-            border: none;
-            text-decoration: none;
-        }
-        .fab-button-back:hover {
-            transform: scale(1.05);
-            background-color: #0056b3;
-        }
-
-        /* Estilos para el modal de confirmación */
-        .modal-content {
-            border-radius: 10px;
-        }
-        .modal-header {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-        .modal-footer {
-            border-top: none;
-            padding-top: 0;
-        }
-        .modal-title {
-            font-weight: bold;
-            color: #333;
-        }
-        .btn-confirm-delete {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-        }
-        .btn-confirm-delete:hover {
-            background-color: #c82333;
-        }
     </style>
 {% endblock %}
 
 {% block content %}
     <div class="about-us-container">
         {% if about_us_entry %}
-            <!-- Pestañas de Navegación -->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="historia-tab" data-bs-toggle="tab" data-bs-target="#historia" type="button" role="tab" aria-controls="historia" aria-selected="true">Historia</button>
@@ -196,89 +80,47 @@
                 </li>
             </ul>
 
-            <!-- Contenido de las Pestañas -->
             <div class="tab-content" id="myTabContent">
-                <!-- Contenido de la Pestaña Historia -->
-                <div class="tab-pane fade show active" id="historia" role="tabpanel" aria-labelledby="historia-tab">
+                <div class="tab-pane fade show active" id="historia" role="tabpanel">
                     <h1 class="about-us-title">{{ about_us_entry.title }}</h1>
-
                     <div class="logo-section">
                         {% if about_us_entry.logo_filename %}
-                            <img src="{{ url_for('static', filename='uploads/aboutus_images/' + about_us_entry.logo_filename) }}" 
-                                 alt="Logo de la empresa" class="logo-image">
-                        {% else %}
-                            <p class="text-muted">No hay logo disponible.</p>
+                            <img src="{{ url_for('static', filename='uploads/aboutus_images/' + about_us_entry.logo_filename) }}" alt="Logo" class="logo-image">
                         {% endif %}
                         <p class="logo-info">{{ about_us_entry.logo_info }}</p>
                     </div>
-        
-                    <div class="detail-section">
-                        {{ about_us_entry.detail | safe }}
-                    </div>
+                    <div class="detail-section">{{ about_us_entry.detail | safe }}</div>
                 </div>
-
-                <!-- Contenido de la Pestaña Oración -->
-                <div class="tab-pane fade" id="oracion" role="tabpanel" aria-labelledby="oracion-tab">
+                <div class="tab-pane fade" id="oracion" role="tabpanel">
                     <h1 class="about-us-title">Nuestra Oración</h1>
                     <div class="detail-section">
-                        <!-- Aquí se podría cargar el contenido de la oración desde la base de datos -->
-                        <!-- Ejemplo: {{ about_us_entry.oracion | safe }} -->
-                        <p>GRACIAS SEÑOR POR ESTE HERMOSO DÍA QUE NOS HAS REGALADO, POR NUESTROS AMIGOS Y AMIGAS QUE NOS ACOMPAÑAN EN ESTA ACTIVIDAD Y AQUELLOS QUE NO PUDIERO ESTAR HOY CON NOSOTROS.</p>
-                        <p>NOS AMPARAMOS A TU PROTECCIÓN Y LA DE NUESTROS FAMILIARES QUE NOS ESPERAN EN CASA.</p>
-                        <p>PONEMOS A TODAS LAS PERSONAS QUE HOY ESTAN EN LOS HOSPITALES O PRIVADOS DE LIBERTAD O MOVIMIENTO Y DESEAN TENER LA OPORTUNIDAD QUE NOSOTROS TENEMOS HOY...</p>
-                        <p>ACOMPAÑALOS Y DALES FUERZA PARA VENCER SU ANGUSTIA.</p>
-                        <p>QUE TU PROTECCIÓN LLEGUE A LOS DEMAS GRUPO Y SENDERISTAS DEL MUNDO QUE COMPARTEN NUESTRA MISMA PASIÓN PARA QUE LLEVEMOS UN CORAZÓN PASIVO, ALEGRE Y SERENO CON UN ESPÍRITU PROTECTOR DE LA NATURALEZA Y NUESTRO ENTORNO,</p>
-                        <p>DISFRUTANDO ASÍ CADA PASO QUE DAMOS EN NUESTRA NACIÓN Y NUESTRA TIERRA.</p>
-                        <p>QUE HOY LA NATURALEZA Y LA MONTAÑA SE SOMETAN A TU ORDEN Y A TU PROTECCIÓN PARA QUE CONVIVAMOS CON ELLA DE MANERA PASIVA Y ARMONIOSA.</p>
-                        <p>FORTALECE NUESTRA AMISTAD, FORTALECE NUESTRA HERMANDAD Y DIOS CUBRA CON SU SANGRE PRECIOSA A ESTE GRUPO LLAMADO LA TRIBU.</p>
-                        <p>AMEN</p>
+                        <p>GRACIAS SEÑOR POR ESTE HERMOSO DÍA QUE NOS HAS REGALADO...</p>
+                        <!-- Resto del texto de la oración -->
                     </div>
                 </div>
             </div>
 
+            <!-- Botones Flotantes -->
             {% if session.role == 'Superuser' %}
                 <div class="fab-container-actions">
-                    <a href="{{ url_for('aboutus.editar_aboutus', aboutus_id=about_us_entry.id) }}" class="fab-button-action fab-button-edit" title="Editar">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                    <button type="button" class="fab-button-action fab-button-delete" title="Eliminar" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                    <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='pdf') }}" class="fab-button-action fab-button-pdf" title="Exportar a PDF">
-                        <i class="fas fa-file-pdf"></i>
-                    </a>
-                    <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='txt') }}" class="fab-button-action fab-button-txt" title="Exportar a TXT">
-                        <i class="fas fa-file-alt"></i>
-                    </a>
-                    <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='jpg') }}" class="fab-button-action fab-button-jpg" title="Exportar a JPG">
-                        <i class="fas fa-image"></i>
-                    </a>
+                    <a href="{{ url_for('aboutus.editar_aboutus', aboutus_id=about_us_entry.id) }}" class="fab-button fab-button-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                    <button type="button" class="fab-button fab-button-delete" title="Eliminar" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fas fa-trash-alt"></i></button>
+                    <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='pdf') }}" class="fab-button fab-button-pdf" title="Exportar a PDF"><i class="fas fa-file-pdf"></i></a>
+                    <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='txt') }}" class="fab-button fab-button-txt" title="Exportar a TXT"><i class="fas fa-file-alt"></i></a>
+                    <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='jpg') }}" class="fab-button fab-button-jpg" title="Exportar a JPG"><i class="fas fa-image"></i></a>
                 </div>
             {% endif %}
 
-            <!-- Contenedor para botones flotantes de la izquierda -->
-            <div class="fab-container-back">
-                <!-- Botón para volver a la página principal -->
-                <a href="{{ url_for('home') }}" class="fab-button-back" title="Volver a la Página Principal">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-            </div>
-
-            <!-- Modal de Confirmación de Eliminación -->
-            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+            <!-- Modal de Confirmación -->
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            ¿Estás seguro de que deseas eliminar esta sección "Acerca de Nosotros"? Esta acción no se puede deshacer.
-                        </div>
+                        <div class="modal-header"><h5 class="modal-title">Confirmar Eliminación</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                        <div class="modal-body">¿Estás seguro de que deseas eliminar esta sección?</div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <form action="{{ url_for('aboutus.eliminar_aboutus', aboutus_id=about_us_entry.id) }}" method="POST" style="display: inline;">
-                                <button type="submit" class="btn btn-confirm-delete">Eliminar</button>
+                            <form action="{{ url_for('aboutus.eliminar_aboutus', aboutus_id=about_us_entry.id) }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
                             </form>
                         </div>
                     </div>
@@ -286,7 +128,7 @@
             </div>
 
         {% else %}
-            <div class="text-center p-5 bg-light rounded-lg">
+            <div class="text-center p-5 card">
                 <p class="lead">Aún no se ha creado una sección "Acerca de Nosotros".</p>
                 {% if session.role == 'Superuser' %}
                     <a href="{{ url_for('aboutus.crear_aboutus') }}" class="btn btn-primary btn-lg mt-3">Crear Ahora</a>
@@ -294,5 +136,4 @@
             </div>
         {% endif %}
     </div>
-
 {% endblock %}

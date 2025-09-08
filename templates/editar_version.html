@@ -2,18 +2,14 @@
 
 {% block title %}Editar Versión{% endblock %}
 
-{% block head_content %}
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-{% endblock %}
-
 {% block content %}
 <div class="container mt-4">
-    <h1 class="mb-4 text-center">Editar Versión: {{ version.nombre_version }}</h1>
+    <h1 class="mb-4 text-center">Editar Versión</h1>
     <hr class="mb-4">
 
     <form method="POST">
         <div class="mb-3">
-            <label for="titulo" class="form-label">Título</label> {# Eliminado span text-danger y required #}
+            <label for="titulo" class="form-label">Título</label>
             <input type="text" class="form-control" id="titulo" name="titulo" value="{{ version.titulo }}">
         </div>
         <div class="mb-3">
@@ -41,23 +37,17 @@
             <textarea class="form-control" id="pendiente" name="pendiente">{{ version.pendiente | safe }}</textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3">Actualizar Versión</button>
-        <a href="{{ url_for('version.detalle_version', version_id=version.id) }}" class="btn btn-secondary mt-3">Cancelar</a>
+        <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>
     </form>
 </div>
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 <script>
-    ClassicEditor
-        .create( document.querySelector( '#descripcion' ) )
-        .catch( error => {
-            console.error( error );
-        } );
-    ClassicEditor
-        .create( document.querySelector( '#pendiente' ) )
-        .catch( error => {
-            console.error( error );
-        } );
+    document.addEventListener("DOMContentLoaded", function() {
+        ClassicEditor.create(document.querySelector('#descripcion')).catch(error => console.error(error));
+        ClassicEditor.create(document.querySelector('#pendiente')).catch(error => console.error(error));
+    });
 </script>
 {% endblock %}

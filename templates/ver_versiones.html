@@ -64,35 +64,6 @@
         background-color: #c82333; /* Rojo más oscuro */
     }
 
-    /* Estilos específicos para el botón flotante (FAB) de volver atrás */
-    .fab-container-back {
-        position: fixed;
-        bottom: 75px; /* Ajustado a 20px para consistencia con los otros FABs */
-        left: 20px; /* Distancia desde la izquierda */
-        right: auto; /* Anula la distancia derecha */
-        z-index: 1000; /* Asegura que esté por encima de otros elementos */
-    }
-    .fab-button-back {
-        width: 60px; /* Tamaño del botón */
-        height: 60px; /* Tamaño del botón */
-        border-radius: 50%; /* Hacerlo circular */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem; /* Tamaño del icono */
-        transition: all 0.3s ease;
-        background-color: #007bff; /* Color de fondo primary (azul) */
-        color: #ffffff; /* Color de texto blanco */
-        border: none; /* Asegurar que no haya borde */
-        text-decoration: none; /* Eliminar el subrayado */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .fab-button-back:hover {
-        transform: scale(1.05); /* Pequeño efecto al pasar el ratón */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Sombra al pasar el ratón */
-        background-color: #0056b3; /* Tono más oscuro al pasar el ratón */
-    }
-
 </style>
 {% endblock %}
 
@@ -176,12 +147,5 @@
         <i class="fas fa-plus" style="color: black;"></i> {# Icono de más en negro #}
     </a>
     {% endif %}
-</div>
-
-{# Botón flotante para volver atrás #}
-<div class="fab-container-back">
-    <a href="{{ url_for('caminatas.ver_caminatas') }}" class="fab-button-back" title="Volver a Caminatas"> {# CAMBIO APLICADO AQUÍ #}
-        <i class="fas fa-arrow-left"></i> {# Icono de flecha izquierda #}
-    </a>
 </div>
 {% endblock %}

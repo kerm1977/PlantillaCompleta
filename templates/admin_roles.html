@@ -4,34 +4,7 @@
 {% block title %}Administración de Roles{% endblock %}
 
 {% block head_content %}
-{# Estilos específicos para esta página que no están en main.css o sobrescriben base.html #}
-<style>
-    /* Estilos específicos para el botón flotante (FAB) */
-    .fab-container {
-        position: fixed;
-        bottom: 50px; /* Distancia desde abajo */
-        left: 20px; /* CAMBIO: Distancia desde la izquierda */
-        right: auto; /* Asegurarse de que no haya conflicto con 'right' */
-        z-index: 1000; /* Asegura que esté por encima de otros elementos */
-    }
-    .fab-button {
-        width: 60px; /* Tamaño del botón */
-        height: 60px; /* Tamaño del botón */
-        border-radius: 50%; /* Hacerlo circular */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem; /* Tamaño del icono */
-        /* MODIFICACIÓN: Eliminar box-shadow para quitar el borde oscuro */
-        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-        transition: all 0.3s ease;
-    }
-    .fab-button:hover {
-        transform: scale(1.05); /* Pequeño efecto al pasar el ratón */
-        /* MODIFICACIÓN: Ajustar box-shadow al pasar el ratón para quitar el borde oscuro */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
-</style>
+{# No se necesitan estilos adicionales aquí para el botón de volver #}
 {% endblock %}
 
 {% block content %}
@@ -129,12 +102,5 @@
             </div>
         </div>
     </div>
-</div>
-
-{# Botón flotante para volver a inicio #}
-<div class="fab-container">
-    <a href="{{ url_for('home') }}" class="btn btn-primary fab-button" title="Volver a Inicio">
-        <i class="fas fa-arrow-left"></i> {# CAMBIO: Icono de flecha izquierda #}
-    </a>
 </div>
 {% endblock %}

@@ -2,138 +2,140 @@
 {% block title %}Acerca de Nosotros{% endblock %}
 
 {% block head_content %}
-    <style>
-        .about-us-container {
-            margin: 30px 15px;
-            padding: 0;
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-        }
+<style>
+.about-us-container {
+margin: 30px 15px;
+padding: 0;
+border-radius: 12px;
+font-family: 'Inter', sans-serif;
+}
 
-        .about-us-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            color: var(--bs-warning);
-        }
+    .about-us-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        color: var(--bs-warning);
+    }
 
-        .nav-tabs {
-            border-bottom: 2px solid var(--bs-border-color);
-            margin-bottom: 20px;
-            justify-content: center;
-        }
+    .nav-tabs {
+        border-bottom: 2px solid var(--bs-border-color);
+        margin-bottom: 20px;
+        justify-content: center;
+    }
 
-        .nav-tabs .nav-link {
-            border: 1px solid transparent;
-            font-weight: 600;
-            color: var(--bs-body-color);
-        }
+    .nav-tabs .nav-link {
+        border: 1px solid transparent;
+        font-weight: 600;
+        color: var(--bs-body-color);
+    }
 
-        .nav-tabs .nav-link.active {
-            background-color: var(--bs-warning);
-            color: var(--bs-dark);
-            border-color: var(--bs-warning) var(--bs-warning) var(--card-bg);
-        }
-        
-        .logo-section { text-align: center; margin-bottom: 30px; }
-        .logo-image { max-width: 200px; height: auto; border-radius: 8px; margin-bottom: 15px; }
-        .logo-info { font-size: 1.1rem; line-height: 1.6; }
-        .detail-section { font-size: 1.1rem; line-height: 1.5; margin-bottom: 30px; text-align: justify; }
+    .nav-tabs .nav-link.active {
+        background-color: var(--bs-warning);
+        color: var(--bs-dark);
+        border-color: var(--bs-warning) var(--bs-warning) var(--card-bg);
+    }
+    
+    .logo-section { text-align: center; margin-bottom: 30px; }
+    .logo-image { max-width: 200px; height: auto; border-radius: 8px; margin-bottom: 15px; }
+    .logo-info { font-size: 1.1rem; line-height: 1.6; }
+    .detail-section { font-size: 1.1rem; line-height: 1.5; margin-bottom: 30px; text-align: justify; }
 
-        .fab-container-actions {
-            position: fixed;
-            bottom: 70px;
-            z-index: 1050;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            right: 20px;
-        }
+    .fab-container-actions {
+        position: fixed;
+        bottom: 70px;
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        right: 20px;
+    }
 
-        .fab-button {
-            width: 60px; height: 60px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; transition: all 0.3s ease; text-decoration: none; border: none;
-            color: var(--bs-light) !important;
-        }
-        .fab-button:hover { transform: scale(1.05); filter: brightness(90%); }
-        .fab-button-edit { background-color: var(--bs-warning); color: var(--bs-dark) !important; }
-        .fab-button-delete { background-color: var(--bs-danger); }
-        .fab-button-pdf { background-color: var(--bs-purple); }
-        .fab-button-txt { background-color: var(--bs-info); }
-        .fab-button-jpg { background-color: var(--bs-orange); }
+    .fab-button {
+        width: 60px; height: 60px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.8rem; transition: all 0.3s ease; text-decoration: none; border: none;
+        color: var(--bs-light) !important;
+    }
+    .fab-button:hover { transform: scale(1.05); filter: brightness(90%); }
+    .fab-button-edit { background-color: var(--bs-warning); color: var(--bs-dark) !important; }
+    .fab-button-delete { background-color: var(--bs-danger); }
+    .fab-button-pdf { background-color: var(--bs-purple); }
+    .fab-button-txt { background-color: var(--bs-info); }
+    .fab-button-jpg { background-color: var(--bs-orange); }
 
-    </style>
+</style>
+
 {% endblock %}
 
 {% block content %}
-    <div class="about-us-container">
-        {% if about_us_entry %}
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="historia-tab" data-bs-toggle="tab" data-bs-target="#historia" type="button" role="tab" aria-controls="historia" aria-selected="true">Historia</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="oracion-tab" data-bs-toggle="tab" data-bs-target="#oracion" type="button" role="tab" aria-controls="oracion" aria-selected="false">Oración</button>
-                </li>
-            </ul>
+<div class="about-us-container">
+{% if about_us_entry %}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+<li class="nav-item" role="presentation">
+<button class="nav-link active" id="historia-tab" data-bs-toggle="tab" data-bs-target="#historia" type="button" role="tab" aria-controls="historia" aria-selected="true">{{ _('Historia') }}</button>
+</li>
+<li class="nav-item" role="presentation">
+<button class="nav-link" id="oracion-tab" data-bs-toggle="tab" data-bs-target="#oracion" type="button" role="tab" aria-controls="oracion" aria-selected="false">{{ _('Oración') }}</button>
+</li>
+</ul>
 
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="historia" role="tabpanel">
-                    <h1 class="about-us-title">{{ about_us_entry.title }}</h1>
-                    <div class="logo-section">
-                        {% if about_us_entry.logo_filename %}
-                            <img src="{{ url_for('static', filename='uploads/aboutus_images/' + about_us_entry.logo_filename) }}" alt="Logo" class="logo-image">
-                        {% endif %}
-                        <p class="logo-info">{{ about_us_entry.logo_info }}</p>
-                    </div>
-                    <div class="detail-section">{{ about_us_entry.detail | safe }}</div>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="historia" role="tabpanel">
+                <h1 class="about-us-title">{{ about_us_entry.title }}</h1>
+                <div class="logo-section">
+                    {% if about_us_entry.logo_filename %}
+                        <img src="{{ url_for('static', filename='uploads/aboutus_images/' + about_us_entry.logo_filename) }}" alt="{{ _('Logo') }}" class="logo-image">
+                    {% endif %}
+                    <p class="logo-info">{{ about_us_entry.logo_info }}</p>
                 </div>
-                <div class="tab-pane fade" id="oracion" role="tabpanel">
-                    <h1 class="about-us-title">Nuestra Oración</h1>
-                    <div class="detail-section">
-                        <p>GRACIAS SEÑOR POR ESTE HERMOSO DÍA QUE NOS HAS REGALADO...</p>
-                        <!-- Resto del texto de la oración -->
-                    </div>
+                <div class="detail-section">{{ about_us_entry.detail | safe }}</div>
+            </div>
+            <div class="tab-pane fade" id="oracion" role="tabpanel">
+                <h1 class="about-us-title">{{ _('Nuestra Oración') }}</h1>
+                <div class="detail-section">
+                    <p>{{ _('GRACIAS SEÑOR POR ESTE HERMOSO DÍA QUE NOS HAS REGALADO...') }}</p>
+                    <!-- Resto del texto de la oración -->
                 </div>
             </div>
+        </div>
 
-            <!-- Botones Flotantes -->
-            {% if session.role == 'Superuser' %}
-                <div class="fab-container-actions">
-                    <a href="{{ url_for('aboutus.editar_aboutus', aboutus_id=about_us_entry.id) }}" class="fab-button fab-button-edit" title="Editar"><i class="fas fa-edit"></i></a>
-                    <button type="button" class="fab-button fab-button-delete" title="Eliminar" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fas fa-trash-alt"></i></button>
-                    <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='pdf') }}" class="fab-button fab-button-pdf" title="Exportar a PDF"><i class="fas fa-file-pdf"></i></a>
-                    <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='txt') }}" class="fab-button fab-button-txt" title="Exportar a TXT"><i class="fas fa-file-alt"></i></a>
-                    <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='jpg') }}" class="fab-button fab-button-jpg" title="Exportar a JPG"><i class="fas fa-image"></i></a>
-                </div>
-            {% endif %}
-
-            <!-- Modal de Confirmación -->
-            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header"><h5 class="modal-title">Confirmar Eliminación</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                        <div class="modal-body">¿Estás seguro de que deseas eliminar esta sección?</div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <form action="{{ url_for('aboutus.eliminar_aboutus', aboutus_id=about_us_entry.id) }}" method="POST" class="d-inline">
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        {% else %}
-            <div class="text-center p-5 card">
-                <p class="lead">Aún no se ha creado una sección "Acerca de Nosotros".</p>
-                {% if session.role == 'Superuser' %}
-                    <a href="{{ url_for('aboutus.crear_aboutus') }}" class="btn btn-primary btn-lg mt-3">Crear Ahora</a>
-                {% endif %}
+        <!-- Botones Flotantes -->
+        {% if session.role == 'Superuser' %}
+            <div class="fab-container-actions">
+                <a href="{{ url_for('aboutus.editar_aboutus', aboutus_id=about_us_entry.id) }}" class="fab-button fab-button-edit" title="{{ _('Editar') }}"><i class="fas fa-edit"></i></a>
+                <button type="button" class="fab-button fab-button-delete" title="{{ _('Eliminar') }}" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fas fa-trash-alt"></i></button>
+                <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='pdf') }}" class="fab-button fab-button-pdf" title="{{ _('Exportar a PDF') }}"><i class="fas fa-file-pdf"></i></a>
+                <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='txt') }}" class="fab-button fab-button-txt" title="{{ _('Exportar a TXT') }}"><i class="fas fa-file-alt"></i></a>
+                <a href="{{ url_for('aboutus.exportar_aboutus', aboutus_id=about_us_entry.id, format='jpg') }}" class="fab-button fab-button-jpg" title="{{ _('Exportar a JPG') }}"><i class="fas fa-image"></i></a>
             </div>
         {% endif %}
-    </div>
+
+        <!-- Modal de Confirmación -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header"><h5 class="modal-title">{{ _('Confirmar Eliminación') }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                    <div class="modal-body">{{ _('¿Estás seguro de que deseas eliminar esta sección?') }}</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancelar') }}</button>
+                        <form action="{{ url_for('aboutus.eliminar_aboutus', aboutus_id=about_us_entry.id) }}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger">{{ _('Eliminar') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="text-center p-5 card">
+            <p class="lead">{{ _('Aún no se ha creado una sección "Acerca de Nosotros".') }}</p>
+            {% if session.role == 'Superuser' %}
+                <a href="{{ url_for('aboutus.crear_aboutus') }}" class="btn btn-primary btn-lg mt-3">{{ _('Crear Ahora') }}</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
 {% endblock %}

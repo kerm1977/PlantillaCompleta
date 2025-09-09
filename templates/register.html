@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Registro{% endblock %}
+{% block title %}{{ _('Registro') }}{% endblock %}
 
 {% block head_content %}
 <style>
@@ -16,58 +16,58 @@
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-7">
         <div class="register-card p-4 mt-5">
-            <h2 class="text-center text-warning mb-4">Registro de Usuario</h2>
+            <h2 class="text-center text-warning mb-4">{{ _('Registro de Usuario') }}</h2>
             <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data">
                 
-                <p class="text-muted text-center">Los campos marcados con * son obligatorios.</p>
+                <p class="text-muted text-center">{{ _('Los campos marcados con * son obligatorios.') }}</p>
 
                 <div class="mb-3">
-                    <label for="avatar" class="form-label">Avatar (Opcional)</label>
+                    <label for="avatar" class="form-label">{{ _('Avatar (Opcional)') }}</label>
                     <input class="form-control" type="file" id="avatar" name="avatar" accept="image/*">
                 </div>
                 <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre *</label>
+                    <label for="nombre" class="form-label">{{ _('Nombre *') }}</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" value="{{ request.form.get('nombre', '') | title }}" required>
                 </div>
                 <div class="mb-3">
-                    <label for="primer_apellido" class="form-label">Primer Apellido *</label>
+                    <label for="primer_apellido" class="form-label">{{ _('Primer Apellido *') }}</label>
                     <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" value="{{ request.form.get('primer_apellido', '') | title }}" required>
                 </div>
                 <div class="mb-3">
-                    <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
+                    <label for="segundo_apellido" class="form-label">{{ _('Segundo Apellido') }}</label>
                     <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido" value="{{ request.form.get('segundo_apellido', '') | title }}">
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email *</label>
+                    <label for="email" class="form-label">{{ _('Email *') }}</label>
                     <input type="email" class="form-control" id="email" name="email" value="{{ request.form.get('email', '') }}" required>
                 </div>
                 <div class="mb-3">
-                    <label for="username_registro" class="form-label">Usuario *</label>
+                    <label for="username_registro" class="form-label">{{ _('Usuario *') }}</label>
                     <input type="text" class="form-control" id="username_registro" name="username_registro" value="{{ request.form.get('username_registro', '') }}" required>
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña *</label>
+                    <label for="password" class="form-label">{{ _('Contraseña *') }}</label>
                     <div class="input-group">
                         <input type="password" class="form-control" id="password" name="password" required>
                         <button class="btn btn-outline-secondary" type="button" id="togglePassword"><i class="fas fa-eye"></i></button>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="confirm_password" class="form-label">Confirmar Contraseña *</label>
+                    <label for="confirm_password" class="form-label">{{ _('Confirmar Contraseña *') }}</label>
                     <div class="input-group">
                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
                         <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword"><i class="fas fa-eye"></i></button>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="telefono" class="form-label">Teléfono *</label>
+                    <label for="telefono" class="form-label">{{ _('Teléfono *') }}</label>
                     <input type="tel" class="form-control" id="telefono" name="telefono" value="{{ request.form.get('telefono', '') }}" required>
                 </div>
 
                 <div class="d-grid gap-2 mt-4">
-                    <button type="submit" class="btn btn-warning">Registrarse</button>
+                    <button type="submit" class="btn btn-warning">{{ _('Registrarse') }}</button>
                 </div>
-                <p class="text-center mt-3">¿Ya tienes una cuenta? <a href="{{ url_for('login') }}">Inicia Sesión</a></p>
+                <p class="text-center mt-3">{{ _('¿Ya tienes una cuenta? ') }}<a href="{{ url_for('login') }}">{{ _('Inicia Sesión') }}</a></p>
             </form>
         </div>
     </div>

@@ -1,13 +1,12 @@
-
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-09-08 19:11-0600\n"
 "PO-Revision-Date: 2025-09-08 22:01-0600\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: en\n"
-"Language-Team: en <LL@li.org>\n"
+"Last-Translator: FULL NAME EMAIL@ADDRESS\n"
+"Language: es\n"
+"Language-Team: es LL@li.org\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -59,7 +58,7 @@ msgstr ""
 msgid "Missing command."
 msgstr ""
 
-#: env/Lib/site-packages/click/core.py:1888
+#: env/site-packages/click/core.py:1888
 #, python-brace-format
 msgid "No such command {name!r}."
 msgstr ""
@@ -326,178 +325,178 @@ msgstr[1] ""
 #: env/Lib/site-packages/wtforms/validators.py:293
 #: env/Lib/site-packages/wtforms/validators.py:323
 msgid "This field is required."
-msgstr ""
+msgstr "Este campo es obligatorio."
 
 #: env/Lib/site-packages/flask_wtf/file.py:94
 #, python-brace-format
 msgid "File does not have an approved extension: {extensions}"
-msgstr ""
+msgstr "El archivo no tiene una extensión aprobada: {extensions}"
 
 #: env/Lib/site-packages/flask_wtf/file.py:101
 msgid "File does not have an approved extension."
-msgstr ""
+msgstr "El archivo no tiene una extensión aprobada."
 
 #: env/Lib/site-packages/wtforms/validators.py:86
 #, python-format
 msgid "Invalid field name '%s'."
-msgstr ""
+msgstr "Nombre de campo no válido '%s'."
 
 #: env/Lib/site-packages/wtforms/validators.py:99
 #, python-format
 msgid "Field must be equal to %(other_name)s."
-msgstr ""
+msgstr "El campo debe ser igual a %(other_name)s."
 
 #: env/Lib/site-packages/wtforms/validators.py:146
 #, python-format
 msgid "Field must be at least %(min)d character long."
 msgid_plural "Field must be at least %(min)d characters long."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "El campo debe tener al menos %(min)d carácter."
+msgstr[1] "El campo debe tener al menos %(min)d caracteres."
 
 #: env/Lib/site-packages/wtforms/validators.py:152
 #, python-format
 msgid "Field cannot be longer than %(max)d character."
 msgid_plural "Field cannot be longer than %(max)d characters."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "El campo no puede ser mayor de %(max)d carácter."
+msgstr[1] "El campo no puede ser mayor de %(max)d caracteres."
 
 #: env/Lib/site-packages/wtforms/validators.py:158
 #, python-format
 msgid "Field must be exactly %(max)d character long."
 msgid_plural "Field must be exactly %(max)d characters long."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "El campo debe tener exactamente %(max)d carácter."
+msgstr[1] "El campo debe tener exactamente %(max)d caracteres."
 
 #: env/Lib/site-packages/wtforms/validators.py:164
 #, python-format
 msgid "Field must be between %(min)d and %(max)d characters long."
-msgstr ""
+msgstr "El campo debe tener entre %(min)d y %(max)d caracteres."
 
 #: env/Lib/site-packages/wtforms/validators.py:216
 #, python-format
 msgid "Number must be at least %(min)s."
-msgstr ""
+msgstr "El número debe ser al menos %(min)s."
 
 #: env/Lib/site-packages/wtforms/validators.py:219
 #, python-format
 msgid "Number must be at most %(max)s."
-msgstr ""
+msgstr "El número debe ser como máximo %(max)s."
 
 #: env/Lib/site-packages/wtforms/validators.py:222
 #, python-format
 msgid "Number must be between %(min)s and %(max)s."
-msgstr ""
+msgstr "El número debe estar entre %(min)s y %(max)s."
 
 #: env/Lib/site-packages/wtforms/validators.py:358
 msgid "Invalid input."
-msgstr ""
+msgstr "Entrada no válida."
 
 #: env/Lib/site-packages/wtforms/validators.py:422
 msgid "Invalid email address."
-msgstr ""
+msgstr "Dirección de correo electrónico no válida."
 
 #: env/Lib/site-packages/wtforms/validators.py:460
 msgid "Invalid IP address."
-msgstr ""
+msgstr "Dirección IP no válida."
 
 #: env/Lib/site-packages/wtforms/validators.py:503
 msgid "Invalid Mac address."
-msgstr ""
+msgstr "Dirección Mac no válida."
 
 #: env/Lib/site-packages/wtforms/validators.py:540
 msgid "Invalid URL."
-msgstr ""
+msgstr "URL no válida."
 
 #: env/Lib/site-packages/wtforms/validators.py:561
 msgid "Invalid UUID."
-msgstr ""
+msgstr "UUID no válido."
 
 #: env/Lib/site-packages/wtforms/validators.py:595
 #, python-format
 msgid "Invalid value, must be one of: %(values)s."
-msgstr ""
+msgstr "Valor no válido, debe ser uno de: %(values)s."
 
 #: env/Lib/site-packages/wtforms/validators.py:631
 #, python-format
 msgid "Invalid value, can't be any of: %(values)s."
-msgstr ""
+msgstr "Valor no válido, no puede ser ninguno de: %(values)s."
 
 #: env/Lib/site-packages/wtforms/validators.py:700
 msgid "This field cannot be edited."
-msgstr ""
+msgstr "Este campo no se puede editar."
 
 #: env/Lib/site-packages/wtforms/validators.py:716
 msgid "This field is disabled and cannot have a value."
-msgstr ""
+msgstr "Este campo está deshabilitado y no puede tener un valor."
 
 #: env/Lib/site-packages/wtforms/csrf/core.py:96
 msgid "Invalid CSRF Token."
-msgstr ""
+msgstr "Token CSRF no válido."
 
 #: env/Lib/site-packages/wtforms/csrf/session.py:64
 msgid "CSRF token missing."
-msgstr ""
+msgstr "Falta el token CSRF."
 
 #: env/Lib/site-packages/wtforms/csrf/session.py:72
 msgid "CSRF failed."
-msgstr ""
+msgstr "CSRF fallido."
 
 #: env/Lib/site-packages/wtforms/csrf/session.py:77
 msgid "CSRF token expired."
-msgstr ""
+msgstr "Token CSRF caducado."
 
 #: env/Lib/site-packages/wtforms/fields/choices.py:142
 msgid "Invalid Choice: could not coerce."
-msgstr ""
+msgstr "Opción no válida: no se pudo coaccionar."
 
 #: env/Lib/site-packages/wtforms/fields/choices.py:149
 #: env/Lib/site-packages/wtforms/fields/choices.py:203
 msgid "Choices cannot be None."
-msgstr ""
+msgstr "Las opciones no pueden ser Ninguno."
 
 #: env/Lib/site-packages/wtforms/fields/choices.py:155
 msgid "Not a valid choice."
-msgstr ""
+msgstr "No es una opción válida."
 
 #: env/Lib/site-packages/wtforms/fields/choices.py:194
 msgid "Invalid choice(s): one or more data inputs could not be coerced."
-msgstr ""
+msgstr "Opción(es) no válida(s): uno o más datos de entrada no pudieron ser coaccionados."
 
 #: env/Lib/site-packages/wtforms/fields/choices.py:212
 #, python-format
 msgid "'%(value)s' is not a valid choice for this field."
 msgid_plural "'%(value)s' are not valid choices for this field."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "'%(value)s' no es una opción válida para este campo."
+msgstr[1] "'%(value)s' no son opciones válidas para este campo."
 
 #: env/Lib/site-packages/wtforms/fields/datetime.py:52
 msgid "Not a valid datetime value."
-msgstr ""
+msgstr "No es un valor de fecha y hora válido."
 
 #: env/Lib/site-packages/wtforms/fields/datetime.py:78
 msgid "Not a valid date value."
-msgstr ""
+msgstr "No es un valor de fecha válido."
 
 #: env/Lib/site-packages/wtforms/fields/datetime.py:104
 msgid "Not a valid time value."
-msgstr ""
+msgstr "No es un valor de hora válido."
 
 #: env/Lib/site-packages/wtforms/fields/datetime.py:149
 msgid "Not a valid week value."
-msgstr ""
+msgstr "No es un valor de semana válido."
 
 #: env/Lib/site-packages/wtforms/fields/numeric.py:82
 #: env/Lib/site-packages/wtforms/fields/numeric.py:92
 msgid "Not a valid integer value."
-msgstr ""
+msgstr "No es un valor de número entero válido."
 
 #: env/Lib/site-packages/wtforms/fields/numeric.py:168
 msgid "Not a valid decimal value."
-msgstr ""
+msgstr "No es un valor decimal válido."
 
 #: env/Lib/site-packages/wtforms/fields/numeric.py:197
 msgid "Not a valid float value."
-msgstr ""
+msgstr "No es un valor flotante válido."
 
 #: templates/navbar.html:18
 msgid "Acerca de Nosotros"
@@ -507,7 +506,7 @@ msgstr "About Us"
 msgid "Más Opciones"
 msgstr "More Options"
 
-#: templates/navbar.html:32 templates/perfil.html:156
+#: templates/navbar.html:32
 msgid "Ver Contactos"
 msgstr "View Contacts"
 
@@ -515,7 +514,7 @@ msgstr "View Contacts"
 msgid "Configurar Botón Flotante"
 msgstr "Configure Floating Button"
 
-#: templates/navbar.html:35 templates/perfil.html:164
+#: templates/navbar.html:35
 msgid "Administrar Roles"
 msgstr "Manage Roles"
 
@@ -531,11 +530,11 @@ msgstr "Dark"
 msgid "Sepia"
 msgstr "Sepia"
 
-#: templates/navbar.html:73 templates/navbar.html:86
+#: templates/navbar.html:73
 msgid "English"
 msgstr "English"
 
-#: templates/navbar.html:75 templates/navbar.html:81
+#: templates/navbar.html:75
 msgid "Español"
 msgstr "Spanish"
 
@@ -547,15 +546,14 @@ msgstr "Log Out"
 msgid "Iniciar Sesión"
 msgstr "Log In"
 
-# --- Traducciones de perfil.html ---
 #: templates/perfil.html:3
 msgid "Mi Perfil"
-msgstr "Profile"
+msgstr "My Profile"
 
 #: templates/perfil.html:96
 #, python-format
 msgid "Avatar de %(username)s"
-msgstr ""
+msgstr "Avatar of %(username)s"
 
 #: templates/perfil.html:97
 #, python-format
@@ -566,7 +564,7 @@ msgstr "Welcome, %(username)s"
 msgid "Información de Contacto"
 msgstr "Contact Information"
 
-#: templates/perfil.html:104 templates/perfil.html:116
+#: templates/perfil.html:104
 msgid "Teléfono"
 msgstr "Phone"
 
@@ -576,23 +574,23 @@ msgstr "Email"
 
 #: templates/perfil.html:104
 msgid "Empresa"
-msgstr ""
+msgstr "Company"
 
 #: templates/perfil.html:105
 msgid "Dirección (Provincia)"
-msgstr "Province"
+msgstr "Address (Province)"
 
 #: templates/perfil.html:105
 msgid "Rol"
-msgstr "Roll"
+msgstr "Role"
 
 #: templates/perfil.html:105
 msgid "Cédula"
-msgstr "Id"
+msgstr "ID Card"
 
 #: templates/perfil.html:107
 msgid "Información Adicional"
-msgstr "Additional information"
+msgstr "Additional Information"
 
 #: templates/perfil.html:108
 msgid "Fecha de Registro"
@@ -600,7 +598,7 @@ msgstr "Registration Date"
 
 #: templates/perfil.html:109
 msgid "Fecha de Cumpleaños"
-msgstr "Birthday Date"
+msgstr "Birthday"
 
 #: templates/perfil.html:111
 msgid "Información de Salud"
@@ -608,7 +606,7 @@ msgstr "Health Information"
 
 #: templates/perfil.html:112
 msgid "Tipo de Sangre"
-msgstr "Blood type"
+msgstr "Blood Type"
 
 #: templates/perfil.html:112
 msgid "Póliza"
@@ -616,7 +614,7 @@ msgstr "Policy"
 
 #: templates/perfil.html:112
 msgid "Aseguradora"
-msgstr "Insurance"
+msgstr "Insurer"
 
 #: templates/perfil.html:113
 msgid "Alergias"
@@ -624,7 +622,7 @@ msgstr "Allergies"
 
 #: templates/perfil.html:113
 msgid "Enfermedades Crónicas"
-msgstr "Chronic Diseases"
+msgstr "Chronic Illnesses"
 
 #: templates/perfil.html:115
 msgid "Contacto de Emergencia"
@@ -634,13 +632,29 @@ msgstr "Emergency Contact"
 msgid "Nombre"
 msgstr "Name"
 
+#: templates/perfil.html:116
+msgid "Apellidos"
+msgstr "Last Names"
+
+#: templates/perfil.html:116
+msgid "Dirección (Cantón)"
+msgstr "Address (Canton)"
+
+#: templates/perfil.html:116
+msgid "Puesto"
+msgstr "Position"
+
+#: templates/perfil.html:116
+msgid "Fecha de Nacimiento"
+msgstr "Date of Birth"
+
 #: templates/perfil.html:137
 msgid "Acciones Personales"
 msgstr "Personal Actions"
 
 #: templates/perfil.html:141
 msgid "Editar mi Información"
-msgstr "Edit my Information"
+msgstr "Edit My Information"
 
 #: templates/perfil.html:145
 msgid "Cambiar Contraseña"
@@ -652,636 +666,530 @@ msgstr "Superuser Panel"
 
 #: templates/perfil.html:160
 msgid "Botones Flotantes"
-msgstr "Configure Floating Button"
-
-# --- Otras traducciones de la aplicación ---
-#~ msgid "Cambiar Contraseña"
-#~ msgstr "Change Password"
-
-#~ msgid "Contraseña Actual"
-#~ msgstr "Current Password"
-
-#~ msgid "Nueva Contraseña"
-#~ msgstr "New Password"
-
-#~ msgid "Confirmar Nueva Contraseña"
-#~ msgstr "Confirm New Password"
-
-#~ msgid "Actualizar Contraseña"
-#~ msgstr "Update Password"
-
-#~ msgid "Crear Sección \"Acerca de Nosotros\""
-#~ msgstr "Create \"About Us\" Section"
-
-#~ msgid "Título"
-#~ msgstr "Title"
-
-#~ msgid "Guardar Cambios"
-#~ msgstr "Save Changes"
-
-#~ msgid "Editar"
-#~ msgstr "Edit"
-
-#~ msgid "Eliminar"
-#~ msgstr "Delete"
-
-#~ msgid "Hecho con ❤️ Por La Tribu de Los Libres - 2025"
-#~ msgstr "Made with ❤️ By The Tribe of the Free - 2025"
-
-#~ msgid "Versión"
-#~ msgstr "Version"
-
-#~ msgid "Buscar"
-#~ msgstr "Search"
-
-#~ msgid "Actualizar"
-#~ msgstr "Update"
-
-#~ msgid "Superuser"
-#~ msgstr "Superuser"
-
-#~ msgid "Administrador"
-#~ msgstr "Administrator"
-
-#~ msgid "Usuario Regular"
-#~ msgstr "Regular User"
-
-# --- Traducciones de archivos adicionales (Set 1) ---
-#~ msgid "Página No Encontrada"
-#~ msgstr "Page Not Found"
-
-#~ msgid "¡Oops! Página No Encontrada"
-#~ msgstr "Oops! Page Not Found"
-
-#~ msgid ""
-#~ "La URL solicitada no se encontró "
-#~ "en el servidor. Si ingresaste la "
-#~ "URL manualmente, por favor, verifica la"
-#~ " ortografía e inténtalo de nuevo."
-#~ msgstr ""
-#~ "The requested URL was not found on"
-#~ " the server. If you entered the "
-#~ "URL manually, please check your spelling"
-#~ " and try again."
-
-#~ msgid "Error del Servidor (500)"
-#~ msgstr "Server Error (500)"
-
-#~ msgid "Error Interno del Servidor"
-#~ msgstr "Internal Server Error"
-
-#~ msgid "Lo sentimos, algo salió mal en nuestro servidor."
-#~ msgstr "We're sorry, something went wrong on our server."
-
-#~ msgid ""
-#~ "Estamos trabajando para solucionar el "
-#~ "problema. Por favor, inténtalo de nuevo"
-#~ " más tarde."
-#~ msgstr "We are working to fix the problem. Please try again later."
-
-#~ msgid "Administración de Roles"
-#~ msgstr "Role Management"
-
-#~ msgid "Administración de Roles de Usuario"
-#~ msgstr "User Role Management"
-
-#~ msgid ""
-#~ "Aquí puedes gestionar los roles de "
-#~ "todos los usuarios. Solo los "
-#~ "Superusuarios tienen acceso a esta "
-#~ "sección."
-#~ msgstr ""
-#~ "Here you can manage the roles of"
-#~ " all users. Only Superusers have "
-#~ "access to this section."
-
-#~ msgid "Recordatorio: Solo puede haber hasta 2 Superusuarios en el sistema."
-#~ msgstr "Reminder: There can only be up to 2 Superusers in the system."
-
-#~ msgid "Superusuarios y Administradores"
-#~ msgstr "Superusers and Administrators"
-
-#~ msgid "No puedes cambiar tu propio rol de Superuser."
-#~ msgstr "You cannot change your own Superuser role."
-
-#~ msgid "No hay Superusuarios o Administradores registrados."
-#~ msgstr "There are no Superusers or Administrators registered."
-
-#~ msgid "Buscar y Asignar Roles a Usuarios Regulares"
-#~ msgstr "Search and Assign Roles to Regular Users"
-
-#~ msgid ""
-#~ "Usa el buscador para encontrar usuarios"
-#~ " con el rol \"Usuario Regular\" y "
-#~ "asignarles un nuevo rol."
-#~ msgstr ""
-#~ "Use the search to find users with"
-#~ " the \"Regular User\" role and assign"
-#~ " them a new one."
-
-#~ msgid ""
-#~ "Buscar usuario regular por nombre de "
-#~ "usuario, nombre, apellido o email..."
-#~ msgstr "Search regular user by username, name, last name or email..."
-
-#~ msgid "No se encontraron usuarios regulares para \"%(query)s\"."
-#~ msgstr "No regular users found for \"%(query)s\"."
-
-#~ msgid "Realiza una búsqueda para encontrar usuarios regulares."
-#~ msgstr "Perform a search to find regular users."
-
-#~ msgid "Volver atrás"
-#~ msgstr "Go back"
-
-#~ msgid "Crear Acerca de Nosotros"
-#~ msgstr "Create About Us"
-
-#~ msgid "Imagen del Logo (JPG, PNG)"
-#~ msgstr "Logo Image (JPG, PNG)"
-
-#~ msgid "Selecciona una imagen para el logo."
-#~ msgstr "Select an image for the logo."
-
-#~ msgid "Evite caracteres especiales en el nombre del archivo."
-#~ msgstr "Avoid special characters in the file name."
-
-#~ msgid "Información del Logo"
-#~ msgstr "Logo Information"
-
-#~ msgid "Describe brevemente el logo..."
-#~ msgstr "Briefly describe the logo..."
-
-#~ msgid "Ej: Nuestra Historia"
-#~ msgstr "Ex: Our History"
-
-#~ msgid "Detalle (Contenido Principal)"
-#~ msgstr "Detail (Main Content)"
-
-#~ msgid "Crear Sección"
-#~ msgstr "Create Section"
-
-#~ msgid "Configurar Botones Flotantes"
-#~ msgstr "Configure Floating Buttons"
-
-#~ msgid ""
-#~ "Define el enlace, icono y visibilidad"
-#~ " para los botones flotantes del "
-#~ "sitio."
-#~ msgstr "Define the link, icon, and visibility for the site's floating buttons."
-
-#~ msgid "Botón 1 (Izquierdo)"
-#~ msgstr "Button 1 (Left)"
-
-#~ msgid "Mostrar este botón"
-#~ msgstr "Show this button"
-
-#~ msgid "Enlace (URL)"
-#~ msgstr "Link (URL)"
-
-#~ msgid "Icono (Font Awesome)"
-#~ msgstr "Icon (Font Awesome)"
-
-#~ msgid "Visibilidad"
-#~ msgstr "Visibility"
-
-#~ msgid "Todos"
-#~ msgstr "All"
-
-#~ msgid "Usuarios logueados"
-#~ msgstr "Logged in users"
-
-#~ msgid "Superusuarios"
-#~ msgstr "Superusers"
-
-#~ msgid "Botón 2 (Derecho)"
-#~ msgstr "Button 2 (Right)"
-
-#~ msgid "Crear Nueva Versión"
-#~ msgstr "Create New Version"
-
-#~ msgid "Párrafo"
-#~ msgstr "Paragraph"
-
-#~ msgid "Nombre de la Versión"
-#~ msgstr "Version Name"
-
-#~ msgid "Número de la Versión"
-#~ msgstr "Version Number"
-
-#~ msgid "Descripción de la Versión"
-#~ msgstr "Version Description"
-
-#~ msgid "Pendiente"
-#~ msgstr "Pending"
-
-#~ msgid "Guardar Versión"
-#~ msgstr "Save Version"
-
-#~ msgid "Detalles de Contacto"
-#~ msgstr "Contact Details"
-
-#~ msgid "Última Actualización"
-#~ msgstr "Last Update"
-
-#~ msgid "Actividad"
-#~ msgstr "Activity"
-
-#~ msgid "Capacidad"
-#~ msgstr "Capacity"
-
-#~ msgid "Participación"
-#~ msgstr "Participation"
-
-#~ msgid "Notas Médicas"
-#~ msgstr "Medical Notes"
-
-#~ msgid "Confirmar Eliminación"
-#~ msgstr "Confirm Deletion"
-
-#~ msgid ""
-#~ "¿Estás seguro de que quieres eliminar"
-#~ " a %(nombre)s? Esta acción no se "
-#~ "puede deshacer."
-#~ msgstr ""
-#~ "Are you sure you want to delete"
-#~ " %(nombre)s? This action cannot be "
-#~ "undone."
-
-#~ msgid "Cancelar"
-#~ msgstr "Cancel"
-
-#~ msgid "Exportar vCard"
-#~ msgstr "Export vCard"
-
-#~ msgid "Exportar como JPG"
-#~ msgstr "Export as JPG"
-
-#~ msgid "Exportar como PDF"
-#~ msgstr "Export as PDF"
-
-#~ msgid "Detalle de Versión"
-#~ msgstr "Version Detail"
-
-#~ msgid "Descripción"
-#~ msgstr "Description"
-
-#~ msgid "Fecha de Creación"
-#~ msgstr "Creation Date"
-
-#~ msgid "Última Modificación"
-#~ msgstr "Last Modified"
-
-# --- Traducciones de archivos adicionales (Set 2) ---
-#~ msgid "Editar Acerca de Nosotros"
-#~ msgstr "Edit About Us"
-
-#~ msgid "Editar Sección \"Acerca de Nosotros\""
-#~ msgstr "Edit \"About Us\" Section"
-
-#~ msgid "Deja vacío si no deseas cambiar el logo actual."
-#~ msgstr "Leave empty if you don't want to change the current logo."
-
-#~ msgid "Logo actual:"
-#~ msgstr "Current logo:"
-
-#~ msgid "Actualizar Sección"
-#~ msgstr "Update Section"
-
-#~ msgid "Editar Contacto"
-#~ msgstr "Edit Contact"
-
-#~ msgid "Los campos marcados con * son obligatorios."
-#~ msgstr "Fields marked with * are required."
-
-#~ msgid "Avatar Actual"
-#~ msgstr "Current Avatar"
-
-#~ msgid "Cambiar Avatar (Opcional)"
-#~ msgstr "Change Avatar (Optional)"
-
-#~ msgid "Nombre *"
-#~ msgstr "Name *"
-
-#~ msgid "Primer Apellido *"
-#~ msgstr "First Last Name *"
-
-#~ msgid "Segundo Apellido"
-#~ msgstr "Second Last Name"
-
-#~ msgid "Nombre de Usuario *"
-#~ msgstr "Username *"
-
-#~ msgid "Correo Electrónico *"
-#~ msgstr "Email Address *"
-
-#~ msgid "Teléfono *"
-#~ msgstr "Phone *"
-
-#~ msgid "Teléfono de Emergencia"
-#~ msgstr "Emergency Phone"
-
-#~ msgid "Nombre Contacto Emergencia"
-#~ msgstr "Emergency Contact Name"
-
-#~ msgid "Provincia"
-#~ msgstr "Province"
-
-#~ msgid "Rol del Usuario"
-#~ msgstr "User Role"
-
-#~ msgid "Editar Mi Perfil"
-#~ msgstr "Edit My Profile"
-
-#~ msgid "Cambiar Avatar"
-#~ msgstr "Change Avatar"
-
-#~ msgid "Nombre de Usuario"
-#~ msgstr "Username"
-
-#~ msgid "Correo Electrónico"
-#~ msgstr "Email Address"
-
-#~ msgid "Primer Apellido"
-#~ msgstr "First Last Name"
-
-#~ msgid "Información de Emergencia"
-#~ msgstr "Emergency Information"
-
-#~ msgid "Nombre del Contacto"
-#~ msgstr "Contact Name"
-
-#~ msgid "Editar Versión"
-#~ msgstr "Edit Version"
-
-#~ msgid "Inicio"
-#~ msgstr "Home"
-
-#~ msgid "¡Bienvenido, %(username)s!"
-#~ msgstr "Welcome, %(username)s!"
-
-#~ msgid "Invitado"
-#~ msgstr "Guest"
-
-#~ msgid "Esta es la página de inicio de tu aplicación."
-#~ msgstr "This is the homepage of your application."
-
-#~ msgid "Aquí puedes agregar el contenido principal para usuarios autenticados."
-#~ msgstr "Here you can add the main content for authenticated users."
-
-#~ msgid "Registrarse"
-#~ msgstr "Sign Up"
-
-#~ msgid "Usuario o Correo"
-#~ msgstr "Username or Email"
-
-#~ msgid "Contraseña"
-#~ msgstr "Password"
-
-#~ msgid "Mantener sesión iniciada"
-#~ msgstr "Keep me logged in"
-
-#~ msgid "¿No tienes una cuenta?"
-#~ msgstr "Don't have an account?"
-
-#~ msgid "Regístrate"
-#~ msgstr "Register"
-
-#~ msgid "¿Olvidaste tu contraseña?"
-#~ msgstr "Forgot your password?"
-
-#~ msgid "Sin Conexión - La Tribu"
-#~ msgstr "Offline - The Tribe"
-
-#~ msgid "Estás sin conexión"
-#~ msgstr "You are offline"
-
-#~ msgid "Parece que no tienes conexión a internet."
-#~ msgstr "It seems you don't have an internet connection."
-
-#~ msgid "Por favor, revisa tu conexión y vuelve a intentarlo."
-#~ msgstr "Please check your connection and try again."
-
-# --- Traducciones de archivos adicionales (Set 3) ---
-#~ msgid "Registro"
-#~ msgstr "Register"
-
-#~ msgid "Registro de Usuario"
-#~ msgstr "User Registration"
-
-#~ msgid "Avatar (Opcional)"
-#~ msgstr "Avatar (Optional)"
-
-#~ msgid "Email *"
-#~ msgstr "Email *"
-
-#~ msgid "Usuario *"
-#~ msgstr "Username *"
-
-#~ msgid "Contraseña *"
-#~ msgstr "Password *"
-
-#~ msgid "Confirmar Contraseña *"
-#~ msgstr "Confirm Password *"
-
-#~ msgid "¿Ya tienes una cuenta?"
-#~ msgstr "Already have an account?"
-
-#~ msgid "Inicia Sesión"
-#~ msgstr "Log In"
-
-#~ msgid "Solicitar Restablecimiento de Contraseña"
-#~ msgstr "Request Password Reset"
-
-#~ msgid "Restablecer Contraseña"
-#~ msgstr "Reset Password"
-
-#~ msgid ""
-#~ "Ingresa tu correo electrónico y te "
-#~ "enviaremos un enlace para restablecer tu"
-#~ " contraseña."
-#~ msgstr ""
-#~ "Enter your email address and we "
-#~ "will send you a link to reset "
-#~ "your password."
-
-#~ msgid "Enviar Enlace"
-#~ msgstr "Send Link"
-
-#~ msgid "Establecer Nueva Contraseña"
-#~ msgstr "Set New Password"
-
-#~ msgid "Historia"
-#~ msgstr "History"
-
-#~ msgid "Oración"
-#~ msgstr "Prayer"
-
-#~ msgid "Nuestra Oración"
-#~ msgstr "Our Prayer"
-
-#~ msgid "¿Estás seguro de que deseas eliminar esta sección?"
-#~ msgstr "Are you sure you want to delete this section?"
-
-#~ msgid "Aún no se ha creado una sección \"Acerca de Nosotros\"."
-#~ msgstr "An \"About Us\" section has not been created yet."
-
-#~ msgid "Crear Ahora"
-#~ msgstr "Create Now"
-
-#~ msgid "Lista de Contactos"
-#~ msgstr "Contact List"
-
-#~ msgid "Se encontraron %(user_count)s usuarios para \"%(search_query)s\""
-#~ msgstr "%(user_count)s users found for \"%(search_query)s\""
-
-#~ msgid "%(user_count)s usuarios registrados en total"
-#~ msgstr "%(user_count)s total registered users"
-
-#~ msgid "Buscar por nombre, teléfono, email, etc."
-#~ msgstr "Search by name, phone, email, etc."
-
-#~ msgid "Limpiar"
-#~ msgstr "Clear"
-
-#~ msgid "Vista de Tarjetas"
-#~ msgstr "Card View"
-
-#~ msgid "Vista de Lista"
-#~ msgstr "List View"
-
-#~ msgid "Ver más"
-#~ msgstr "View more"
-
-#~ msgid "No se encontraron contactos para la búsqueda \"%(search_query)s\"."
-#~ msgstr "No contacts found for search \"%(search_query)s\"."
-
-#~ msgid "No hay contactos para mostrar."
-#~ msgstr "No contacts to display."
-
-#~ msgid "Exportar a Excel"
-#~ msgstr "Export to Excel"
-
-#~ msgid "Agregar nuevo contacto"
-#~ msgstr "Add new contact"
-
-#~ msgid "Ver Versiones"
-#~ msgstr "View Versions"
-
-#~ msgid "Lista de Versiones"
-#~ msgstr "Version List"
-
-#~ msgid ""
-#~ "Es necesario dejar claro que todas "
-#~ "las vistas de este sitio son "
-#~ "libres de sobrecarga gráfica, eliminando "
-#~ "lo máximo que se pueda imagenes, "
-#~ "videos y efectos css pesados para "
-#~ "evitar el consumo de datos excesivo "
-#~ "pensando principalmente en servicios móviles"
-#~ " pre-pago. Esta área muestra las "
-#~ "versiones de la aplicación de La "
-#~ "Tribu de Los Libres. Antes es "
-#~ "necesario indicar que la construcción de"
-#~ " este sitio fue realizado con el "
-#~ "lenguaje PYTHON y el marco de "
-#~ "trabajo Flask, Javascript, CSS, html5 "
-#~ "principalmente, además cuenta con un "
-#~ "hashing criptográfico que utiliza el "
-#~ "algoritmo Blowfish resistente a ataques "
-#~ "de fuerza bruta."
-#~ msgstr ""
-#~ "It is necessary to make it clear"
-#~ " that all views on this site "
-#~ "are free of graphic overload, "
-#~ "eliminating as much as possible images,"
-#~ " videos, and heavy CSS effects to "
-#~ "avoid excessive data consumption, thinking "
-#~ "mainly of pre-paid mobile services. "
-#~ "This area shows the versions of "
-#~ "the La Tribu de Los Libres "
-#~ "application. It is necessary to indicate"
-#~ " that the construction of this site"
-#~ " was carried out mainly with the "
-#~ "PYTHON language and the Flask framework,"
-#~ " Javascript, CSS, html5, and it also"
-#~ " has a cryptographic hashing that "
-#~ "uses the Blowfish algorithm resistant to"
-#~ " brute force attacks."
-
-#~ msgid ""
-#~ "Aun hay áreas si terminar y es "
-#~ "probable que se encuentren varios fallos"
-#~ " en el diseño y respuesta del "
-#~ "backend por esa razón se va a "
-#~ "clasificar con un nombre, cada versión"
-#~ " según su fortaleza y funcionalidad "
-#~ "como una forma de identificar los "
-#~ "cambios, mejoras y errores que van "
-#~ "apareciendo con el tiempo. Los nombres"
-#~ " de cada versión tienen un nombre "
-#~ "de aves en ingles solo para "
-#~ "identificar cada modificación de una "
-#~ "sección o área especifica. Además la "
-#~ "versión tendrá al menos 3 variantes "
-#~ "más antes de brincar a la 1.2 "
-#~ "y así sucesivamente hasta la 1.9 "
-#~ "antes de pasar a la versión 2.0."
-#~ msgstr ""
-#~ "There are still areas to be "
-#~ "finished and it is likely that "
-#~ "several flaws will be found in the"
-#~ " design and response of the backend."
-#~ " For that reason, each version will"
-#~ " be classified with a name, according"
-#~ " to its strength and functionality as"
-#~ " a way to identify the changes, "
-#~ "improvements and errors that appear over"
-#~ " time. The names of each version "
-#~ "have a bird name in English just"
-#~ " to identify each modification of a"
-#~ " specific section or area. In "
-#~ "addition, the version will have at "
-#~ "least 3 more variants before jumping "
-#~ "to 1.2 and so on up to 1.9"
-#~ " before moving to version 2.0."
-
-#~ msgid ""
-#~ "Versión 1.0 Canario: Son aves pequeñas,"
-#~ " delicadas y criadas principalmente por "
-#~ "su canto, convirtiéndolas en aves muy"
-#~ " frágiles pero prácticas como criatura. "
-#~ "Así mismo estamos ante una aplicación"
-#~ " aún delicada con limitantes pero "
-#~ "sencilla de asimilar."
-#~ msgstr ""
-#~ "Version 1.0 Canary: They are small, "
-#~ "delicate birds and bred mainly for "
-#~ "their song, making them very fragile "
-#~ "but practical creatures. Likewise, we "
-#~ "are facing an application that is "
-#~ "still delicate with limitations but easy"
-#~ " to assimilate."
-
-#~ msgid "Ver Más"
-#~ msgstr "View More"
-
-#~ msgid ""
-#~ "¿Estás seguro de que deseas eliminar "
-#~ "la versión \"%(version_name)s\" (Número: "
-#~ "%(version_number)s)? Esta acción no se "
-#~ "puede deshacer."
-#~ msgstr ""
-#~ "Are you sure you want to delete"
-#~ " version \"%(version_name)s\" (Number: "
-#~ "%(version_number)s)? This action cannot be "
-#~ "undone."
-
-#~ msgid "No hay versiones registradas aún."
-#~ msgstr "No versions registered yet."
-
-#~ msgid "Editar Primera Versión"
-#~ msgstr "Edit First Version"
-
-#~ msgid "Eliminar Primera Versión"
-#~ msgstr "Delete First Version"
-
+msgstr "Floating Buttons"
+
+#: templates/ver_aboutus.html:2
+msgid "Acerca de Nosotros"
+msgstr "About Us"
+
+#: templates/ver_aboutus.html:47
+msgid "Historia"
+msgstr "History"
+
+#: templates/ver_aboutus.html:50
+msgid "Oración"
+msgstr "Prayer"
+
+#: templates/ver_aboutus.html:54
+msgid "Nuestra Oración"
+msgstr "Our Prayer"
+
+#: templates/ver_aboutus.html:56
+msgid "GRACIAS SEÑOR POR ESTE HERMOSO DÍA QUE NOS HAS REGALADO..."
+msgstr "THANK YOU LORD FOR THIS BEAUTIFUL DAY YOU HAVE GIVEN US..."
+
+#: templates/ver_aboutus.html:61
+msgid "Editar"
+msgstr "Edit"
+
+#: templates/ver_aboutus.html:62
+msgid "Eliminar"
+msgstr "Delete"
+
+#: templates/ver_aboutus.html:63
+msgid "Exportar a PDF"
+msgstr "Export to PDF"
+
+#: templates/ver_aboutus.html:64
+msgid "Exportar a TXT"
+msgstr "Export to TXT"
+
+#: templates/ver_aboutus.html:65
+msgid "Exportar a JPG"
+msgstr "Export to JPG"
+
+#: templates/ver_aboutus.html:69
+msgid "Confirmar Eliminación"
+msgstr "Confirm Deletion"
+
+#: templates/ver_aboutus.html:70
+msgid "¿Estás seguro de que deseas eliminar esta sección?"
+msgstr "Are you sure you want to delete this section?"
+
+#: templates/ver_aboutus.html:71
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: templates/ver_aboutus.html:72
+msgid "Eliminar"
+msgstr "Delete"
+
+#: templates/ver_aboutus.html:77
+msgid "Aún no se ha creado una sección "Acerca de Nosotros"."
+msgstr "An "About Us" section has not been created yet."
+
+#: templates/ver_aboutus.html:78
+msgid "Crear Ahora"
+msgstr "Create Now"
+
+#: templates/editar_aboutus.html:2
+msgid "Editar Acerca de Nosotros"
+msgstr "Edit About Us"
+
+#: templates/editar_aboutus.html:36
+msgid "Editar Sección "Acerca de Nosotros""
+msgstr "Edit "About Us" Section"
+
+#: templates/editar_aboutus.html:40
+msgid "Subir Logo (Opcional)"
+msgstr "Upload Logo (Optional)"
+
+#: templates/editar_aboutus.html:43
+msgid "Logo actual:"
+msgstr "Current Logo:"
+
+#: templates/editar_aboutus.html:46
+msgid "Información del Logo"
+msgstr "Logo Information"
+
+#: templates/editar_aboutus.html:49
+msgid "Título"
+msgstr "Title"
+
+#: templates/editar_aboutus.html:53
+msgid "Detalle (Contenido Principal)"
+msgstr "Detail (Main Content)"
+
+#: templates/editar_aboutus.html:56
+msgid "Actualizar Sección"
+msgstr "Update Section"
+
+#: templates/editar_aboutus.html:73
+msgid "Actualizar Sección"
+msgstr "Update Section"
+
+#: templates/detalle_contactos.html:2
+msgid "Detalles de Contacto"
+msgstr "Contact Details"
+
+#: templates/detalle_contactos.html:28
+#, python-format
+msgid "Avatar de %(username)s"
+msgstr "Avatar of %(username)s"
+
+#: templates/detalle_contactos.html:35
+msgid "Información de Contacto"
+msgstr "Contact Information"
+
+#: templates/detalle_contactos.html:36
+msgid "Teléfono"
+msgstr "Phone"
+
+#: templates/detalle_contactos.html:36
+msgid "Email"
+msgstr "Email"
+
+#: templates/detalle_contactos.html:36
+msgid "Empresa"
+msgstr "Company"
+
+#: templates/detalle_contactos.html:37
+msgid "Dirección (Provincia)"
+msgstr "Address (Province)"
+
+#: templates/detalle_contactos.html:37
+msgid "Rol"
+msgstr "Role"
+
+#: templates/detalle_contactos.html:37
+msgid "Cédula"
+msgstr "ID Card"
+
+#: templates/detalle_contactos.html:39
+msgid "Información Adicional"
+msgstr "Additional Information"
+
+#: templates/detalle_contactos.html:40
+msgid "Fecha de Registro"
+msgstr "Registration Date"
+
+#: templates/detalle_contactos.html:40
+msgid "Última Actualización"
+msgstr "Last Update"
+
+#: templates/detalle_contactos.html:41
+msgid "Fecha de Cumpleaños"
+msgstr "Birthday"
+
+#: templates/detalle_contactos.html:41
+msgid "Tipo de Sangre"
+msgstr "Blood Type"
+
+#: templates/detalle_contactos.html:41
+msgid "Póliza"
+msgstr "Policy"
+
+#: templates/detalle_contactos.html:41
+msgid "Aseguradora"
+msgstr "Insurer"
+
+#: templates/detalle_contactos.html:42
+msgid "Actividad"
+msgstr "Activity"
+
+#: templates/detalle_contactos.html:42
+msgid "Capacidad"
+msgstr "Capacity"
+
+#: templates/detalle_contactos.html:42
+msgid "Participación"
+msgstr "Participation"
+
+#: templates/detalle_contactos.html:44
+msgid "Notas Médicas"
+msgstr "Medical Notes"
+
+#: templates/detalle_contactos.html:45
+msgid "Alergias"
+msgstr "Allergies"
+
+#: templates/detalle_contactos.html:45
+msgid "Enfermedades Crónicas"
+msgstr "Chronic Illnesses"
+
+#: templates/detalle_contactos.html:47
+msgid "Contacto de Emergencia"
+msgstr "Emergency Contact"
+
+#: templates/detalle_contactos.html:48
+msgid "Nombre"
+msgstr "Name"
+
+#: templates/detalle_contactos.html:48
+msgid "Teléfono de Emergencia"
+msgstr "Emergency Phone"
+
+#: templates/detalle_contactos.html:62
+msgid "Editar"
+msgstr "Edit"
+
+#: templates/detalle_contactos.html:64
+msgid "Eliminar"
+msgstr "Delete"
+
+#: templates/detalle_contactos.html:69
+msgid "Confirmar Eliminación"
+msgstr "Confirm Deletion"
+
+#: templates/detalle_contactos.html:71
+#, python-format
+msgid "¿Estás seguro de que quieres eliminar a %(nombre)s? Esta acción no se puede deshacer."
+msgstr "Are you sure you want to delete %(nombre)s? This action cannot be undone."
+
+#: templates/detalle_contactos.html:73
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: templates/detalle_contactos.html:74
+msgid "Eliminar"
+msgstr "Delete"
+
+#: templates/detalle_contactos.html:79
+msgid "Exportar vCard"
+msgstr "Export vCard"
+
+#: templates/detalle_contactos.html:80
+msgid "Exportar como JPG"
+msgstr "Export as JPG"
+
+#: templates/detalle_contactos.html:81
+msgid "Exportar como PDF"
+msgstr "Export as PDF"
+
+#: templates/editar_contacto.html:2
+msgid "Editar Contacto"
+msgstr "Edit Contact"
+
+#: templates/editar_contacto.html:36
+msgid "Editar Contacto"
+msgstr "Edit Contact"
+
+#: templates/editar_contacto.html:38
+msgid "Los campos marcados con * son obligatorios."
+msgstr "Fields marked with * are required."
+
+#: templates/editar_contacto.html:41
+msgid "Avatar Actual"
+msgstr "Current Avatar"
+
+#: templates/editar_contacto.html:43
+msgid "Cambiar Avatar (Opcional)"
+msgstr "Change Avatar (Optional)"
+
+#: templates/editar_contacto.html:46
+msgid "Nombre *"
+msgstr "Name *"
+
+#: templates/editar_contacto.html:49
+msgid "Primer Apellido *"
+msgstr "First Last Name *"
+
+#: templates/editar_contacto.html:52
+msgid "Segundo Apellido"
+msgstr "Second Last Name"
+
+#: templates/editar_contacto.html:55
+msgid "Nombre de Usuario *"
+msgstr "Username *"
+
+#: templates/editar_contacto.html:58
+msgid "Correo Electrónico *"
+msgstr "Email *"
+
+#: templates/editar_contacto.html:61
+msgid "Teléfono *"
+msgstr "Phone *"
+
+#: templates/editar_contacto.html:64
+msgid "Teléfono de Emergencia"
+msgstr "Emergency Phone"
+
+#: templates/editar_contacto.html:67
+msgid "Nombre Contacto Emergencia"
+msgstr "Emergency Contact Name"
+
+#: templates/editar_contacto.html:70
+msgid "Empresa"
+msgstr "Company"
+
+#: templates/editar_contacto.html:73
+msgid "Cédula"
+msgstr "ID Card"
+
+#: templates/editar_contacto.html:76
+msgid "Provincia"
+msgstr "Province"
+
+#: templates/editar_contacto.html:77
+msgid "Seleccionar"
+msgstr "Select"
+
+#: templates/editar_contacto.html:79
+msgid "Fecha de Cumpleaños"
+msgstr "Birthday"
+
+#: templates/editar_contacto.html:82
+msgid "Tipo de Sangre"
+msgstr "Blood Type"
+
+#: templates/editar_contacto.html:85
+msgid "Póliza"
+msgstr "Policy"
+
+#: templates/editar_contacto.html:88
+msgid "Aseguradora"
+msgstr "Insurer"
+
+#: templates/editar_contacto.html:91
+msgid "Alergias"
+msgstr "Allergies"
+
+#: templates/editar_contacto.html:94
+msgid "Enfermedades Crónicas"
+msgstr "Chronic Illnesses"
+
+#: templates/editar_contacto.html:98
+msgid "Actividad"
+msgstr "Activity"
+
+#: templates/editar_contacto.html:101
+msgid "Capacidad"
+msgstr "Capacity"
+
+#: templates/editar_contacto.html:104
+msgid "Participación"
+msgstr "Participation"
+
+#: templates/editar_contacto.html:107
+msgid "Rol del Usuario"
+msgstr "User Role"
+
+#: templates/editar_contacto.html:112
+msgid "Guardar Cambios"
+msgstr "Save Changes"
+
+#: templates/login.html:2
+msgid "Iniciar Sesión"
+msgstr "Log In"
+
+#: templates/login.html:36
+msgid "Iniciar Sesión"
+msgstr "Log In"
+
+#: templates/login.html:38
+msgid "Usuario o Correo"
+msgstr "Username or Email"
+
+#: templates/login.html:42
+msgid "Contraseña"
+msgstr "Password"
+
+#: templates/login.html:49
+msgid "Mantener sesión iniciada"
+msgstr "Remember me"
+
+#: templates/login.html:53
+msgid "Iniciar Sesión"
+msgstr "Log In"
+
+#: templates/login.html:56
+msgid "o"
+msgstr "or"
+
+#: templates/login.html:65
+msgid "¿No tienes una cuenta? "
+msgstr "Don't have an account? "
+
+#: templates/login.html:65
+msgid "Regístrate"
+msgstr "Sign Up"
+
+#: templates/login.html:68
+msgid "¿Olvidaste tu contraseña?"
+msgstr "Forgot your password?"
+
+#: templates/register.html:2
+msgid "Registro"
+msgstr "Sign Up"
+
+#: templates/register.html:15
+msgid "Registro de Usuario"
+msgstr "User Registration"
+
+#: templates/register.html:17
+msgid "Los campos marcados con * son obligatorios."
+msgstr "Fields marked with * are required."
+
+#: templates/register.html:20
+msgid "Avatar (Opcional)"
+msgstr "Avatar (Optional)"
+
+#: templates/register.html:23
+msgid "Nombre *"
+msgstr "Name *"
+
+#: templates/register.html:26
+msgid "Primer Apellido *"
+msgstr "First Last Name *"
+
+#: templates/register.html:29
+msgid "Segundo Apellido"
+msgstr "Second Last Name"
+
+#: templates/register.html:32
+msgid "Email *"
+msgstr "Email *"
+
+#: templates/register.html:35
+msgid "Usuario *"
+msgstr "Username *"
+
+#: templates/register.html:38
+msgid "Contraseña *"
+msgstr "Password *"
+
+#: templates/register.html:42
+msgid "Confirmar Contraseña *"
+msgstr "Confirm Password *"
+
+#: templates/register.html:46
+msgid "Teléfono *"
+msgstr "Phone *"
+
+#: templates/register.html:50
+msgid "Registrarse"
+msgstr "Sign Up"
+
+#: templates/register.html:52
+msgid "¿Ya tienes una cuenta? "
+msgstr "Already have an account? "
+
+#: templates/register.html:52
+msgid "Inicia Sesión"
+msgstr "Log In"
+
+#: templates/ver_contactos.html:2
+msgid "Ver Contactos"
+msgstr "View Contacts"
+
+#: templates/ver_contactos.html:71
+msgid "Vista de Tarjetas"
+msgstr "Card View"
+
+#: templates/ver_contactos.html:74
+msgid "Vista de Lista"
+msgstr "List View"
+
+#: templates/ver_contactos.html:80
+msgid "Lista de Contactos"
+msgstr "Contact List"
+
+#: templates/ver_contactos.html:84
+msgid "Se encontraron %(user_count)s usuarios para "%(search_query)s""
+msgstr "Found %(user_count)s users for "%(search_query)s""
+
+#: templates/ver_contactos.html:86
+msgid "%(user_count)s usuarios registrados en total"
+msgstr "%(user_count)s users registered in total"
+
+#: templates/ver_contactos.html:90
+msgid "Buscar por nombre, teléfono, email, etc."
+msgstr "Search by name, phone, email, etc."
+
+#: templates/ver_contactos.html:91
+msgid "Buscar"
+msgstr "Search"
+
+#: templates/ver_contactos.html:92
+msgid "Limpiar"
+msgstr "Clear"
+
+#: templates/ver_contactos.html:112
+msgid "Teléfono"
+msgstr "Phone"
+
+#: templates/ver_contactos.html:115
+msgid "Email"
+msgstr "Email"
+
+#: templates/ver_contactos.html:118
+msgid "Cédula"
+msgstr "ID Card"
+
+#: templates/ver_contactos.html:122
+msgid "Ver más"
+msgstr "See more"
+
+#: templates/ver_contactos.html:132
+msgid "Avatar de "
+msgstr "Avatar of "
+
+#: templates/ver_contactos.html:145
+msgid "Ver Detalles"
+msgstr "View Details"
+
+#: templates/ver_contactos.html:150
+msgid "No se encontraron contactos para la búsqueda "%(search_query)s"."
+msgstr "No contacts found for the search "%(search_query)s"."
+
+#: templates/ver_contactos.html:152
+msgid "No hay contactos para mostrar."
+msgstr "There are no contacts to show."
+
+#: templates/ver_contactos.html:158
+msgid "Exportar a Excel"
+msgstr "Export to Excel"
+
+#: templates/ver_contactos.html:161
+msgid "Agregar nuevo contacto"
+msgstr "Add new contact"

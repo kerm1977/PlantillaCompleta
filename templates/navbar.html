@@ -6,32 +6,35 @@
             <google-cast-launcher class="ms-2"></google-cast-launcher>
         </div>
         
-        <!-- Botones de Tema e Idioma (visibles en móvil) -->
-        <div class="d-flex order-lg-3 me-2 align-items-center">
-            <!-- Botón de Tema (un solo clic) -->
-            <a class="nav-link" href="#" id="theme-switcher-button" role="button">
-                {% if session.get('theme') == 'dark' %}
-                    <i id="theme-icon" class="fas fa-moon"></i>
-                {% else %}
-                    <i id="theme-icon" class="fas fa-sun"></i>
-                {% endif %}
-            </a>
-            <!-- Botón de Idioma (un solo clic) -->
-            <a class="nav-link" href="#" id="lang-switcher-button" role="button">
-                {% if session.get('lang') == 'en' %}
-                    <span id="lang-icon">🇬🇧</span>
-                {% else %}
-                    <span id="lang-icon">🇪🇸</span>
-                {% endif %}
-            </a>
-        </div>
-        
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        
+                <!-- Botones de Tema e Idioma (visibles en todas las vistas) -->
+                <li class="nav-item">
+                    <!-- Botón de Tema (un solo clic) -->
+                    <a class="nav-link theme-switcher" href="#" role="button" id="single-theme-button">
+                        {% if session.get('theme') == 'dark' %}
+                            <i class="fas fa-moon" id="active-theme-icon"></i>
+                        {% elif session.get('theme') == 'sepia' %}
+                            <i class="fas fa-book-open" id="active-theme-icon"></i>
+                        {% else %}
+                            <i class="fas fa-sun" id="active-theme-icon"></i>
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <!-- Botón de Idioma (un solo clic) -->
+                    <a class="nav-link" href="#" role="button" id="single-lang-button">
+                        {% if session.get('lang') == 'en' %}
+                            <span id="lang-icon">🇬🇧</span>
+                        {% else %}
+                            <span id="lang-icon">🇪🇸</span>
+                        {% endif %}
+                    </a>
+                </li>
+                       
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('aboutus.ver_aboutus') }}">
                         <i class="fas fa-info-circle icon-only-mobile"></i>
@@ -39,8 +42,6 @@
                     </a>
                 </li>
         
-              
-                       
                 {% if session.logged_in %}
                     {% if session.role == 'Superuser' %}
                         <li class="nav-item dropdown">
@@ -63,8 +64,7 @@
                         </a>
                     </li>
                     
-                    
-                    <li class="nav-item d-lg-none">
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('logout') }}">
                             <i class="fas fa-sign-out-alt icon-only-mobile"></i>
                             <span class="text-only-desktop">{{ _('Cerrar Sesión') }}</span>
@@ -79,7 +79,7 @@
                         </a>
                     </li>
 
-             {% endif %}
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -87,15 +87,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const langSwitcherButton = document.getElementById('lang-switcher-button');
-    const themeSwitcherButton = document.getElementById('theme-switcher-button');
+    const langSwitcherButton = document.getElementById('single-lang-button');
+    const themeSwitcherButton = document.getElementById('single-theme-button');
     
     // Función para manejar el cambio de idioma
     if (langSwitcherButton) {
         langSwitcherButton.addEventListener('click', function(event) {
             event.preventDefault();
             
-            let currentLang = "{{ session.get('lang') }}";
+            let currentLang = document.documentElement.getAttribute('lang');
             let newLang = (currentLang === 'es') ? 'en' : 'es';
 
             // Llama a la ruta de Flask para cambiar el idioma
@@ -117,9 +117,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (themeSwitcherButton) {
         themeSwitcherButton.addEventListener('click', function(event) {
             event.preventDefault();
-
-            let currentTheme = "{{ session.get('theme') }}";
-            let newTheme = (currentTheme === 'light') ? 'dark' : 'light';
+            const themes = ['light', 'dark', 'sepia'];
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const currentIndex = themes.indexOf(currentTheme);
+            const nextIndex = (currentIndex + 1) % themes.length;
+            const newTheme = themes[nextIndex];
 
             // Llama a la nueva ruta de Flask para cambiar el tema
             fetch('/change_theme/' + newTheme)

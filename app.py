@@ -467,14 +467,11 @@ def logout():
 
 
 # <<< INICIO: NUEVA RUTA PARA CAMBIAR EL TEMA >>>
-@app.route('/set_theme', methods=['POST'])
-def set_theme():
-    data = request.get_json()
-    theme = data.get('theme')
+@app.route('/change_theme/<theme>')
+def change_theme(theme):
     if theme in ['light', 'dark', 'sepia']:
         session['theme'] = theme
-        return jsonify({'status': 'success', 'theme': theme})
-    return jsonify({'status': 'error', 'message': 'Invalid theme'}), 400
+    return redirect(request.referrer or url_for('home'))
 # <<< FIN: NUEVA RUTA >>>
 
 

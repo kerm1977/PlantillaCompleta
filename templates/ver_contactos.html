@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Ver Contactos{% endblock %}
+{% block title %}{{ _('Ver Contactos') }}{% endblock %}
 
 {% block head_content %}
 <style>
@@ -179,13 +179,13 @@
         <div class="col-md-11 col-lg-10">
             <div class="contact-list-container p-4 rounded-3">
                 <div class="text-center mb-4">
-                    <h2 class="card-title text-warning">Lista de Contactos</h2>
+                    <h2 class="card-title text-warning">{{ _('Lista de Contactos') }}</h2>
                     {% if user_count is defined %}
                         <p class="text-muted mb-0">
                             {% if search_query %}
-                                Se encontraron {{ user_count }} usuarios para "{{ search_query }}"
+                                {{ _('Se encontraron %(user_count)s usuarios para "%(search_query)s"', user_count=user_count, search_query=search_query) }}
                             {% else %}
-                                {{ user_count }} usuarios registrados en total
+                                {{ _('%(user_count)s usuarios registrados en total', user_count=user_count) }}
                             {% endif %}
                         </p>
                     {% endif %}
@@ -195,20 +195,20 @@
                 <div class="mb-4">
                     <form action="{{ url_for('contactos.ver_contactos') }}" method="GET" class="d-flex">
                         <input type="hidden" name="view" id="view-input" value="{{ view_mode }}">
-                        <input type="text" class="form-control me-2" name="search_query" placeholder="Buscar por nombre, teléfono, email, etc." value="{{ search_query if search_query else '' }}">
-                        <button type="submit" class="btn btn-outline-warning">Buscar</button>
+                        <input type="text" class="form-control me-2" name="search_query" placeholder="{{ _('Buscar por nombre, teléfono, email, etc.') }}" value="{{ search_query if search_query else '' }}">
+                        <button type="submit" class="btn btn-outline-warning">{{ _('Buscar') }}</button>
                         {% if search_query %}
-                            <a href="{{ url_for('contactos.ver_contactos', view=view_mode) }}" class="btn btn-outline-secondary ms-2">Limpiar</a>
+                            <a href="{{ url_for('contactos.ver_contactos', view=view_mode) }}" class="btn btn-outline-secondary ms-2">{{ _('Limpiar') }}</a>
                         {% endif %}
                     </form>
                 </div>
 
                 {# Selector de Vista #}
                 <div class="view-switcher mb-4">
-                    <button id="grid-view-btn" class="btn btn-outline-secondary" title="Vista de Tarjetas">
+                    <button id="grid-view-btn" class="btn btn-outline-secondary" title="{{ _('Vista de Tarjetas') }}">
                         <i class="fas fa-th-large"></i>
                     </button>
-                    <button id="list-view-btn" class="btn btn-outline-secondary" title="Vista de Lista">
+                    <button id="list-view-btn" class="btn btn-outline-secondary" title="{{ _('Vista de Lista') }}">
                         <i class="fas fa-list"></i>
                     </button>
                 </div>
@@ -221,7 +221,7 @@
                             <div class="contact-card border rounded p-3 mb-3">
                                 <div class="d-flex align-items-center mb-3">
                                     <img src="{{ url_for('static', filename=user.avatar_url if user.avatar_url else 'uploads/avatars/default.png') }}"
-                                         alt="Avatar de {{ user.username }}"
+                                         alt="{{ _('Avatar de %(username)s', username=user.username) }}"
                                          class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
                                     <div>
                                         <h5 class="mb-0">{{ user.nombre | title }} {{ user.primer_apellido | title }}{% if user.segundo_apellido %} {{ user.segundo_apellido | title }}{% endif %}</h5>
@@ -230,21 +230,21 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6 col-md-4 contact-detail">
-                                        <strong>Teléfono:</strong>
+                                        <strong>{{ _('Teléfono') }}:</strong>
                                         <span>{{ user.telefono or 'N/A' }}</span>
                                     </div>
                                     <div class="col-sm-6 col-md-4 contact-detail">
-                                        <strong>Email:</strong>
+                                        <strong>{{ _('Email') }}:</strong>
                                         <span>{{ user.email or 'N/A' }}</span>
                                     </div>
                                     <div class="col-sm-6 col-md-4 contact-detail">
-                                        <strong>Cédula:</strong>
+                                        <strong>{{ _('Cédula') }}:</strong>
                                         <span>{{ user.cedula or 'N/A' }}</span>
                                     </div>
                                 </div>
                                 <div class="text-end mt-3">
                                     <a href="{{ url_for('contactos.ver_detalle', user_id=user.id) }}" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-eye me-1"></i> Ver más
+                                        <i class="fas fa-eye me-1"></i> {{ _('Ver más') }}
                                     </a>
                                 </div>
                             </div>
@@ -257,7 +257,7 @@
                         <div class="contact-list-item">
                             <div class="contact-list-card">
                                 <div class="contact-list-avatar-wrapper">
-                                    <img src="{{ url_for('static', filename=user.avatar_url if user.avatar_url else 'uploads/avatars/default.png') }}" alt="Avatar" class="contact-list-avatar">
+                                    <img src="{{ url_for('static', filename=user.avatar_url if user.avatar_url else 'uploads/avatars/default.png') }}" alt="{{ _('Avatar de %(username)s', username=user.username) }}" class="contact-list-avatar">
                                 </div>
                                 <div class="contact-list-body">
                                     <div class="contact-list-info">
@@ -267,7 +267,7 @@
                                         <span class="contact-list-detail" style="grid-column: 1 / -1;"><i class="fas fa-envelope me-2 text-muted"></i>{{ user.email or 'N/A' }}</span>
                                     </div>
                                     <div class="contact-list-actions">
-                                        <a href="{{ url_for('contactos.ver_detalle', user_id=user.id) }}" class="btn btn-outline-warning btn-sm" title="Ver Detalles">
+                                        <a href="{{ url_for('contactos.ver_detalle', user_id=user.id) }}" class="btn btn-outline-warning btn-sm" title="{{ _('Ver Detalles') }}">
                                             <i class="fas fa-chevron-right"></i>
                                         </a>
                                     </div>
@@ -280,9 +280,9 @@
                 {% else %}
                     <div class="text-center py-4 border rounded">
                         {% if search_query %}
-                            No se encontraron contactos para la búsqueda "{{ search_query }}".
+                            {{ _('No se encontraron contactos para la búsqueda "%(search_query)s".', search_query=search_query) }}
                         {% else %}
-                            No hay contactos para mostrar.
+                            {{ _('No hay contactos para mostrar.') }}
                         {% endif %}
                     </div>
                 {% endif %}
@@ -294,10 +294,10 @@
 {# Botones Flotantes #}
 <div class="fab-container">
     {% if current_role == 'Superuser' or current_role == 'Administrador' %}
-    <a href="{{ url_for('contactos.exportar_todos_excel') }}" class="btn btn-success fab-button" title="Exportar a Excel">
+    <a href="{{ url_for('contactos.exportar_todos_excel') }}" class="btn btn-success fab-button" title="{{ _('Exportar a Excel') }}">
         <i class="fas fa-file-excel"></i>
     </a>
-    <a href="{{ url_for('register') }}" class="btn btn-warning fab-button" title="Agregar nuevo contacto">
+    <a href="{{ url_for('register') }}" class="btn btn-warning fab-button" title="{{ _('Agregar nuevo contacto') }}">
         <i class="fas fa-plus"></i>
     </a>
     {% endif %}

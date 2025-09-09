@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Detalles de Contacto{% endblock %}
+{% block title %}{{ _('Detalles de Contacto') }}{% endblock %}
 
 {% block head_content %}
 <style>
@@ -48,29 +48,29 @@
         <div class="col-md-10 col-lg-9">
             <div class="contact-detail-card">
                 <div class="text-center mb-4">
-                    <img src="{{ avatar_url }}" alt="Avatar de {{ user.username }}" class="profile-avatar mb-3">
+                    <img src="{{ avatar_url }}" alt="{{ _('Avatar de %(username)s', username=user.username) }}" class="profile-avatar mb-3">
                     <h3 class="text-warning">{{ user.nombre | title }} {{ user.primer_apellido | title}} {{ user.segundo_apellido | title if user.segundo_apellido  else '' }}</h3>
                     <p class="text-muted">@{{ user.username }}</p>
                 </div>
 
                 <!-- Bucle para mostrar la información en secciones -->
                 {% set sections = {
-                    "Información de Contacto": [
-                        ("Teléfono", user.telefono), ("Email", user.email), ("Empresa", user.empresa),
-                        ("Dirección (Provincia)", user.direccion), ("Rol", user.role), ("Cédula", user.cedula)
+                    _("Información de Contacto"): [
+                        (_("Teléfono"), user.telefono), (_("Email"), user.email), (_("Empresa"), user.empresa),
+                        (_("Dirección (Provincia)"), user.direccion), (_("Rol"), user.role), (_("Cédula"), user.cedula)
                     ],
-                    "Información Adicional": [
-                        ("Fecha de Registro", user.fecha_registro.strftime('%d/%m/%Y %H:%M') if user.fecha_registro else None),
-                        ("Última Actualización", user.fecha_actualizacion.strftime('%d/%m/%Y %H:%M') if user.fecha_actualizacion else None),
-                        ("Fecha de Cumpleaños", user.fecha_cumpleanos.strftime('%d/%m/%Y') if user.fecha_cumpleanos else None),
-                        ("Tipo de Sangre", user.tipo_sangre), ("Póliza", user.poliza), ("Aseguradora", user.aseguradora),
-                        ("Actividad", user.actividad), ("Capacidad", user.capacidad), ("Participación", user.participacion)
+                    _("Información Adicional"): [
+                        (_("Fecha de Registro"), user.fecha_registro.strftime('%d/%m/%Y %H:%M') if user.fecha_registro else None),
+                        (_("Última Actualización"), user.fecha_actualizacion.strftime('%d/%m/%Y %H:%M') if user.fecha_actualizacion else None),
+                        (_("Fecha de Cumpleaños"), user.fecha_cumpleanos.strftime('%d/%m/%Y') if user.fecha_cumpleanos else None),
+                        (_("Tipo de Sangre"), user.tipo_sangre), (_("Póliza"), user.poliza), (_("Aseguradora"), user.aseguradora),
+                        (_("Actividad"), user.actividad), (_("Capacidad"), user.capacidad), (_("Participación"), user.participacion)
                     ],
-                    "Notas Médicas": [
-                        ("Alergias", user.alergias), ("Enfermedades Crónicas", user.enfermedades_cronicas)
+                    _("Notas Médicas"): [
+                        (_("Alergias"), user.alergias), (_("Enfermedades Crónicas"), user.enfermedades_cronicas)
                     ],
-                    "Contacto de Emergencia": [
-                        ("Nombre", user.nombre_emergencia), ("Teléfono", user.telefono_emergencia)
+                    _("Contacto de Emergencia"): [
+                        (_("Nombre"), user.nombre_emergencia), (_("Teléfono de Emergencia"), user.telefono_emergencia)
                     ]
                 } %}
 
@@ -90,10 +90,10 @@
 
                 <div class="action-buttons text-center mt-4">
                     {% if current_role in ['Superuser', 'Administrador'] or current_user_id == user.id %}
-                        <a href="{{ url_for('contactos.editar_contacto', user_id=user.id) }}" class="btn btn-warning me-2"><i class="fas fa-edit me-1"></i> Editar</a>
+                        <a href="{{ url_for('contactos.editar_contacto', user_id=user.id) }}" class="btn btn-warning me-2"><i class="fas fa-edit me-1"></i> {{ _('Editar') }}</a>
                     {% endif %}
                     {% if current_role == 'Superuser' %}
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fas fa-trash-alt me-1"></i> Eliminar</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fas fa-trash-alt me-1"></i> {{ _('Eliminar') }}</button>
                     {% endif %}
                 </div>
             </div>
@@ -106,16 +106,16 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <h5 class="modal-title">{{ _('Confirmar Eliminación') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que quieres eliminar a {{ user.nombre }}? Esta acción no se puede deshacer.
+                {{ _('¿Estás seguro de que quieres eliminar a %(nombre)s? Esta acción no se puede deshacer.', nombre=user.nombre) }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancelar') }}</button>
                 <form action="{{ url_for('contactos.eliminar_contacto', user_id=user.id) }}" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <button type="submit" class="btn btn-danger">{{ _('Eliminar') }}</button>
                 </form>
             </div>
         </div>
@@ -125,10 +125,10 @@
 <!-- Botones Flotantes -->
 <div class="fab-container-actions">
     {% if current_role in ['Superuser', 'Administrador'] %}
-    <a href="{{ url_for('contactos.exportar_vcard', user_id=user.id) }}" class="fab-button fab-button-vcard" title="Exportar vCard"><i class="fas fa-address-card"></i></a>
+    <a href="{{ url_for('contactos.exportar_vcard', user_id=user.id) }}" class="fab-button fab-button-vcard" title="{{ _('Exportar vCard') }}"><i class="fas fa-address-card"></i></a>
     {% endif %}
-    <button id="exportToJpg" class="fab-button fab-button-jpg" title="Exportar como JPG"><i class="fas fa-image"></i></button>
-    <button id="exportToPdf" class="fab-button fab-button-pdf" title="Exportar como PDF"><i class="fas fa-file-pdf"></i></button>
+    <button id="exportToJpg" class="fab-button fab-button-jpg" title="{{ _('Exportar como JPG') }}"><i class="fas fa-image"></i></button>
+    <button id="exportToPdf" class="fab-button fab-button-pdf" title="{{ _('Exportar como PDF') }}"><i class="fas fa-file-pdf"></i></button>
 </div>
 {% endblock %}
 

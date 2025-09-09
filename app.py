@@ -17,11 +17,11 @@ from flask_cors import CORS
 from flask_mail import Mail, Message
 from version import version_bp, Version
 from btns import btns_bp
-from flask_babel import Babel
+from flask_babel import Babel  # <-- CAMBIO CLAVE: Usa la importación de Flask-Babel
 
 # --- Instanciar las extensiones globalmente ---
 mail = Mail()
-babel = Babel()
+
 
 app = Flask(__name__, instance_relative_config=True)
 CORS(app)
@@ -31,31 +31,31 @@ app.config.from_object(Config)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
-# --- Función para obtener el idioma seleccionado ---
-LANGUAGES = ['es', 'en']
-
-# NOTA: EL DECORADOR @babel.localeselector SE HA ELIMINADO
-def get_locale():
-    lang = session.get('lang')
-    if lang in LANGUAGES:
-        return lang
-    return request.accept_languages.best_match(LANGUAGES)
-
-# --- Asegurarse de que la carpeta 'instance' exista ---
-if not os.path.exists(app.instance_path):
-    os.makedirs(app.instance_path)
-
 # --- Inicializar extensiones ---
 db.init_app(app)
 bcrypt.init_app(app)
 migrate.init_app(app, db)
 mail.init_app(app)
-# --- ¡CAMBIO CLAVE Y DEFINITIVO! ---
-# Se registra la función 'get_locale' directamente aquí.
+
+# --- Función para obtener el idioma seleccionado ---
+LANGUAGES = ['es', 'en']
+def get_locale():
+    # Intenta obtener el idioma de la sesión del usuario.
+    # Si no existe, usa el mejor idioma aceptado por el navegador.
+    lang = session.get('lang')
+    if lang in LANGUAGES:
+        return lang
+    return request.accept_languages.best_match(LANGUAGES)
+
+# --- Instanciar y registrar Babel después de la configuración de la app ---
+babel = Babel(app)
 babel.init_app(app, locale_selector=get_locale)
 
-# --- El resto de tu archivo app.py sin cambios ---
-# ... (todo el código desde la creación de carpetas hasta el final)
+
+# --- Asegurarse de que la carpeta 'instance' exista ---
+if not os.path.exists(app.instance_path):
+    os.makedirs(app.instance_path)
+
 # Configuración para subida de archivos (usando app.config directamente desde el principio)
 # Asegúrate de que estas rutas sean absolutas y que el usuario que ejecuta la app tenga permisos de escritura.
 # Estas rutas ya deberían estar definidas en config.py, aquí solo las aseguramos
@@ -461,7 +461,7 @@ def logout():
     session.pop('username', None)
     session.pop('role', None) # Eliminar el rol de la sesión
     session.pop('theme', None) # <<< AÑADIDO: Eliminar el tema de la sesión
-    session.pop('lang', None) # <<< AÑADIDO: Eliminar el idioma de la sesión
+    session.pop('lang', None) # <<< IMPORTANTE: Eliminar el idioma de la sesión
     flash('Has cerrado sesión exitosamente.', 'info')
     return redirect(url_for('login'))
 
@@ -479,14 +479,11 @@ def set_theme():
 
 
 # <<< INICIO: NUEVA RUTA PARA CAMBIAR EL IDIOMA >>>
-@app.route('/set_lang', methods=['POST'])
-def set_lang():
-    data = request.get_json()
-    lang = data.get('lang')
-    if lang in LANGUAGES:
+@app.route('/change_language/<lang>')
+def change_language(lang):
+    if lang in ['es', 'en']:
         session['lang'] = lang
-        return jsonify({'status': 'success', 'lang': lang})
-    return jsonify({'status': 'error', 'message': 'Invalid language'}), 400
+    return redirect(request.referrer or url_for('home'))
 # <<< FIN: NUEVA RUTA >>>
 
 
@@ -549,10 +546,6 @@ def reset_password(token):
 # --- FIN: RUTAS DE RECUPERACIÓN DE CONTRASEÑA ---
 
 
-
-
-
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
@@ -592,24 +585,6 @@ if __name__ == '__main__':
         # $ flask db stamp head
         # $ flask db migrate
         # $ flask db upgrade
-        # git clone https://github.com/kerm1977/MI_APP_FLASK.git
-        # mysql> DROP DATABASE kenth1977$db; PYTHONANYWHATE
-# -----------------------
-
-# del db.db
-# rmdir /s /q migrations
-# flask db init
-# flask db migrate -m "Reinitial migration with all correct models"
-# flask db upgrade
-
-
-# -----------------------
-# Consola de pythonanywhere ante los errores de versiones
-# Error: Can't locate revision identified by '143967eb40c0'
-
-# flask db stamp head
-# flask db migrate
-# flask db upgrade
 
 # Database pythonanywhere
 # kenth1977$db
@@ -644,6 +619,7 @@ if __name__ == '__main__':
 # borrar base de datos y reconstruirla
 # pip install PyMySQL
 # SHOW TABLES;
+
 # 21:56 ~/LATRIBU1 (main)$ source env/Scripts/activate <-- Entra al entorno virtual
 # (env) 21:57 ~/LATRIBU1 (main)$
 # (env) 23:30 ~/LATRIBU1 (main)$ cd /home/kenth1977/LATRIBU1
@@ -653,4 +629,3 @@ if __name__ == '__main__':
 # (env) 23:33 ~/LATRIBU1 (main)$ flask db migrate -m "Initial migration with all models"
 # (env) 23:34 ~/LATRIBU1 (main)$ flask db upgrade
 # (env) 23:34 ~/LAT
-

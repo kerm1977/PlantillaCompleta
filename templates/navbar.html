@@ -1,18 +1,38 @@
-<nav class="navbar navbar-expand-lg custom-navbar">
+<nav class="navbar navbar-expand-lg custom-navbar py-1 align-items-center">
     <div class="container-fluid">
         <!-- Contenedor para alinear logo y botón Cast -->
-        <div class="navbar-brand-container">
-            <a class="navbar-brand" href="{{ url_for('home') }}">TRANSAVI</a>
-            <google-cast-launcher></google-cast-launcher>
+        <div class="navbar-brand-container d-flex align-items-center">
+            <a class="navbar-brand me-auto" href="{{ url_for('home') }}">TRANSAVI</a>
+            <google-cast-launcher class="ms-2"></google-cast-launcher>
         </div>
-
+        
+        <!-- Botones de Tema e Idioma (visibles en móvil) -->
+        <div class="d-flex order-lg-3 me-2 align-items-center">
+            <!-- Botón de Tema (un solo clic) -->
+            <a class="nav-link" href="#" id="theme-switcher-button" role="button">
+                {% if session.get('theme') == 'dark' %}
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                {% else %}
+                    <i id="theme-icon" class="fas fa-sun"></i>
+                {% endif %}
+            </a>
+            <!-- Botón de Idioma (un solo clic) -->
+            <a class="nav-link" href="#" id="lang-switcher-button" role="button">
+                {% if session.get('lang') == 'en' %}
+                    <span id="lang-icon">🇬🇧</span>
+                {% else %}
+                    <span id="lang-icon">🇪🇸</span>
+                {% endif %}
+            </a>
+        </div>
+        
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         
-                 <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('aboutus.ver_aboutus') }}">
                         <i class="fas fa-info-circle icon-only-mobile"></i>
                         <span class="text-only-desktop">{{ _('Acerca de Nosotros') }}</span>
@@ -28,7 +48,6 @@
                                 {{ _('Más Opciones') }}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ url_for('contactos.ver_contactos') }}">{{ _('Ver Contactos') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('btns.crear_btns') }}">{{ _('Configurar Botón Flotante') }}</a></li>
                                 <li><a class="dropdown-item" href="https://www.pythonanywhere.com/user/kenth1977/">Pythonanywhere</a></li>
@@ -44,53 +63,8 @@
                         </a>
                     </li>
                     
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="themeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i id="active-theme-icon" class="fas fa-sun"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="themeDropdown">
-                            <li>
-                                <a class="dropdown-item theme-switcher" href="#" data-theme="light">
-                                    <i class="fas fa-sun me-2"></i> {{ _('Claro') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item theme-switcher" href="#" data-theme="dark">
-                                    <i class="fas fa-moon me-2"></i> {{ _('Oscuro') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item theme-switcher" href="#" data-theme="sepia">
-                                    <i class="fas fa-book-open me-2"></i> {{ _('Sepia') }}
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                           {% if session.get('lang') == 'en' %}
-                                <span>🇬🇧</span><span class="d-none d-lg-inline ms-1">{{ _('English') }}</span>
-                           {% else %}
-                                <span>🇪🇸</span><span class="d-none d-lg-inline ms-1">{{ _('Español') }}</span>
-                           {% endif %}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
-                            <li>
-                                <a class="dropdown-item lang-switcher" href="#" data-lang="es">
-                                    <span class="me-2">🇪🇸</span> {{ _('Español') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item lang-switcher" href="#" data-lang="en">
-                                    <span class="me-2">🇬🇧</span> {{ _('English') }}
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-item">
-                        <hr class="mobile-separator d-lg-none">
+                    
+                    <li class="nav-item d-lg-none">
                         <a class="nav-link" href="{{ url_for('logout') }}">
                             <i class="fas fa-sign-out-alt icon-only-mobile"></i>
                             <span class="text-only-desktop">{{ _('Cerrar Sesión') }}</span>
@@ -111,3 +85,55 @@
     </div>
 </nav>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const langSwitcherButton = document.getElementById('lang-switcher-button');
+    const themeSwitcherButton = document.getElementById('theme-switcher-button');
+    
+    // Función para manejar el cambio de idioma
+    if (langSwitcherButton) {
+        langSwitcherButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            let currentLang = "{{ session.get('lang') }}";
+            let newLang = (currentLang === 'es') ? 'en' : 'es';
+
+            // Llama a la ruta de Flask para cambiar el idioma
+            fetch('/change_language/' + newLang)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        console.error('Error al cambiar el idioma.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de red:', error);
+                });
+        });
+    }
+
+    // Función para manejar el cambio de tema
+    if (themeSwitcherButton) {
+        themeSwitcherButton.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            let currentTheme = "{{ session.get('theme') }}";
+            let newTheme = (currentTheme === 'light') ? 'dark' : 'light';
+
+            // Llama a la nueva ruta de Flask para cambiar el tema
+            fetch('/change_theme/' + newTheme)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        console.error('Error al cambiar el tema.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de red:', error);
+                });
+        });
+    }
+});
+</script>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Mi Perfil{% endblock %}
+{% block title %}{{ _('Mi Perfil') }}{% endblock %}
 
 {% block head_content %}
 <style>
@@ -93,27 +93,27 @@
             <div class="profile-details-container">
                 <!-- CABECERA DEL PERFIL -->
                 <div class="dashboard-header">
-                    <img src="{{ url_for('static', filename=user.avatar_url if user.avatar_url else 'uploads/avatars/default.png') }}" alt="Avatar de {{ user.username }}" class="profile-avatar">
-                    <h1 class="h3 mt-3">Bienvenido, {{ user.username }}</h1>
+                    <img src="{{ url_for('static', filename=user.avatar_url if user.avatar_url else 'uploads/avatars/default.png') }}" alt="{{ _('Avatar de %(username)s', username=user.username) }}" class="profile-avatar">
+                    <h1 class="h3 mt-3">{{ _('Bienvenido, %(username)s', username=user.username) }}</h1>
                     <p class="text-muted">@{{ user.username }}</p>
                 </div>
 
                 <!-- SECCIONES DE INFORMACIÓN DETALLADA -->
                 {% set sections = {
-                    "Información de Contacto": [
-                        ("Teléfono", user.telefono), ("Email", user.email), ("Empresa", user.empresa),
-                        ("Dirección (Provincia)", user.direccion), ("Rol", user.role), ("Cédula", user.cedula)
+                    _("Información de Contacto"): [
+                        (_("Teléfono"), user.telefono), (_("Email"), user.email), (_("Empresa"), user.empresa),
+                        (_("Dirección (Provincia)"), user.direccion), (_("Rol"), user.role), (_("Cédula"), user.cedula)
                     ],
-                    "Información Adicional": [
-                        ("Fecha de Registro", user.fecha_registro.strftime('%d/%m/%Y %H:%M') if user.fecha_registro else None),
-                        ("Fecha de Cumpleaños", user.fecha_cumpleanos.strftime('%d/%m/%Y') if user.fecha_cumpleanos else None)
+                    _("Información Adicional"): [
+                        (_("Fecha de Registro"), user.fecha_registro.strftime('%d/%m/%Y %H:%M') if user.fecha_registro else None),
+                        (_("Fecha de Cumpleaños"), user.fecha_cumpleanos.strftime('%d/%m/%Y') if user.fecha_cumpleanos else None)
                     ],
-                    "Información de Salud": [
-                        ("Tipo de Sangre", user.tipo_sangre), ("Póliza", user.poliza), ("Aseguradora", user.aseguradora),
-                        ("Alergias", user.alergias), ("Enfermedades Crónicas", user.enfermedades_cronicas)
+                    _("Información de Salud"): [
+                        (_("Tipo de Sangre"), user.tipo_sangre), (_("Póliza"), user.poliza), (_("Aseguradora"), user.aseguradora),
+                        (_("Alergias"), user.alergias), (_("Enfermedades Crónicas"), user.enfermedades_cronicas)
                     ],
-                    "Contacto de Emergencia": [
-                        ("Nombre", user.nombre_emergencia), ("Teléfono", user.telefono_emergencia)
+                    _("Contacto de Emergencia"): [
+                        (_("Nombre"), user.nombre_emergencia), (_("Teléfono"), user.telefono_emergencia)
                     ]
                 } %}
 
@@ -134,34 +134,34 @@
                 <!-- SECCIÓN DE BOTONES DE ACCIÓN -->
                 <div class="actions-section">
                     <div id="personal-actions-section">
-                        <h3>Acciones Personales</h3>
+                        <h3>{{ _('Acciones Personales') }}</h3>
                         <div class="dashboard-list">
                             <a href="{{ url_for('perfil.editar_perfil') }}" class="dashboard-link">
                                 <i class="fas fa-user-edit"></i>
-                                <span>Editar mi Información</span>
+                                <span>{{ _('Editar mi Información') }}</span>
                             </a>
                             <a href="{{ url_for('perfil.change_password') }}" class="dashboard-link">
                                 <i class="fas fa-key"></i>
-                                <span>Cambiar Contraseña</span>
+                                <span>{{ _('Cambiar Contraseña') }}</span>
                             </a>
                         </div>
                     </div>
 
                     {% if session.role == 'Superuser' %}
                     <div class="superuser-section mt-4 pt-4">
-                        <h3>Panel de Superusuario</h3>
+                        <h3>{{ _('Panel de Superusuario') }}</h3>
                         <div class="dashboard-list">
                             <a href="{{ url_for('contactos.ver_contactos') }}" class="dashboard-link">
                                 <i class="fas fa-address-book"></i>
-                                <span>Ver Contactos</span>
+                                <span>{{ _('Ver Contactos') }}</span>
                             </a>
                             <a href="{{ url_for('btns.crear_btns') }}" class="dashboard-link">
                                 <i class="fas fa-toggle-on"></i>
-                                <span>Botones Flotantes</span>
+                                <span>{{ _('Botones Flotantes') }}</span>
                             </a>
                             <a href="{{ url_for('contactos.admin_manage_roles') }}" class="dashboard-link">
                                 <i class="fas fa-user-shield"></i>
-                                <span>Administrar Roles</span>
+                                <span>{{ _('Administrar Roles') }}</span>
                             </a>
                         </div>
                     </div>

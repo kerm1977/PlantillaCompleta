@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-09-08 15:48-0600\n"
+"POT-Creation-Date: 2025-09-08 19:11-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -498,5 +498,159 @@ msgstr ""
 
 #: env/Lib/site-packages/wtforms/fields/numeric.py:197
 msgid "Not a valid float value."
+msgstr ""
+
+#: templates/navbar.html:18
+msgid "Acerca de Nosotros"
+msgstr ""
+
+#: templates/navbar.html:28
+msgid "Más Opciones"
+msgstr ""
+
+#: templates/navbar.html:32 templates/perfil.html:156
+msgid "Ver Contactos"
+msgstr ""
+
+#: templates/navbar.html:33
+msgid "Configurar Botón Flotante"
+msgstr ""
+
+#: templates/navbar.html:35 templates/perfil.html:164
+msgid "Administrar Roles"
+msgstr ""
+
+#: templates/navbar.html:54
+msgid "Claro"
+msgstr ""
+
+#: templates/navbar.html:59
+msgid "Oscuro"
+msgstr ""
+
+#: templates/navbar.html:64
+msgid "Sepia"
+msgstr ""
+
+#: templates/navbar.html:73 templates/navbar.html:86
+msgid "English"
+msgstr ""
+
+#: templates/navbar.html:75 templates/navbar.html:81
+msgid "Español"
+msgstr ""
+
+#: templates/navbar.html:96
+msgid "Cerrar Sesión"
+msgstr ""
+
+#: templates/navbar.html:104
+msgid "Iniciar Sesión"
+msgstr ""
+
+#: templates/perfil.html:3
+msgid "Mi Perfil"
+msgstr ""
+
+#: templates/perfil.html:96
+#, python-format
+msgid "Avatar de %(username)s"
+msgstr ""
+
+#: templates/perfil.html:97
+#, python-format
+msgid "Bienvenido, %(username)s"
+msgstr ""
+
+#: templates/perfil.html:103
+msgid "Información de Contacto"
+msgstr ""
+
+#: templates/perfil.html:104 templates/perfil.html:116
+msgid "Teléfono"
+msgstr ""
+
+#: templates/perfil.html:104
+msgid "Email"
+msgstr ""
+
+#: templates/perfil.html:104
+msgid "Empresa"
+msgstr ""
+
+#: templates/perfil.html:105
+msgid "Dirección (Provincia)"
+msgstr ""
+
+#: templates/perfil.html:105
+msgid "Rol"
+msgstr ""
+
+#: templates/perfil.html:105
+msgid "Cédula"
+msgstr ""
+
+#: templates/perfil.html:107
+msgid "Información Adicional"
+msgstr ""
+
+#: templates/perfil.html:108
+msgid "Fecha de Registro"
+msgstr ""
+
+#: templates/perfil.html:109
+msgid "Fecha de Cumpleaños"
+msgstr ""
+
+#: templates/perfil.html:111
+msgid "Información de Salud"
+msgstr ""
+
+#: templates/perfil.html:112
+msgid "Tipo de Sangre"
+msgstr ""
+
+#: templates/perfil.html:112
+msgid "Póliza"
+msgstr ""
+
+#: templates/perfil.html:112
+msgid "Aseguradora"
+msgstr ""
+
+#: templates/perfil.html:113
+msgid "Alergias"
+msgstr ""
+
+#: templates/perfil.html:113
+msgid "Enfermedades Crónicas"
+msgstr ""
+
+#: templates/perfil.html:115
+msgid "Contacto de Emergencia"
+msgstr ""
+
+#: templates/perfil.html:116
+msgid "Nombre"
+msgstr ""
+
+#: templates/perfil.html:137
+msgid "Acciones Personales"
+msgstr ""
+
+#: templates/perfil.html:141
+msgid "Editar mi Información"
+msgstr ""
+
+#: templates/perfil.html:145
+msgid "Cambiar Contraseña"
+msgstr ""
+
+#: templates/perfil.html:152
+msgid "Panel de Superusuario"
+msgstr ""
+
+#: templates/perfil.html:160
+msgid "Botones Flotantes"
 msgstr ""
 

@@ -626,3 +626,7 @@ if __name__ == '__main__':
 # (env) 23:33 ~/LATRIBU1 (main)$ flask db migrate -m "Initial migration with all models"
 # (env) 23:34 ~/LATRIBU1 (main)$ flask db upgrade
 # (env) 23:34 ~/LAT
+
+
+# Instalar todas las dependecias para utilizar offline luego
+# pip download -r requirements.txt -d librerias_offline

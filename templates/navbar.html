@@ -1,14 +1,18 @@
 <nav class="navbar navbar-expand-lg custom-navbar py-1 align-items-center">
-    <div class="container-fluid">
-        <!-- Contenedor para alinear logo y botón Cast -->
-        <div class="navbar-brand-container d-flex align-items-center">
-            <a class="navbar-brand me-auto" href="{{ url_for('home') }}">TRANSAVI</a>
-            <google-cast-launcher class="ms-2"></google-cast-launcher>
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <!-- Logo en el centro -->
+        <a class="navbar-brand mx-auto" href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='uploads/avatars/transavi.png') }}" alt="Transavi Logo" class="navbar-logo">
+        </a>
+
+        <!-- Botón de Cast y Botón de colapso -->
+        <div class="d-flex align-items-center">
+            <google-cast-launcher class="me-2"></google-cast-launcher>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
         
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <!-- Botones de Tema e Idioma (visibles en todas las vistas) -->
@@ -85,12 +89,27 @@
     </div>
 </nav>
 
+<style>
+    .navbar-logo {
+        max-height: 30px;
+        margin-left: 10px; 
+        width: auto;
+    }
+
+    @media (max-width: 991px) {
+        .navbar-logo {
+            max-height: 30px;
+            margin-left: 50px;
+            width: auto;
+        }
+}
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const langSwitcherButton = document.getElementById('single-lang-button');
     const themeSwitcherButton = document.getElementById('single-theme-button');
     
-    // Función para manejar el cambio de idioma
     if (langSwitcherButton) {
         langSwitcherButton.addEventListener('click', function(event) {
             event.preventDefault();
@@ -98,7 +117,6 @@ document.addEventListener('DOMContentLoaded', function() {
             let currentLang = document.documentElement.getAttribute('lang');
             let newLang = (currentLang === 'es') ? 'en' : 'es';
 
-            // Llama a la ruta de Flask para cambiar el idioma
             fetch('/change_language/' + newLang)
                 .then(response => {
                     if (response.ok) {
@@ -113,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Función para manejar el cambio de tema
     if (themeSwitcherButton) {
         themeSwitcherButton.addEventListener('click', function(event) {
             event.preventDefault();
@@ -123,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const nextIndex = (currentIndex + 1) % themes.length;
             const newTheme = themes[nextIndex];
 
-            // Llama a la nueva ruta de Flask para cambiar el tema
             fetch('/change_theme/' + newTheme)
                 .then(response => {
                     if (response.ok) {

@@ -1,6 +1,7 @@
 <!-- navbar.html -->
 
 <nav class="navbar navbar-expand-lg custom-navbar py-1 align-items-center">
+<<<<<<< HEAD
 <div class="container-fluid">
 <!-- Contenedor para alinear logo y botón Cast -->
 <div class="navbar-brand-container d-flex align-items-center">
@@ -23,6 +24,68 @@
                         <i class="fas fa-book-open" id="active-theme-icon"></i>
                     {% else %}
                         <i class="fas fa-sun" id="active-theme-icon"></i>
+=======
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <!-- Logo en el centro -->
+        <a class="navbar-brand mx-auto" href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='uploads/avatars/transavi.png') }}" alt="Transavi Logo" class="navbar-logo">
+        </a>
+
+        <!-- Botón de Cast y Botón de colapso -->
+        <div class="d-flex align-items-center">
+            <google-cast-launcher class="me-2"></google-cast-launcher>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <!-- Botones de Tema e Idioma (visibles en todas las vistas) -->
+                <li class="nav-item">
+                    <!-- Botón de Tema (un solo clic) -->
+                    <a class="nav-link theme-switcher" href="#" role="button" id="single-theme-button">
+                        {% if session.get('theme') == 'dark' %}
+                            <i class="fas fa-moon" id="active-theme-icon"></i>
+                        {% elif session.get('theme') == 'sepia' %}
+                            <i class="fas fa-book-open" id="active-theme-icon"></i>
+                        {% else %}
+                            <i class="fas fa-sun" id="active-theme-icon"></i>
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <!-- Botón de Idioma (un solo clic) -->
+                    <a class="nav-link" href="#" role="button" id="single-lang-button">
+                        {% if session.get('lang') == 'en' %}
+                            <span id="lang-icon">🇬🇧</span>
+                        {% else %}
+                            <span id="lang-icon">🇪🇸</span>
+                        {% endif %}
+                    </a>
+                </li>
+                       
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('aboutus.ver_aboutus') }}">
+                        <i class="fas fa-info-circle icon-only-mobile"></i>
+                        <span class="text-only-desktop">{{ _('Acerca de Nosotros') }}</span>
+                    </a>
+                </li>
+        
+                {% if session.logged_in %}
+                    {% if session.role == 'Superuser' %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ _('Más Opciones') }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('contactos.ver_contactos') }}">{{ _('Ver Contactos') }}</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('btns.crear_btns') }}">{{ _('Configurar Botón Flotante') }}</a></li>
+                                <li><a class="dropdown-item" href="https://www.pythonanywhere.com/user/kenth1977/">Pythonanywhere</a></li>
+                                <li><a class="dropdown-item text-danger fw-bold" href="{{ url_for('contactos.admin_manage_roles') }}">{{ _('Administrar Roles') }}</a></li>
+                            </ul>
+                        </li>
+>>>>>>> 4c55facb445ebbbf4949f8c38650a8bd0d94c43a
                     {% endif %}
                 </a>
             </li>
@@ -96,6 +159,7 @@
 
 </nav>
 
+<<<<<<< HEAD
 <script src="https://www.google.com/search?q=https://cdn.jsdelivr.net/npm/bootstrap%405.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <script>
@@ -151,5 +215,71 @@ if (themeSwitcherButton) {
     });
 }
 
+=======
+<style>
+    .navbar-logo {
+        max-height: 30px;
+        margin-left: 10px; 
+        width: auto;
+    }
+
+    @media (max-width: 991px) {
+        .navbar-logo {
+            max-height: 30px;
+            margin-left: 50px;
+            width: auto;
+        }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const langSwitcherButton = document.getElementById('single-lang-button');
+    const themeSwitcherButton = document.getElementById('single-theme-button');
+    
+    if (langSwitcherButton) {
+        langSwitcherButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            let currentLang = document.documentElement.getAttribute('lang');
+            let newLang = (currentLang === 'es') ? 'en' : 'es';
+
+            fetch('/change_language/' + newLang)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        console.error('Error al cambiar el idioma.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de red:', error);
+                });
+        });
+    }
+
+    if (themeSwitcherButton) {
+        themeSwitcherButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            const themes = ['light', 'dark', 'sepia'];
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const currentIndex = themes.indexOf(currentTheme);
+            const nextIndex = (currentIndex + 1) % themes.length;
+            const newTheme = themes[nextIndex];
+
+            fetch('/change_theme/' + newTheme)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        console.error('Error al cambiar el tema.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de red:', error);
+                });
+        });
+    }
+>>>>>>> 4c55facb445ebbbf4949f8c38650a8bd0d94c43a
 });
 </script>

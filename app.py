@@ -18,6 +18,7 @@ from flask_mail import Mail, Message
 from version import version_bp, Version
 from btns import btns_bp
 from flask_babel import Babel  # <-- CAMBIO CLAVE: Usa la importación de Flask-Babel
+from colaboradores import colaboradores_bp
 
 # --- Instanciar las extensiones globalmente ---
 mail = Mail()
@@ -557,6 +558,8 @@ app.register_blueprint(perfil_bp, url_prefix='/perfil')
 app.register_blueprint(aboutus_bp, url_prefix='/aboutus')
 app.register_blueprint(version_bp, url_prefix='/version')
 app.register_blueprint(btns_bp) # REGISTRO DEL BLUEPRINT DE BTNS
+app.register_blueprint(colaboradores_bp) # NUEVO: REGISTRO DEL BLUEPRINT DE COLABORADORES
+
 
 
 # --- AÑADE ESTAS DOS LÍNEAS PARA CONECTAR OAUTH ---

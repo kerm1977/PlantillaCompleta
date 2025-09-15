@@ -1,141 +1,155 @@
+<!-- navbar.html -->
+
 <nav class="navbar navbar-expand-lg custom-navbar py-1 align-items-center">
-    <div class="container-fluid">
-        <!-- Contenedor para alinear logo y botón Cast -->
-        <div class="navbar-brand-container d-flex align-items-center">
-            <a class="navbar-brand me-auto" href="{{ url_for('home') }}">TRANSAVI</a>
-            <google-cast-launcher class="ms-2"></google-cast-launcher>
-        </div>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <!-- Botones de Tema e Idioma (visibles en todas las vistas) -->
-                <li class="nav-item">
-                    <!-- Botón de Tema (un solo clic) -->
-                    <a class="nav-link theme-switcher" href="#" role="button" id="single-theme-button">
-                        {% if session.get('theme') == 'dark' %}
-                            <i class="fas fa-moon" id="active-theme-icon"></i>
-                        {% elif session.get('theme') == 'sepia' %}
-                            <i class="fas fa-book-open" id="active-theme-icon"></i>
-                        {% else %}
-                            <i class="fas fa-sun" id="active-theme-icon"></i>
-                        {% endif %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <!-- Botón de Idioma (un solo clic) -->
-                    <a class="nav-link" href="#" role="button" id="single-lang-button">
-                        {% if session.get('lang') == 'en' %}
-                            <span id="lang-icon">🇬🇧</span>
-                        {% else %}
-                            <span id="lang-icon">🇪🇸</span>
-                        {% endif %}
-                    </a>
-                </li>
-                       
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('aboutus.ver_aboutus') }}">
-                        <i class="fas fa-info-circle icon-only-mobile"></i>
-                        <span class="text-only-desktop">{{ _('Acerca de Nosotros') }}</span>
-                    </a>
-                </li>
-        
-                {% if session.logged_in %}
-                    {% if session.role == 'Superuser' %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ _('Más Opciones') }}
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ url_for('contactos.ver_contactos') }}">{{ _('Ver Contactos') }}</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('btns.crear_btns') }}">{{ _('Configurar Botón Flotante') }}</a></li>
-                                <li><a class="dropdown-item" href="https://www.pythonanywhere.com/user/kenth1977/">Pythonanywhere</a></li>
-                                <li><a class="dropdown-item text-danger fw-bold" href="{{ url_for('contactos.admin_manage_roles') }}">{{ _('Administrar Roles') }}</a></li>
-                            </ul>
-                        </li>
+<div class="container-fluid">
+<!-- Contenedor para alinear logo y botón Cast -->
+<div class="navbar-brand-container d-flex align-items-center">
+<a class="navbar-brand me-auto" href="{{ url_for('home') }}">TRANSAVI</a>
+<google-cast-launcher class="ms-2"></google-cast-launcher>
+</div>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <!-- Botones de Tema e Idioma (visibles en todas las vistas) -->
+            <li class="nav-item">
+                <!-- Botón de Tema (un solo clic) -->
+                <a class="nav-link theme-switcher" href="#" role="button" id="single-theme-button">
+                    {% if session.get('theme') == 'dark' %}
+                        <i class="fas fa-moon" id="active-theme-icon"></i>
+                    {% elif session.get('theme') == 'sepia' %}
+                        <i class="fas fa-book-open" id="active-theme-icon"></i>
+                    {% else %}
+                        <i class="fas fa-sun" id="active-theme-icon"></i>
                     {% endif %}
-                    
+                </a>
+            </li>
+            <li class="nav-item">
+                <!-- Botón de Idioma (un solo clic) -->
+                <a class="nav-link" href="#" role="button" id="single-lang-button">
+                    {% if session.get('lang') == 'en' %}
+                        <span id="lang-icon">🇬🇧</span>
+                    {% else %}
+                        <span id="lang-icon">🇪🇸</span>
+                    {% endif %}
+                </a>
+            </li>
+                   
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('aboutus.ver_aboutus') }}">
+                    <i class="fas fa-info-circle icon-only-mobile"></i>
+                    <span class="text-only-desktop">{{ _('Acerca de Nosotros') }}</span>
+                </a>
+            </li>
+    
+            {% if session.logged_in %}
+                {% if session.role in ['Superuser', 'Administrador'] %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('perfil.perfil') }}">
-                            <i class="fas fa-user icon-only-mobile"></i>
-                            <span class="text-only-desktop">{{ session.username }}</span>
+                        <a class="nav-link" href="{{ url_for('colaboradores.ver_colaboradores') }}">
+                            <i class="fas fa-users-cog icon-only-mobile"></i>
+                            <span class="text-only-desktop">Colaboradores</span>
                         </a>
                     </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">
-                            <i class="fas fa-sign-out-alt icon-only-mobile"></i>
-                            <span class="text-only-desktop">{{ _('Cerrar Sesión') }}</span>
-                        </a>
-                    </li>
-                {% else %}
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('login') }}">
-                            <i class="fas fa-user icon-only-mobile"></i>
-                            <span class="text-only-desktop">{{ _('Iniciar Sesión') }}</span>
-                        </a>
-                    </li>
-
                 {% endif %}
-            </ul>
-        </div>
+                {% if session.role == 'Superuser' %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ _('Más Opciones') }}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('contactos.ver_contactos') }}">{{ _('Ver Contactos') }}</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('btns.crear_btns') }}">{{ _('Configurar Botón Flotante') }}</a></li>
+                            <li><a class="dropdown-item" href="https://www.pythonanywhere.com/user/kenth1977/">Pythonanywhere</a></li>
+                            <li><a class="dropdown-item text-danger fw-bold" href="{{ url_for('contactos.admin_manage_roles') }}">{{ _('Administrar Roles') }}</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('perfil.perfil') }}">
+                        <i class="fas fa-user icon-only-mobile"></i>
+                        <span class="text-only-desktop">{{ session.username }}</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt icon-only-mobile"></i>
+                        <span class="text-only-desktop">{{ _('Cerrar Sesión') }}</span>
+                    </a>
+                </li>
+            {% else %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">
+                        <i class="fas fa-user icon-only-mobile"></i>
+                        <span class="text-only-desktop">{{ _('Iniciar Sesión') }}</span>
+                    </a>
+                </li>
+
+            {% endif %}
+        </ul>
     </div>
+</div>
+
 </nav>
+
+<script src="https://www.google.com/search?q=https://cdn.jsdelivr.net/npm/bootstrap%405.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const langSwitcherButton = document.getElementById('single-lang-button');
-    const themeSwitcherButton = document.getElementById('single-theme-button');
-    
-    // Función para manejar el cambio de idioma
-    if (langSwitcherButton) {
-        langSwitcherButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            
-            let currentLang = document.documentElement.getAttribute('lang');
-            let newLang = (currentLang === 'es') ? 'en' : 'es';
+const langSwitcherButton = document.getElementById('single-lang-button');
+const themeSwitcherButton = document.getElementById('single-theme-button');
 
-            // Llama a la ruta de Flask para cambiar el idioma
-            fetch('/change_language/' + newLang)
-                .then(response => {
-                    if (response.ok) {
-                        window.location.reload();
-                    } else {
-                        console.error('Error al cambiar el idioma.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error de red:', error);
-                });
-        });
-    }
+// Función para manejar el cambio de idioma
+if (langSwitcherButton) {
+    langSwitcherButton.addEventListener(&#39;click&#39;, function(event) {
+        event.preventDefault();
+        
+        let currentLang = document.documentElement.getAttribute(&#39;lang&#39;);
+        let newLang = (currentLang === &#39;es&#39;) ? &#39;en&#39; : &#39;es&#39;;
 
-    // Función para manejar el cambio de tema
-    if (themeSwitcherButton) {
-        themeSwitcherButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            const themes = ['light', 'dark', 'sepia'];
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const currentIndex = themes.indexOf(currentTheme);
-            const nextIndex = (currentIndex + 1) % themes.length;
-            const newTheme = themes[nextIndex];
+        // Llama a la ruta de Flask para cambiar el idioma
+        fetch(&#39;/change_language/&#39; + newLang)
+            .then(response =&gt; {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    console.error(&#39;Error al cambiar el idioma.&#39;);
+                }
+            })
+            .catch(error =&gt; {
+                console.error(&#39;Error de red:&#39;, error);
+            });
+    });
+}
 
-            // Llama a la nueva ruta de Flask para cambiar el tema
-            fetch('/change_theme/' + newTheme)
-                .then(response => {
-                    if (response.ok) {
-                        window.location.reload();
-                    } else {
-                        console.error('Error al cambiar el tema.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error de red:', error);
-                });
-        });
-    }
+// Función para manejar el cambio de tema
+if (themeSwitcherButton) {
+    themeSwitcherButton.addEventListener(&#39;click&#39;, function(event) {
+        event.preventDefault();
+        const themes = [&#39;light&#39;, &#39;dark&#39;, &#39;sepia&#39;];
+        const currentTheme = document.documentElement.getAttribute(&#39;data-theme&#39;);
+        const currentIndex = themes.indexOf(currentTheme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        const newTheme = themes[nextIndex];
+
+        // Llama a la nueva ruta de Flask para cambiar el tema
+        fetch(&#39;/change_theme/&#39; + newTheme)
+            .then(response =&gt; {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    console.error(&#39;Error al cambiar el tema.&#39;);
+                }
+            })
+            .catch(error =&gt; {
+                console.error(&#39;Error de red:&#39;, error);
+            });
+    });
+}
+
 });
 </script>

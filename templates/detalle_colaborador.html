@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de {{ colaborador.nombre }}{% endblock %}
+
+{% block head_content %}
+<style>
+.container {
+max-width: 900px;
+}
+.colaborador-header {
+border-radius: 1rem;
+background-color: #f8f9fa;
+padding: 2rem;
+}
+
+/* Ajustes de tipografía para un look más estilizado */
+.colaborador-header h1 {
+    font-size: 2.5rem; /* Reducido para no ser tan abrumador */
+    margin-bottom: 0.5rem;
+}
+.colaborador-header p.lead {
+    font-size: 1.2rem;
+    color: #6c757d; /* Color gris para la cédula */
+}
+
+.section-title {
+color: #495057;
+border-bottom: 2px solid #007bff;
+padding-bottom: 0.5rem;
+margin-bottom: 1.5rem;
+font-size: 1.5rem;
+}
+
+/* Estilo para la imagen de perfil circular */
+.colaborador-header img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    border: 3px solid #fff; /* Borde blanco para resaltar la imagen */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.card {
+    border-radius: 1rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.floating-btn-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+.btn-floating {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <div class="d-flex align-items-center mb-4 p-4 colaborador-header shadow-sm">
+                <img src="{{ url_for('colaboradores.uploaded_file', filename=colaborador.foto_perfil.split('/')[-1]) }}" alt="Foto de {{ colaborador.nombre }}" class="me-4" >
+                <div>
+                    <h1 class="fw-bold text-primary">{{ colaborador.nombre }} {{ colaborador.primer_apellido }} {{ colaborador.segundo_apellido }}</h1>
+                    <p class="lead text-muted">{{ colaborador.cedula }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h4 class="section-title">Información Personal</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <p><strong>Cédula:</strong> {{ colaborador.cedula }}</p>
+                            <p><strong>Teléfono:</strong> {{ colaborador.telefono }}</p>
+                            <p><strong>Móvil:</strong> {{ colaborador.movil }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <p><strong>Email:</strong> {{ colaborador.email }}</p>
+                            <p><strong>Fecha de Creación:</strong> {{ colaborador.fecha_creacion.strftime('%Y-%m-%d') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if colaborador.vehiculos %}
+            {% for vehiculo in colaborador.vehiculos %}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h4 class="section-title">Información del Vehículo</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% if vehiculo.revisiones_tecnicas %}
+                                <p><strong>Placa:</strong> {{ vehiculo.revisiones_tecnicas[0].placa }}</p>
+                                {% endif %}
+                                <p><strong>Marca:</strong> {{ vehiculo.marca }}</p>
+                                <p><strong>Modelo:</strong> {{ vehiculo.modelo }}</p>
+                                <p><strong>Año:</strong> {{ vehiculo.anio }}</p>
+                                <p><strong>Propietario:</strong> {{ vehiculo.propietario_registral }}</p>
+                                <p><strong>Capacidad:</strong> {{ vehiculo.capacidad }} pasajeros</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Combustible:</strong> {{ vehiculo.tipo_combustible }}</p>
+                                <p><strong>Tipo de Servicio:</strong> {{ vehiculo.tipo_servicio }}</p>
+                                <p><strong>Estado:</strong> {{ vehiculo.estado_vehiculo }}</p>
+                                {% if vehiculo.revisiones_tecnicas %}
+                                    <p><strong>Revisión Técnica:</strong>
+                                    {% if vehiculo.revisiones_tecnicas[0].fecha_segunda_revision %}
+                                    {{ vehiculo.revisiones_tecnicas[0].fecha_segunda_revision.strftime('%Y-%m-%d') }}
+                                    {% else %}
+                                    {{ vehiculo.revisiones_tecnicas[0].fecha_primera_revision.strftime('%Y-%m-%d') }}
+                                    {% endif %}
+                                    </p>
+                                {% endif %}
+                                {% if vehiculo.polizas %}
+                                <p><strong>Póliza:</strong> {{ vehiculo.polizas[0].numero_poliza }}</p>
+                                <p><strong>Vigencia Póliza:</strong> {{ vehiculo.polizas[0].cobertura_desde.strftime('%Y-%m-%d') }} a {{ vehiculo.polizas[0].cobertura_hasta.strftime('%Y-%m-%d') }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="mb-3">Fotografías del Vehículo</h5>
+                            <div class="row g-2">
+                                <!-- CORRECCIÓN: Se accede a la lista de fotos con el nombre correcto de la relación -->
+                                {% for foto in vehiculo.fotografias %}
+                                <div class="col-4">
+                                    <img src="{{ url_for('colaboradores.uploaded_file', filename=foto.url_foto.split('/')[-1]) }}" class="img-fluid rounded shadow-sm" alt="Foto del vehículo">
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <a href="{{ url_for('colaboradores.editar_colaborador', id=colaborador.id) }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-edit me-2"></i>Editar
+                </a>
+                <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fas fa-trash-alt me-2"></i>Eliminar
+                </button>
+                <a href="{{ url_for('colaboradores.exportar_colaborador', id=colaborador.id, format='xls') }}" class="btn btn-success btn-lg">
+                    <i class="fas fa-file-excel me-2"></i>Exportar Excel
+                </a>
+                <a href="{{ url_for('colaboradores.exportar_colaborador', id=colaborador.id, format='pdf') }}" class="btn btn-info btn-lg">
+                    <i class="fas fa-file-pdf me-2"></i>Generar PDF de ID
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación de eliminación -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar a {{ colaborador.nombre }} {{ colaborador.primer_apellido }}?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form action="{{ url_for('colaboradores.eliminar_colaborador', id=colaborador.id) }}" method="POST">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="floating-btn-container">
+    <a href="{{ url_for('colaboradores.ver_colaboradores') }}" class="btn btn-primary btn-floating" data-bs-toggle="tooltip" data-bs-placement="left" title="Ver Colaboradores">
+        <i class="fas fa-list"></i>
+    </a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+{% endblock %}

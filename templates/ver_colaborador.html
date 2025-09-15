@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Colaboradores{% endblock %}
+
+{% block head_content %}
+<style>
+.colaborador-card {
+border-radius: 1rem;
+transition: transform 0.3s ease-in-out;
+border: 1px solid #dee2e6;
+background-color: #fff;
+}
+.colaborador-card:hover {
+transform: translateY(-5px);
+}
+.card-img-top {
+border-top-left-radius: 1rem;
+border-top-right-radius: 1rem;
+height: 200px;
+object-fit: cover;
+}
+.floating-btn-container {
+position: fixed;
+bottom: 20px;
+right: 20px;
+display: flex;
+flex-direction: column;
+gap: 10px;
+z-index: 1000;
+}
+.btn-floating {
+width: 60px;
+height: 60px;
+border-radius: 50%;
+display: flex;
+justify-content: center;
+align-items: center;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+<h1 class="text-center mb-4">Lista de Colaboradores</h1>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for colaborador in colaboradores %}
+        <div class="col">
+            <div class="card colaborador-card h-100">
+                <img src="{{ url_for('colaboradores.uploaded_file', filename=colaborador.foto_perfil.split('/')[-1]) }}" class="card-img-top" alt="Foto de {{ colaborador.nombre }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-center">{{ colaborador.nombre }} {{ colaborador.primer_apellido }}</h5>
+                    <ul class="list-group list-group-flush mb-auto">
+                        <li class="list-group-item"><i class="fas fa-phone-alt me-2"></i>Teléfono: {{ colaborador.telefono }}</li>
+                        {% for vehiculo in colaborador.vehiculos %}
+                            <li class="list-group-item"><i class="fas fa-car me-2"></i>Vehículo: {{ vehiculo.marca }} {{ vehiculo.modelo }}</li>
+                            <li class="list-group-item"><i class="fas fa-users me-2"></i>Capacidad: {{ vehiculo.capacidad }} pasajeros</li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{{ url_for('colaboradores.detalle_colaborador', id=colaborador.id) }}" class="btn btn-primary mt-3">Ver Detalles</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center">
+            <p>No se encontraron colaboradores.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="floating-btn-container">
+    {% if user_role in ['Superuser', 'Administrador'] %}
+    <a href="{{ url_for('colaboradores.crear_colaborador') }}" class="btn btn-warning btn-floating" data-bs-toggle="tooltip" data-bs-placement="left" title="Agregar Nuevo">
+        <i class="fas fa-plus"></i>
+    </a>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+{% endblock %}

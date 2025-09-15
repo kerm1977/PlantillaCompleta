@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Colaborador{% endblock %}
+
+{% block head_content %}
+<style>
+.container {
+max-width: 900px;
+}
+.form-section {
+padding: 2rem;
+border-radius: 1rem;
+margin-bottom: 2rem;
+}
+.form-section.personales {
+background-color: #f8f9fa;
+}
+.form-section.vehiculos {
+background-color: #e9ecef;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+<h1 class="text-center mb-4">Editar Colaborador</h1>
+
+    <form id="colaborador-form" method="POST" enctype="multipart/form-data" action="{{ url_for('colaboradores.editar_colaborador', id=colaborador.id) }}">
+        
+        <div class="form-section personales shadow-sm">
+            <h2 class="mb-3">Información Personal</h2>
+            <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                    <label for="foto_perfil" class="form-label">Fotografía del Colaborador</label>
+                    <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" accept="image/png, image/jpeg, image/jpg">
+                    {% if colaborador.foto_perfil %}
+                        <img src="{{ url_for('colaboradores.uploaded_file', filename=colaborador.foto_perfil.split('/')[-1]) }}" alt="Foto actual" class="img-thumbnail mt-2" style="max-height: 150px;">
+                    {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="nombre" class="form-label">Nombre del Colaborador</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{ colaborador.nombre }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="primer_apellido" class="form-label">Primer Apellido</label>
+                    <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" value="{{ colaborador.primer_apellido }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
+                    <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido" value="{{ colaborador.segundo_apellido }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="cedula" class="form-label">Cédula</label>
+                    <input type="text" class="form-control" id="cedula" name="cedula" value="{{ colaborador.cedula }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ colaborador.email }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="text" class="form-control" id="telefono" name="telefono" value="{{ colaborador.telefono }}" inputmode="numeric" pattern="[0-9]*" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="movil" class="form-label">Móvil</label>
+                    <input type="text" class="form-control" id="movil" name="movil" value="{{ colaborador.movil }}" inputmode="numeric" pattern="[0-9]*">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section vehiculos shadow-sm" id="vehiculos-section">
+            <h2 class="mb-3">Información de Vehículo</h2>
+            <div id="vehiculos-container">
+                <!-- Los campos del vehículo se agregarán aquí dinámicamente -->
+            </div>
+            <button type="button" class="btn btn-primary mt-3" id="add-vehiculo-btn">
+                <i class="fas fa-plus"></i> Agregar Vehículo
+            </button>
+        </div>
+        
+        <input type="hidden" name="vehiculos_data" id="vehiculos_data">
+        
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-warning btn-lg">
+                Guardar Cambios
+            </button>
+        </div>
+        
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addVehiculoBtn = document.getElementById('add-vehiculo-btn');
+        const vehiculosContainer = document.getElementById('vehiculos-container');
+        let vehiculoCount = 0;
+        const vehiculosDataInput = document.getElementById('vehiculos_data');
+        
+        const colaboradorData = {{ colaborador | to_json | safe }};
+
+        const vehiculoData = {
+            marcas: ["Toyota", "Nissan", "Hyundai", "King Long", "Mercedes-Benz", "Volkswagen", "Iveco", "Ford", "Mitsubishi", "Isuzu", "Blue Bird", "Golden Dragon", "Yutong", "Higer"],
+            modelos: {
+                "Toyota": ["Toyota Hiace", "Toyota Coaster", "Toyota Sienna", "Toyota Alphard", "Toyota Vellfire"],
+                "Nissan": ["Nissan Urvan", "Nissan Civilian", "Nissan NV Passenger"],
+                "Hyundai": ["Hyundai Staria", "Hyundai H-1", "Hyundai County", "Hyundai Solati"],
+                "King Long": ["King Long Kingo", "King Long Kingwin", "King Long XMQ Series"],
+                "Mercedes-Benz": ["Mercedes-Benz Sprinter", "Mercedes-Benz Vito Tourer", "Mercedes-Benz Tourismo"],
+                "Volkswagen": ["Volkswagen Crafter", "Volkswagen Transporter Caravelle y Volkswagen Transporter Multivan", "Volkswagen Caddy"],
+                "Iveco": ["Iveco Daily Minibús", "Iveco Evadys", "Iveco Crossway"],
+                "Ford": ["Ford Transit Pasajeros", "Ford E-Series Wagon (Econoline)", "Ford Tourneo Custom"],
+                "Mitsubishi": ["Mitsubishi Fuso Rosa", "Minibús Canter FUSO"],
+                "Isuzu": ["Isuzu ELF Bus", "Isuzu Journey", "Isuzu F-Series y Giga Series"],
+                "Blue Bird": ["Blue Bird Vision", "Blue Bird All American"],
+                "Golden Dragon": ["Golden Dragon Kingo", "Golden Dragon XML Series"],
+                "Yutong": ["Yutong ZK6 Series", "Yutong ZK6122"],
+                "Higer": ["Higer Minibús", "Higer H Series"]
+            },
+            combustibles: ["Gasolina", "Diesel", "Eléctrico"],
+            anios: Array.from({length: 51}, (v, k) => 2000 + k),
+            servicios: ["Turismo", "Transporte de Estudiantes"],
+            capacidades: Array.from({length: 41}, (v, k) => 10 + k),
+            estados: ["Nuevo", "Muy Bueno", "Bueno", "Regular", "Malo"]
+        };
+
+        const updateModelSelect = (vehiculoElement) => {
+            const marcaSelect = vehiculoElement.querySelector('.marca-select');
+            const modeloSelect = vehiculoElement.querySelector('.modelo-select');
+            const selectedMarca = marcaSelect.value;
+            const modelos = vehiculoData.modelos[selectedMarca] || [];
+            
+            modeloSelect.innerHTML = '<option value="">Seleccione un Modelo</option>';
+            modelos.forEach(modelo => {
+                const option = document.createElement('option');
+                option.value = modelo;
+                option.textContent = modelo;
+                modeloSelect.appendChild(option);
+            });
+        };
+
+        const addVehiculo = (data = null) => {
+            vehiculoCount++;
+            const tempId = data ? data.id : uuidv4();
+            const newVehiculoDiv = document.createElement('div');
+            newVehiculoDiv.className = 'card shadow-sm mb-4';
+            newVehiculoDiv.setAttribute('data-temp-id', tempId);
+            newVehiculoDiv.innerHTML = `
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title">Vehículo #${vehiculoCount}</h5>
+                        <button type="button" class="btn btn-danger btn-sm remove-vehiculo-btn"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <hr>
+                    <div class="row g-3">
+                        <div class="col-md-6 mb-3">
+                            <label for="marca-${tempId}" class="form-label">Marca</label>
+                            <select class="form-select marca-select" id="marca-${tempId}" required>
+                                <option value="">Seleccione una Marca</option>
+                                ${vehiculoData.marcas.map(marca => `<option value="${marca}">${marca}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="modelo-${tempId}" class="form-label">Modelo</label>
+                            <select class="form-select modelo-select" id="modelo-${tempId}" required>
+                                <option value="">Seleccione un Modelo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="combustible-${tempId}" class="form-label">Tipo de Combustible</label>
+                            <select class="form-select" id="combustible-${tempId}" required>
+                                <option value="">Seleccione el Combustible</option>
+                                ${vehiculoData.combustibles.map(comb => `<option value="${comb}">${comb}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="anio-${tempId}" class="form-label">Año</label>
+                            <select class="form-select" id="anio-${tempId}" required>
+                                <option value="">Seleccione el Año</option>
+                                ${vehiculoData.anios.map(anio => `<option value="${anio}">${anio}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="propietario-${tempId}" class="form-label">Propietario Registral</label>
+                            <input type="text" class="form-control" id="propietario-${tempId}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="servicio-${tempId}" class="form-label">Tipo de Servicio</label>
+                            <select class="form-select" id="servicio-${tempId}" required>
+                                <option value="">Seleccione el Servicio</option>
+                                ${vehiculoData.servicios.map(servicio => `<option value="${servicio}">${servicio}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="capacidad-${tempId}" class="form-label">Capacidad</label>
+                            <input type="number" class="form-control" id="capacidad-${tempId}" min="10" max="50" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="estado-${tempId}" class="form-label">Estado del Vehículo</label>
+                            <select class="form-select" id="estado-${tempId}" required>
+                                <option value="">Seleccione el Estado</option>
+                                ${vehiculoData.estados.map(estado => `<option value="${estado}">${estado}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <h6 class="mt-4 mb-3">Revisión Técnica</h6>
+                    <div class="row g-3">
+                        <div class="col-md-4 mb-3">
+                            <label for="placa-${tempId}" class="form-label">Placa</label>
+                            <input type="text" class="form-control" id="placa-${tempId}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="fecha_primera_revision-${tempId}" class="form-label">Fecha Primera Revisión Vehicular</label>
+                            <input type="date" class="form-control" id="fecha_primera_revision-${tempId}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="fecha_segunda_revision-${tempId}" class="form-label">Fecha Segunda Revisión Vehicular</label>
+                            <input type="date" class="form-control" id="fecha_segunda_revision-${tempId}">
+                        </div>
+                    </div>
+                    
+                    <h6 class="mt-4 mb-3">Póliza</h6>
+                    <div class="row g-3">
+                        <div class="col-md-4 mb-3">
+                            <label for="numero_poliza-${tempId}" class="form-label">Número de Póliza</label>
+                            <input type="text" class="form-control" id="numero_poliza-${tempId}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="cobertura_desde-${tempId}" class="form-label">Cobertura desde</label>
+                            <input type="date" class="form-control" id="cobertura_desde-${tempId}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="cobertura_hasta-${tempId}" class="form-label">Cobertura hasta</label>
+                            <input type="date" class="form-control" id="cobertura_hasta-${tempId}">
+                        </div>
+                         <div class="col-md-4 mb-3">
+                            <label for="fecha_limite_pago-${tempId}" class="form-label">Fecha límite de pago</label>
+                            <input type="date" class="form-control" id="fecha_limite_pago-${tempId}">
+                        </div>
+                    </div>
+
+                    <h6 class="mt-4 mb-3">Fotografías del Vehículo</h6>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <input type="file" class="form-control" id="vehiculo_fotos_${tempId}" name="vehiculo_fotos_${tempId}" accept="image/png, image/jpeg, image/jpg" multiple>
+                        </div>
+                        <div id="image-preview-${tempId}" class="mt-2 row g-2"></div>
+                    </div>
+
+                </div>
+            `;
+            vehiculosContainer.appendChild(newVehiculoDiv);
+            
+            const marcaSelect = newVehiculoDiv.querySelector('.marca-select');
+            marcaSelect.addEventListener('change', () => updateModelSelect(newVehiculoDiv));
+            
+            // Lógica para mostrar la vista previa de las imágenes
+            const fotosInput = newVehiculoDiv.querySelector(`#vehiculo_fotos_${tempId}`);
+            const previewContainer = newVehiculoDiv.querySelector(`#image-preview-${tempId}`);
+            
+            fotosInput.addEventListener('change', (event) => {
+                const files = [...event.target.files];
+                const existingFiles = previewContainer.querySelectorAll('img').length;
+                const totalFiles = files.length + existingFiles;
+
+                if (totalFiles > 5) {
+                    alert('Solo puedes subir un máximo de 5 fotos por vehículo.');
+                    event.target.value = null;
+                    return;
+                }
+                
+                files.forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const col = document.createElement('div');
+                            col.className = 'col-md-3';
+                            col.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded shadow-sm" alt="Vista previa de imagen">`;
+                            previewContainer.appendChild(col);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+
+            newVehiculoDiv.querySelector('.remove-vehiculo-btn').addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que deseas eliminar este vehículo?')) {
+                    const cardToRemove = this.closest('.card');
+                    cardToRemove.remove();
+                }
+            });
+        
+            if (data) {
+                newVehiculoDiv.querySelector('.marca-select').value = data.marca || '';
+                updateModelSelect(newVehiculoDiv);
+                newVehiculoDiv.querySelector('.modelo-select').value = data.modelo || '';
+                newVehiculoDiv.querySelector('#combustible-' + tempId).value = data.tipo_combustible || '';
+                newVehiculoDiv.querySelector('#anio-' + tempId).value = data.anio || '';
+                newVehiculoDiv.querySelector('#propietario-' + tempId).value = data.propietario_registral || '';
+                newVehiculoDiv.querySelector('#servicio-' + tempId).value = data.tipo_servicio || '';
+                newVehiculoDiv.querySelector('#capacidad-' + tempId).value = data.capacidad || '';
+                newVehiculoDiv.querySelector('#estado-' + tempId).value = data.estado_vehiculo || '';
+                
+                // Cargar datos de revisión técnica
+                const revision = data.revisiones_tecnicas[0] || {};
+                newVehiculoDiv.querySelector('#placa-' + tempId).value = revision.placa || '';
+                newVehiculoDiv.querySelector('#fecha_primera_revision-' + tempId).value = revision.fecha_primera_revision || '';
+                newVehiculoDiv.querySelector('#fecha_segunda_revision-' + tempId).value = revision.fecha_segunda_revision || '';
+                
+                // Cargar datos de póliza
+                const poliza = data.polizas[0] || {};
+                newVehiculoDiv.querySelector('#numero_poliza-' + tempId).value = poliza.numero_poliza || '';
+                newVehiculoDiv.querySelector('#cobertura_desde-' + tempId).value = poliza.cobertura_desde || '';
+                newVehiculoDiv.querySelector('#cobertura_hasta-' + tempId).value = poliza.cobertura_hasta || '';
+                newVehiculoDiv.querySelector('#fecha_limite_pago-' + tempId).value = poliza.fecha_limite_pago || '';
+
+                // Cargar imágenes existentes
+                if (data.fotografias) {
+                    data.fotografias.forEach(foto => {
+                        const col = document.createElement('div');
+                        col.className = 'col-4';
+                        // CORRECCIÓN: Se usa la ruta completa con url_for
+                        col.innerHTML = `<img src="{{ url_for('colaboradores.uploaded_file', filename='') }}${foto.url_foto.split('/').pop()}" class="img-fluid rounded" alt="Foto de vehículo">`;
+                        previewContainer.appendChild(col);
+                    });
+                }
+            }
+        };
+
+        if (colaboradorData && colaboradorData.vehiculos) {
+            colaboradorData.vehiculos.forEach(vehiculo => {
+                addVehiculo(vehiculo);
+            });
+        }
+
+        addVehiculoBtn.addEventListener('click', () => addVehiculo());
+
+        const form = document.getElementById('colaborador-form');
+        form.addEventListener('submit', function(event) {
+            const vehiculos = document.querySelectorAll('#vehiculos-container .card');
+            const vehiculosArray = [];
+            vehiculos.forEach(vehiculo => {
+                const tempId = vehiculo.getAttribute('data-temp-id');
+                const marca = vehiculo.querySelector('.marca-select').value;
+                const modelo = vehiculo.querySelector('.modelo-select').value;
+                const combustible = vehiculo.querySelector('#combustible-' + tempId).value;
+                const anio = vehiculo.querySelector('#anio-' + tempId).value;
+                const propietario = vehiculo.querySelector('#propietario-' + tempId).value;
+                const servicio = vehiculo.querySelector('#servicio-' + tempId).value;
+                const capacidad = vehiculo.querySelector('#capacidad-' + tempId).value;
+                const estado = vehiculo.querySelector('#estado-' + tempId).value;
+                const placa = vehiculo.querySelector('#placa-' + tempId).value;
+                const fecha_primera_revision = vehiculo.querySelector('#fecha_primera_revision-' + tempId).value;
+                const fecha_segunda_revision = vehiculo.querySelector('#fecha_segunda_revision-' + tempId).value;
+                const numero_poliza = vehiculo.querySelector('#numero_poliza-' + tempId).value;
+                const cobertura_desde = vehiculo.querySelector('#cobertura_desde-' + tempId).value;
+                const cobertura_hasta = vehiculo.querySelector('#cobertura_hasta-' + tempId).value;
+                const fecha_limite_pago = vehiculo.querySelector('#fecha_limite_pago-' + tempId).value;
+
+                vehiculosArray.push({
+                    temp_id: tempId,
+                    marca: marca,
+                    modelo: modelo,
+                    tipo_combustible: combustible,
+                    anio: anio,
+                    propietario_registral: propietario,
+                    tipo_servicio: servicio,
+                    capacidad: capacidad,
+                    estado_vehiculo: estado,
+                    placa: placa,
+                    fecha_primera_revision: fecha_primera_revision,
+                    fecha_segunda_revision: fecha_segunda_revision,
+                    numero_poliza: numero_poliza,
+                    cobertura_desde: cobertura_desde,
+                    cobertura_hasta: cobertura_hasta,
+                    fecha_limite_pago: fecha_limite_pago
+                });
+            });
+            vehiculosDataInput.value = JSON.stringify(vehiculosArray);
+        });
+        
+        function uuidv4() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+    });
+</script>
+{% endblock %}

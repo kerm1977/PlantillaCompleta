@@ -77,9 +77,53 @@ def registro_solicitudes():
     solicitudes = Solicitud.query.order_by(Solicitud.id.desc()).all()
     return render_template('registro_solicitudes.html', solicitudes=solicitudes)
 
+@solicitud_bp.route('/consulta_usuarios')
+def consulta_usuarios():
+    users = User.query.all()
+    return render_template('consulta_usuarios.html', users=users)
+
+@solicitud_bp.route('/editar_usuario/<int:user_id>')
+def editar_usuario(user_id):
+    user = User.query.get_or_404(user_id)
+    return render_template('editar_usuario.html', user=user)
+
+@solicitud_bp.route('/guardar_usuario', methods=['POST'])
+def guardar_usuario():
+    try:
+        data = request.json
+        user_id = data.get('id')
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'success': False, 'message': 'Usuario no encontrado.'})
+
+        user.nombre = data.get('nombre')
+        user.primer_apellido = data.get('primer_apellido')
+        user.segundo_apellido = data.get('segundo_apellido')
+        user.telefono = data.get('telefono')
+        user.email = data.get('email')
+
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Usuario actualizado correctamente.'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': f'Error al guardar el usuario: {str(e)}'})
+
+@solicitud_bp.route('/eliminar_usuario/<int:user_id>', methods=['POST'])
+def eliminar_usuario(user_id):
+    try:
+        user = User.query.get_or_404(user_id)
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Usuario eliminado correctamente.'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': f'Ocurrió un error al eliminar el usuario: {str(e)}'})
+
 @solicitud_bp.route('/ver_detalle_solicitud/<int:solicitud_id>')
 def ver_detalle_solicitud(solicitud_id):
-    solicitud = Solicitud.query.get_or_404(solicitud_id)
+    solicitud = Solicitud.query.get(solicitud_id)
+    if not solicitud:
+        return render_template('detalle_solicitud.html', solicitud=None, error_message="No existen Solicitudes con este ID."), 404
     return render_template('detalle_solicitud.html', solicitud=solicitud)
 
 @solicitud_bp.route('/check_user', methods=['POST'])

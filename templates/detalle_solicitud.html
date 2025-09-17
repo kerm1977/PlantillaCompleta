@@ -3,95 +3,157 @@
 {% block title %}Detalle de Solicitud{% endblock %}
 
 {% block content %}
-<!-- NO TENGO AUTORIZACIÓN PARA MODIFICAR EL DISEÑO DE ESTA VISTA -->
+
 <div class="container my-5">
-    <div class="card p-0 border rounded-lg" style="max-width: 800px; margin: auto;">
-        <!-- Header del boleto -->
-        <div class="card-header bg-warning text-white rounded-top-lg" style="border-bottom: 3px dashed #fff;">
-            <div class="d-flex justify-content-between align-items-center p-3">
-                <div>
-                    <h5 class="fw-light mb-0">TRANSAVI</h5>
-                    <p class="mb-0 small fst-italic">Tu servicio de transporte confiable</p>
-                </div>
-                <h1 class="display-5 fw-bold mb-0">BOLETO</h1>
-            </div>
-        </div>
+{% if not solicitud %}
+<div class="card p-4 text-center">
+<h2 class="text-danger">Solicitud No Encontrada</h2>
+<p class="lead">{{ error_message }}</p>
+<p>Por favor, regrese al <a href="{{ url_for('solicitud.registro_solicitudes') }}">Registro de Solicitudes</a> y verifique si el número de solicitud es correcto.</p>
+</div>
+{% else %}
+<div class="card p-0 border rounded-lg" style="max-width: 800px; margin: auto;">
+<!-- Header del boleto -->
+<div class="card-header bg-warning text-white rounded-top-lg" style="border-bottom: 3px dashed #fff;">
+<div class="d-flex justify-content-between align-items-center p-3">
+<div>
+<h5 class="fw-light mb-0">TRANSAVI</h5>
+<p class="mb-0 small fst-italic">Tu servicio de transporte confiable</p>
+</div>
+<h1 class="display-5 fw-bold mb-0">BOLETO</h1>
+</div>
+</div>
 
-        <!-- Cuerpo del boleto - Contenido principal -->
-        <div class="card-body p-4 bg-white rounded-bottom-lg">
-            <div class="row">
-                <!-- Seccion izquierda - Detalles del cliente -->
-                <div class="col-md-8 border-end pe-4">
-                    <h4 class="mb-3 text-warning">Detalles del Pasajero</h4>
-                    <div class="row g-2 mb-4">
-                        {% if solicitud.tipo_servicio == 'Particular' %}
-                            <div class="col-6"><p class="mb-0 small text-muted">NOMBRE COMPLETO</p><p class="fw-bold">{{ solicitud.nombre or '' }} {{ solicitud.primer_apellido or '' }} {{ solicitud.segundo_apellido or '' }}</p></div>
-                            <div class="col-6"><p class="mb-0 small text-muted">TELÉFONO</p><p class="fw-bold">{{ solicitud.telefono or '' }}</p></div>
-                        {% else %}
-                            <div class="col-6"><p class="mb-0 small text-muted">EMPRESA</p><p class="fw-bold">{{ solicitud.nombre_empresa or '' }}</p></div>
-                            <div class="col-6"><p class="mb-0 small text-muted">CONTACTO</p><p class="fw-bold">{{ solicitud.nombre_contacto or '' }}</p></div>
-                            <div class="col-6"><p class="mb-0 small text-muted">TELÉFONO EMPRESA</p><p class="fw-bold">{{ solicitud.telefono_empresa or '' }}</p></div>
-                            <div class="col-6"><p class="mb-0 small text-muted">EMAIL</p><p class="fw-bold">{{ solicitud.email or '' }}</p></div>
-                            <div class="col-12"><p class="mb-0 small text-muted">NOTA</p><p class="fw-bold">{{ solicitud.nota or '' }}</p></div>
-                        {% endif %}
-                    </div>
-                    
-                    <h4 class="mt-4 mb-3 text-warning">Detalles del Viaje</h4>
-                    <div class="row g-2">
-                        <div class="col-6"><p class="mb-0 small text-muted">ORIGEN</p><p class="fw-bold">{{ solicitud.lugar_salida or '' }}</p></div>
-                        <div class="col-6"><p class="mb-0 small text-muted">DESTINO</p><p class="fw-bold">{{ solicitud.lugar_destino or '' }}</p></div>
-                        <div class="col-6"><p class="mb-0 small text-muted">ACTIVIDAD</p><p class="fw-bold">{{ solicitud.actividad or '' }}</p></div>
-                        <div class="col-6"><p class="mb-0 small text-muted">FECHA</p><p class="fw-bold">{{ solicitud.fecha_viaje.strftime('%Y-%m-%d') if solicitud.fecha_viaje else '' }}</p></div>
-                        <div class="col-6"><p class="mb-0 small text-muted">HORA DE SALIDA</p><p class="fw-bold">{{ solicitud.hora_salida or '' }}</p></div>
-                        <div class="col-6"><p class="mb-0 small text-muted">HORA DE RETORNO</p><p class="fw-bold">{{ solicitud.hora_retorno or '' }}</p></div>
-                        <div class="col-12"><p class="mb-0 small text-muted">PUNTOS DE ENCUENTRO</p><p class="fw-bold">{{ solicitud.puntos_encuentro or '' }}</p></div>
-                    </div>
-                </div>
-
-                <!-- Seccion derecha - Código QR y N. de solicitud -->
-                <div class="col-md-4 d-flex flex-column align-items-center justify-content-between p-4">
-                    <div class="text-center">
-                        <h5 class="small text-muted mb-2">SOLICITUD NO.</h5>
-                        <h2 class="fw-bold text-warning mb-4">{{ solicitud.numero_solicitud }}</h2>
-                        <!-- Código QR real -->
-                        <div id="qrcode-container" class="bg-light p-3 border rounded" style="width: 150px; height: 150px;">
-                            <canvas id="qrcode-canvas" style="width: 100%; height: 100%;"></canvas>
+    <!-- Cuerpo del boleto - Contenido principal -->
+    <div class="card-body p-4 bg-white rounded-bottom-lg">
+        <div class="row">
+            <!-- Seccion izquierda - Detalles del cliente -->
+            <div class="col-md-8 border-end pe-4">
+                <h4 class="mb-3 text-warning">Detalles del Pasajero</h4>
+                <div class="row g-2 mb-4">
+                    {% if solicitud.tipo_servicio == 'Particular' %}
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-person-circle text-warning"></i> <strong>Nombre:</strong> {{ solicitud.nombre }} {{ solicitud.primer_apellido }} {{ solicitud.segundo_apellido or '' }}</p>
                         </div>
-                        <p class="mt-2 small fst-italic text-muted">Escanee para más detalles</p>
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-telephone text-warning"></i> <strong>Teléfono:</strong> {{ solicitud.telefono }}</p>
+                        </div>
+                    {% else %}
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-person-circle text-warning"></i> <strong>Nombre de Contacto:</strong> {{ solicitud.nombre_contacto }}</p>
+                        </div>
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-building text-warning"></i> <strong>Nombre de Empresa:</strong> {{ solicitud.nombre_empresa }}</p>
+                        </div>
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-telephone text-warning"></i> <strong>Teléfono:</strong> {{ solicitud.telefono_empresa }}</p>
+                        </div>
+                        {% if solicitud.extension %}
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-telephone-inbound text-warning"></i> <strong>Extensión:</strong> {{ solicitud.extension }}</p>
+                        </div>
+                        {% endif %}
+                        {% if solicitud.whatsapp %}
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-whatsapp text-warning"></i> <strong>WhatsApp:</strong> {{ solicitud.whatsapp }}</p>
+                        </div>
+                        {% endif %}
+                        {% if solicitud.email %}
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-envelope text-warning"></i> <strong>Email:</strong> {{ solicitud.email }}</p>
+                        </div>
+                        {% endif %}
+                        {% if solicitud.horario_atencion %}
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-clock text-warning"></i> <strong>Horario de Atención:</strong> {{ solicitud.horario_atencion }}</p>
+                        </div>
+                        {% endif %}
+                        {% if solicitud.nota %}
+                        <div class="col-12">
+                            <p class="mb-0"><i class="bi bi-card-text text-warning"></i> <strong>Nota:</strong> {{ solicitud.nota }}</p>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <h4 class="mb-3 text-warning">Detalles del Viaje</h4>
+                <div class="row g-2 mb-4">
+                    <div class="col-12">
+                        <p class="mb-0"><i class="bi bi-geo-alt text-warning"></i> <strong>Destino:</strong> {{ solicitud.destino }}</p>
                     </div>
-                    <div class="text-center mt-auto">
-                        <a href="{{ url_for('solicitud.registro_solicitudes') }}" class="btn btn-warning w-100 mt-3">Volver al Registro</a>
+                    <div class="col-12">
+                        <p class="mb-0"><i class="bi bi-people text-warning"></i> <strong>Cantidad de Personas:</strong> {{ solicitud.cantidad_personas }}</p>
+                    </div>
+                    <div class="col-12">
+                        <p class="mb-0"><i class="bi bi-activity text-warning"></i> <strong>Actividad:</strong> {{ solicitud.actividad }}</p>
+                    </div>
+                    <div class="col-12">
+                        <p class="mb-0"><i class="bi bi-arrow-right-short text-warning"></i> <strong>Punto de Salida:</strong> {{ solicitud.lugar_salida }}</p>
+                    </div>
+                    <div class="col-12">
+                        <p class="mb-0"><i class="bi bi-arrow-left-short text-warning"></i> <strong>Punto de Retorno:</strong> {{ solicitud.lugar_destino }}</p>
+                    </div>
+                    <div class="col-12">
+                        <p class="mb-0"><i class="bi bi-signpost-2 text-warning"></i> <strong>Puntos de Encuentro:</strong> {{ solicitud.puntos_encuentro }}</p>
+                    </div>
+                    <div class="col-12">
+                        <p class="mb-0"><i class="bi bi-clock-fill text-warning"></i> <strong>Hora de Salida:</strong> {{ solicitud.hora_salida }}</p>
+                    </div>
+                    <div class="col-12">
+                        <p class="mb-0"><i class="bi bi-clock-history text-warning"></i> <strong>Hora de Retorno:</strong> {{ solicitud.hora_retorno }}</p>
+                    </div>
+                    <div class="col-12">
+                        <p class="mb-0"><i class="bi bi-calendar-date text-warning"></i> <strong>Fecha de Viaje:</strong> {{ solicitud.fecha_viaje.strftime('%Y-%m-%d') }}</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- Mensaje de cancelación -->
-            {% if solicitud.motivo_cancelacion %}
-            <hr class="my-4">
-            <div class="alert alert-danger text-center mb-0">
-                <strong>CANCELADO:</strong> {{ solicitud.motivo_cancelacion }} ({{ solicitud.fecha_cancelacion.strftime('%Y-%m-%d %H:%M:%S') }})
+
+            <!-- Seccion derecha - QR y Contacto -->
+            <div class="col-md-4 d-flex flex-column align-items-center">
+                <h5 class="mb-3 text-warning">Solicitud #{{ solicitud.numero_solicitud }}</h5>
+                <div id="qrcode-canvas" class="my-3"></div>
+                <p class="mt-2 small fst-italic text-muted">Escanee para más detalles</p>
+                <div class="text-center mt-auto">
+                    <a href="{{ url_for('solicitud.registro_solicitudes') }}" class="btn btn-warning w-100 mt-3">Volver al Registro</a>
+                </div>
             </div>
-            {% endif %}
         </div>
+        
+        <!-- Mensaje de cancelación -->
+        {% if solicitud.motivo_cancelacion %}
+        <hr class="my-4">
+        <div class="alert alert-danger text-center mb-0">
+            <strong>CANCELADO:</strong> {{ solicitud.motivo_cancelacion }} ({{ solicitud.fecha_cancelacion.strftime('%Y-%m-%d %H:%M:%S') }})
+        </div>
+        {% endif %}
     </div>
+</div>
+{% endif %}
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const solicitudData = {
-        'numero_solicitud': '{{ solicitud.numero_solicitud }}',
-        'url_detalles': '{{ url_for("solicitud.ver_detalle_solicitud", solicitud_id=solicitud.id, _external=True) }}'
-    };
+// Solo si la solicitud existe
+if ("{{ solicitud }}" !== "None") {
+const solicitudData = {
+'numero_solicitud': '{{ solicitud.numero_solicitud }}',
+'url_detalles': '{{ url_for("solicitud.ver_detalle_solicitud", solicitud_id=solicitud.id, _external=True) }}'
+};
 
-    const qrcode = new QRCode(document.getElementById("qrcode-canvas"), {
+    const qrcode = new QRCode(document.getElementById(&quot;qrcode-canvas&quot;), {
         text: JSON.stringify(solicitudData),
         width: 128,
         height: 128,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
+        colorDark : &quot;#000000&quot;,
+        colorLight : &quot;#ffffff&quot;,
         correctLevel : QRCode.CorrectLevel.H
     });
+}
+
 });
 </script>
+
 {% endblock %}

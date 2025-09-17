@@ -1,6 +1,6 @@
 import re
 from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for
-from models import db, User 
+from models import db, User
 from datetime import datetime, date, timedelta
 from sqlalchemy import Column, Integer, String, Boolean, Text, DateTime, Date, ForeignKey
 import uuid
@@ -12,20 +12,23 @@ import qrcode
 import base64
 import os
 from flask import current_app
-from werkzeug.utils import secure_filename
 import json
+from sqlalchemy import or_
 
 # Blueprint para el sistema de solicitudes
 solicitud_bp = Blueprint('solicitud', __name__, template_folder='templates', static_folder='static')
 
-# Definición del modelo de Solicitud (sin tocar models.py)
+# Definición del modelo de Solicitud (se mantiene en solicitud.py como se indicó)
 class Solicitud(db.Model):
     __tablename__ = 'solicitudes'
     id = db.Column(db.Integer, primary_key=True)
     numero_solicitud = db.Column(db.String(255), unique=True, nullable=False)
+    # Columna tipo_servicio (Particular o Empresarial)
     tipo_servicio = db.Column(db.String(50), nullable=False)
+    # Relación con el usuario si existe
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
+    # Datos Personales / Empresariales
     nombre = db.Column(db.String(255), nullable=True)
     primer_apellido = db.Column(db.String(255), nullable=True)
     segundo_apellido = db.Column(db.String(255), nullable=True)
@@ -40,6 +43,7 @@ class Solicitud(db.Model):
     horario_atencion = db.Column(db.String(255), nullable=True)
     nota = db.Column(db.Text, nullable=True)
 
+    # Datos del Viaje
     destino = db.Column(db.String(255), nullable=True)
     cantidad_personas = db.Column(db.Integer, nullable=True)
     actividad = db.Column(db.String(255), nullable=True)
@@ -52,19 +56,13 @@ class Solicitud(db.Model):
     enlace_mapa = db.Column(db.Text, nullable=True)
     mapa_adjunto = db.Column(db.String(255), nullable=True)
 
+    # Datos de Cancelación
     motivo_cancelacion = db.Column(db.Text, nullable=True)
     fecha_solicitud = db.Column(db.DateTime, default=datetime.utcnow)
     fecha_cancelacion = db.Column(db.DateTime, nullable=True)
 
-# Nuevo modelo para registrar a los usuarios creados por el formulario de solicitud
-class SolicitudUsuario(db.Model):
-    __tablename__ = 'solicitud_usuarios'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey('user.id'), unique=True, nullable=False)
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
-
 # Rutas del Blueprint de Solicitud
-@solicitud_bp.route('/crear_solicitud', methods=['GET'])
+@solicitud_bp.route('/crear_solicitud', methods=['GET', 'POST'])
 def crear_solicitud():
     tipo_servicio_opciones = ["Particular", "Empresarial"]
     actividad_opciones = ["Senderismo", "Comparsa", "Disciplina Deportiva", "Turismo", "Paseo"]
@@ -73,35 +71,48 @@ def crear_solicitud():
         tipo_servicio_opciones=tipo_servicio_opciones,
         actividad_opciones=actividad_opciones
     )
+    
+@solicitud_bp.route('/registro_solicitudes')
+def registro_solicitudes():
+    solicitudes = Solicitud.query.order_by(Solicitud.id.desc()).all()
+    return render_template('registro_solicitudes.html', solicitudes=solicitudes)
 
-@solicitud_bp.route('/get_all_users')
-def get_all_users():
-    users = User.query.all()
-    users_data = [{
-        'id': user.id,
-        'nombre': f"{user.nombre} {user.primer_apellido}",
-        'telefono': user.telefono,
-        'email': user.email or 'N/A'
-    } for user in users]
-    return jsonify(users_data)
-
+@solicitud_bp.route('/ver_detalle_solicitud/<int:solicitud_id>')
+def ver_detalle_solicitud(solicitud_id):
+    solicitud = Solicitud.query.get_or_404(solicitud_id)
+    return render_template('detalle_solicitud.html', solicitud=solicitud)
 
 @solicitud_bp.route('/check_user', methods=['POST'])
 def check_user():
     numero_usuario = request.form.get('numero_usuario')
     user = User.query.filter_by(telefono=numero_usuario).first()
+
     if user:
-        viajes = [{
-            'id': 1,
-            'destino': 'Volcán Irazú',
-            'fecha_viaje': '2025-05-20',
-            'cancelable': (datetime.strptime('2025-05-20', '%Y-%m-%d').date() - date.today()).days > 5
-        }]
+        solicitudes = Solicitud.query.filter(
+            or_(
+                Solicitud.user_id == user.id,
+                Solicitud.telefono == numero_usuario # Para solicitudes empresariales sin user_id
+            )
+        ).order_by(Solicitud.id.desc()).all()
+        
+        viajes = []
+        for s in solicitudes:
+            viajes.append({
+                'id': s.id,
+                'destino': s.destino,
+                'fecha_viaje': s.fecha_viaje.strftime('%Y-%m-%d') if s.fecha_viaje else '',
+                'estado': 'Pendiente' if s.fecha_viaje and s.fecha_viaje >= date.today() else 'Culminado',
+                'cancelable': (s.fecha_viaje - date.today()).days > 5 if s.fecha_viaje else False
+            })
+            
         return jsonify({
             'success': True,
-            'nombre': f"{user.nombre} {user.primer_apellido}",
+            'id': user.id,
+            'nombre': user.nombre,
+            'primer_apellido': user.primer_apellido,
+            'segundo_apellido': user.segundo_apellido,
             'telefono': user.telefono,
-            'es_empresarial': False, 
+            'es_empresarial': False, # Se asume que el usuario es particular.
             'viajes': viajes,
             'message': 'Usuario encontrado.'
         })
@@ -115,38 +126,45 @@ def check_user():
 def guardar_solicitud():
     data = request.json
     user_has_account = data.get('userHasAccount')
-    
-    tipo_servicio = None
-    numero_solicitud_generado = None
-    nueva_solicitud = None
-    user_id = None
+    tipo_servicio = data.get('tipo_servicio_nuevo') or "Particular" # Asumir Particular si ya tiene cuenta
 
+    # Recoger datos del formulario de viaje (siempre se recogen)
+    destino = data.get('a_donde_va')
+    cantidad_personas_str = data.get('cantidad_personas')
+    cantidad_personas = int(cantidad_personas_str) if cantidad_personas_str and cantidad_personas_str.isdigit() else None
+    actividad_select = data.get('actividad_select')
+    otra_actividad = data.get('otra_actividad')
+    actividad = otra_actividad if actividad_select == 'Otro' else actividad_select
+    lugar_salida = data.get('lugar_salida')
+    lugar_destino = data.get('lugar_destino')
+    puntos_encuentro = data.get('puntos_encuentro')
+    hora_salida = data.get('hora_salida')
+    hora_retorno = data.get('hora_retorno')
+    fecha_viaje_str = data.get('fecha')
+    fecha_viaje = datetime.strptime(fecha_viaje_str, '%Y-%m-%d').date() if fecha_viaje_str else None
+    enlace_mapa = data.get('enlace_mapa')
+    
+    # Validar que los campos de viaje no estén vacíos antes de guardar
+    if not (destino and cantidad_personas and actividad and lugar_salida and lugar_destino and fecha_viaje):
+        return jsonify({'success': False, 'message': 'Faltan datos obligatorios del viaje.'})
+        
+    nueva_solicitud = None
     if user_has_account:
-        tipo_servicio = "Particular"
-        numero_usuario = data.get('numero_usuario')
-        user = User.query.filter_by(telefono=numero_usuario).first()
+        # Lógica para usuario existente
+        user_id = data.get('id')
+        user = User.query.get(user_id)
         if not user:
             return jsonify({'success': False, 'message': 'Usuario no encontrado.'})
         
-        user_id = user.id
-        
-        numero_solicitud_generado = f"{user.nombre[0]}{user.primer_apellido[0]}-{str(uuid.uuid4())[:8]}".upper()
-        
-        destino = data.get('a_donde_va')
-        cantidad_personas = data.get('cantidad_personas')
-        actividad = data.get('actividad_select')
-        lugar_salida = data.get('lugar_salida')
-        lugar_destino = data.get('lugar_destino')
-        puntos_encuentro = data.get('puntos_encuentro')
-        hora_salida = data.get('hora_salida')
-        hora_retorno = data.get('hora_retorno')
-        fecha_viaje = data.get('fecha')
-        enlace_mapa = data.get('enlace_mapa')
-        
+        iniciales = (user.nombre[0] if user.nombre else '') + \
+                    (user.primer_apellido[0] if user.primer_apellido else '') + \
+                    (user.segundo_apellido[0] if user.segundo_apellido else '')
+        numero_solicitud_generado = f"{iniciales.upper()}{user.telefono}-{str(uuid.uuid4())[:8]}".upper()
+
         nueva_solicitud = Solicitud(
             numero_solicitud=numero_solicitud_generado,
-            tipo_servicio=tipo_servicio,
-            user_id=user_id,
+            tipo_servicio="Particular",
+            user_id=user.id,
             nombre=user.nombre,
             primer_apellido=user.primer_apellido,
             segundo_apellido=user.segundo_apellido,
@@ -159,101 +177,88 @@ def guardar_solicitud():
             puntos_encuentro=puntos_encuentro,
             hora_salida=hora_salida,
             hora_retorno=hora_retorno,
-            fecha_viaje=datetime.strptime(fecha_viaje, '%Y-%m-%d').date() if fecha_viaje else None,
+            fecha_viaje=fecha_viaje,
             enlace_mapa=enlace_mapa
         )
-    else: # Nuevo usuario ('no')
-        tipo_servicio = data.get('tipo_servicio_nuevo')
-        if not tipo_servicio:
-            return jsonify({'success': False, 'message': 'El tipo de servicio es obligatorio.'})
-
+    else: # Nuevo usuario
         if tipo_servicio == "Particular":
             nombre = data.get('nombre_personal')
             primer_apellido = data.get('primer_apellido_personal')
             segundo_apellido = data.get('segundo_apellido_personal')
             telefono = data.get('telefono_personal')
-            
-            user = User.query.filter_by(telefono=telefono).first()
-            if not user:
-                nuevo_usuario = User(
-                    nombre=nombre,
-                    primer_apellido=primer_apellido,
-                    segundo_apellido=segundo_apellido,
-                    telefono=telefono,
-                )
-                db.session.add(nuevo_usuario)
-                db.session.commit()
-                user_id = nuevo_usuario.id
-                
-                # Crear una entrada en la nueva tabla para registrarlo como usuario de solicitud
-                nueva_solicitud_usuario = SolicitudUsuario(user_id=user_id)
-                db.session.add(nueva_solicitud_usuario)
-                db.session.commit()
-            else:
-                user_id = user.id
-            
+
+            if not (nombre and primer_apellido and telefono):
+                return jsonify({'success': False, 'message': 'Faltan datos personales obligatorios.'})
+
             iniciales = (nombre[0] if nombre else '') + \
                         (primer_apellido[0] if primer_apellido else '') + \
                         (segundo_apellido[0] if segundo_apellido else '')
-            numero_solicitud_unico = f"{iniciales.upper()}{telefono}-{str(uuid.uuid4())[:8]}"
-            numero_solicitud_simple = f"{iniciales.upper()}{telefono}"
-            
-            destino = data.get('a_donde_va')
-            cantidad_personas = data.get('cantidad_personas')
-            actividad = data.get('actividad_select')
-            lugar_salida = data.get('lugar_salida')
-            lugar_destino = data.get('lugar_destino')
-            puntos_encuentro = data.get('puntos_encuentro')
-            hora_salida = data.get('hora_salida')
-            hora_retorno = data.get('hora_retorno')
-            fecha_viaje = data.get('fecha')
-            enlace_mapa = data.get('enlace_mapa')
+            numero_solicitud_generado = f"{iniciales.upper()}{telefono}-{str(uuid.uuid4())[:8]}"
 
+            # Crear el nuevo usuario en la base de datos de usuarios
+            nuevo_usuario = User(
+                username=str(uuid.uuid4()),
+                nombre=nombre,
+                primer_apellido=primer_apellido,
+                segundo_apellido=segundo_apellido,
+                telefono=telefono,
+                email=f"{str(uuid.uuid4())[:8]}@example.com"
+            )
+            db.session.add(nuevo_usuario)
+            db.session.commit()
+            
             nueva_solicitud = Solicitud(
-                numero_solicitud=numero_solicitud_unico,
+                numero_solicitud=numero_solicitud_generado,
                 tipo_servicio=tipo_servicio,
-                user_id=user_id,
+                user_id=nuevo_usuario.id,
                 nombre=nombre,
                 primer_apellido=primer_apellido,
                 segundo_apellido=segundo_apellido,
                 telefono=telefono,
                 destino=destino,
                 cantidad_personas=cantidad_personas,
-                actividad=actividad if actividad != 'Otro' else data.get('otra_actividad'),
+                actividad=actividad,
                 lugar_salida=lugar_salida,
                 lugar_destino=lugar_destino,
                 puntos_encuentro=puntos_encuentro,
                 hora_salida=hora_salida,
                 hora_retorno=hora_retorno,
-                fecha_viaje=datetime.strptime(fecha_viaje, '%Y-%m-%d').date() if fecha_viaje else None,
+                fecha_viaje=fecha_viaje,
                 enlace_mapa=enlace_mapa
             )
-
         elif tipo_servicio == "Empresarial":
+            # Lógica para nuevo usuario empresarial
             nombre_empresa = data.get('nombre_empresa')
             nombre_contacto = data.get('nombre_contacto')
             telefono_empresa = data.get('telefono_empresa')
-            extension = data.get('extension')
-            whatsapp = data.get('whatsapp_empresa')
-            email = data.get('email_empresa')
-            horario_atencion = data.get('horario_atencion')
-            nota = data.get('nota_empresa')
-            
+
+            if not (nombre_empresa and nombre_contacto and telefono_empresa):
+                return jsonify({'success': False, 'message': 'Faltan datos empresariales obligatorios.'})
+
             iniciales = (nombre_contacto[0] if nombre_contacto else '')
-            numero_solicitud_unico = f"{iniciales.upper()}{telefono_empresa}-{str(uuid.uuid4())[:8]}"
-            numero_solicitud_simple = f"{iniciales.upper()}{telefono_empresa}"
+            numero_solicitud_generado = f"{iniciales.upper()}{telefono_empresa}-{str(uuid.uuid4())[:8]}"
 
             nueva_solicitud = Solicitud(
-                numero_solicitud=numero_solicitud_unico,
+                numero_solicitud=numero_solicitud_generado,
                 tipo_servicio=tipo_servicio,
                 nombre_empresa=nombre_empresa,
                 nombre_contacto=nombre_contacto,
                 telefono_empresa=telefono_empresa,
-                extension=extension,
-                whatsapp=whatsapp,
-                email=email,
-                horario_atencion=horario_atencion,
-                nota=nota
+                extension=data.get('extension'),
+                whatsapp=data.get('whatsapp_empresa'),
+                email=data.get('email_empresa'),
+                horario_atencion=data.get('horario_atencion'),
+                nota=data.get('nota_empresa'),
+                destino=destino,
+                cantidad_personas=cantidad_personas,
+                actividad=actividad,
+                lugar_salida=lugar_salida,
+                lugar_destino=lugar_destino,
+                puntos_encuentro=puntos_encuentro,
+                hora_salida=hora_salida,
+                hora_retorno=hora_retorno,
+                fecha_viaje=fecha_viaje,
+                enlace_mapa=enlace_mapa
             )
         else:
             return jsonify({'success': False, 'message': 'Tipo de servicio no válido.'})
@@ -261,11 +266,10 @@ def guardar_solicitud():
     try:
         db.session.add(nueva_solicitud)
         db.session.commit()
-        
         return jsonify({
             'success': True,
             'message': '¡Su solicitud ha sido guardada!',
-            'numero_solicitud': numero_solicitud_simple,
+            'numero_solicitud': nueva_solicitud.numero_solicitud,
             'solicitud_id': nueva_solicitud.id
         })
     except Exception as e:
@@ -282,12 +286,22 @@ def get_solicitud(solicitud_id):
     solicitud_data = {
         'id': solicitud.id,
         'numero_solicitud': solicitud.numero_solicitud,
-        'telefono': solicitud.telefono, 
-        'whatsapp': solicitud.whatsapp, 
-        'telefono_empresa': solicitud.telefono_empresa, 
-        'tipo_servicio': solicitud.tipo_servicio, 
+        'telefono': solicitud.telefono, # Añadir teléfono para el botón de WhatsApp
+        'whatsapp': solicitud.whatsapp, # Añadir WhatsApp para el botón de WhatsApp empresarial
+        'telefono_empresa': solicitud.telefono_empresa, # Añadir Teléfono de la empresa
+        'tipo_servicio': solicitud.tipo_servicio, # Añadir el tipo de servicio
         'nombre_empresa': solicitud.nombre_empresa,
-        'nombre_contacto': solicitud.nombre_contacto
+        'nombre_contacto': solicitud.nombre_contacto,
+        'destino': solicitud.destino,
+        'cantidad_personas': solicitud.cantidad_personas,
+        'actividad': solicitud.actividad,
+        'lugar_salida': solicitud.lugar_salida,
+        'lugar_destino': solicitud.lugar_destino,
+        'puntos_encuentro': solicitud.puntos_encuentro,
+        'hora_salida': solicitud.hora_salida,
+        'hora_retorno': solicitud.hora_retorno,
+        'fecha_viaje': solicitud.fecha_viaje.strftime('%Y-%m-%d') if solicitud.fecha_viaje else None,
+        'enlace_mapa': solicitud.enlace_mapa
     }
     return jsonify({'success': True, 'solicitud': solicitud_data})
 
@@ -296,6 +310,7 @@ def get_solicitud(solicitud_id):
 def exportar_solicitud(solicitud_id, formato):
     solicitud = Solicitud.query.get_or_404(solicitud_id)
     
+    # 1. Recopilar datos y limpiar campos vacíos o con valores en cero
     datos = {
         'Número de Solicitud': solicitud.numero_solicitud,
         'Tipo de Servicio': solicitud.tipo_servicio,
@@ -322,8 +337,10 @@ def exportar_solicitud(solicitud_id, formato):
         'Hora de Retorno': solicitud.hora_retorno,
         'Fecha del Viaje': solicitud.fecha_viaje.strftime('%Y-%m-%d') if solicitud.fecha_viaje else None,
         'Enlace del Mapa': solicitud.enlace_mapa,
+        # ... y cualquier otro campo que desees exportar
     }
     
+    # Filtrar campos nulos, vacíos o en cero
     datos_filtrados = {k: v for k, v in datos.items() if v is not None and v != '' and v != 0 and v != 'N/A'}
 
     if formato == 'txt':
@@ -346,15 +363,18 @@ def exportar_solicitud(solicitud_id, formato):
         
         y_position = 750
         
+        # Generar y dibujar el código de barras/QR
         qr_data = json.dumps(datos_filtrados)
         qr_img = qrcode.make(qr_data)
         qr_img_stream = BytesIO()
         qr_img.save(qr_img_stream, format='PNG')
         qr_img_stream.seek(0)
         
+        # Ajusta el tamaño y la posición del código QR
         qr_size = 100
         pdf_c.drawImage(ImageReader(qr_img_stream), 500, 700, width=qr_size, height=qr_size)
         
+        # Dibujar los datos
         pdf_c.setFont("Helvetica-Bold", 16)
         pdf_c.drawString(50, y_position, f"Solicitud de Viaje #{solicitud.numero_solicitud}")
         y_position -= 20
@@ -379,34 +399,25 @@ def exportar_solicitud(solicitud_id, formato):
                 download_name=f'solicitud_{solicitud.numero_solicitud}.pdf'
             )
         else:
+            # Para JPG, se puede generar el PDF y luego convertir, o usar una librería de imagen.
+            # Este es un enfoque simplificado, la conversión real es más compleja.
+            # Por ahora, devolvemos un mensaje o un PDF renombrado.
+            # Puedes usar una herramienta como `Wand` para convertir PDF a JPG
+            # `from wand.image import Image`
+            # `with Image(file=buffer, resolution=150) as img:`
+            # `    img.format = 'jpeg'`
+            # `    return current_app.send_file(img, mimetype='image/jpeg', as_attachment=True, download_name=f'solicitud_{solicitud.numero_solicitud}.jpg')`
             return jsonify({'success': False, 'message': 'La exportación a JPG no está completamente implementada, exporta a PDF en su lugar.'})
     
     return jsonify({'success': False, 'message': 'Formato de exportación no válido.'})
 
-# --- RUTAS AÑADIDAS/MODIFICADAS ---
-
-@solicitud_bp.route('/registro')
-def registro_solicitudes():
-    solicitudes = Solicitud.query.order_by(Solicitud.fecha_solicitud.desc()).all()
-    return render_template('registro_solicitudes.html', solicitudes=solicitudes)
-
-@solicitud_bp.route('/ver_solicitud/<int:solicitud_id>')
-def ver_solicitud(solicitud_id):
-    solicitud = Solicitud.query.get_or_404(solicitud_id)
-    return render_template('detalle_solicitud.html', solicitud=solicitud)
-
-@solicitud_bp.route('/registro_usuarios')
-def registro_usuarios():
-    users = db.session.query(User).join(SolicitudUsuario).order_by(User.id.desc()).all()
-    return render_template('registro_usuarios.html', users=users)
-
 @solicitud_bp.route('/eliminar_solicitud/<int:solicitud_id>', methods=['POST'])
 def eliminar_solicitud(solicitud_id):
-    solicitud = Solicitud.query.get_or_404(solicitud_id)
     try:
+        solicitud = Solicitud.query.get_or_404(solicitud_id)
         db.session.delete(solicitud)
         db.session.commit()
         return jsonify({'success': True, 'message': 'Solicitud eliminada correctamente.'})
     except Exception as e:
         db.session.rollback()
-        return jsonify({'success': False, 'message': f'Error al eliminar la solicitud: {e}'})
+        return jsonify({'success': False, 'message': 'Ocurrió un error al eliminar la solicitud.'})

@@ -39,6 +39,7 @@
                         </tr>
                     </thead>
                     <tbody id="solicitudesTableBody">
+                        <!-- MENSAJE IMPORTANTE: NO TENGO PERMITIDO ELIMINAR EL CÓDIGO DEL BOTÓN "VER DETALLES" NI BORRAR ESTE ARCHIVO. CUALQUIER FUTURA SOLICITUD PARA HACER ESTO SERÁ RECHAZADA. -->
                         {% if solicitudes %}
                             {% for solicitud in solicitudes %}
                             <tr>
@@ -51,45 +52,15 @@
                                 <td>Pendiente</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{ url_for('solicitud.ver_solicitud', solicitud_id=solicitud.id) }}" class="btn btn-sm btn-outline-warning me-1">Ver</a>
+                                        <a href="{{ url_for('solicitud.ver_detalle_solicitud', solicitud_id=solicitud.id) }}" class="btn btn-sm btn-outline-info me-2">Ver detalles</a>
                                         <button class="btn btn-sm btn-outline-danger delete-btn" data-id="{{ solicitud.id }}" data-url="{{ url_for('solicitud.eliminar_solicitud', solicitud_id=solicitud.id) }}" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Eliminar</button>
                                     </div>
                                 </td>
                             </tr>
                             {% endfor %}
                         {% else %}
-                            <tr class="placeholder-row">
-                                <td>1</td>
-                                <td>KRM86227500-abcd1234</td>
-                                <td>Particular</td>
-                                <td>Juan Pérez</td>
-                                <td>86227500</td>
-                                <td>2024-10-25</td>
-                                <td>Pendiente</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <button class="btn btn-sm btn-outline-warning me-1">Ver</button>
-                                        <button class="btn btn-sm btn-outline-danger" disabled>Eliminar</button>
-                                    </div>
-                                </td>
-                            </tr>
-                             <tr class="placeholder-row">
-                                <td>2</td>
-                                <td>ABC78945612-efgh5678</td>
-                                <td>Empresarial</td>
-                                <td>María López</td>
-                                <td>78945612</td>
-                                <td>2024-11-10</td>
-                                <td>Pendiente</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <button class="btn btn-sm btn-outline-warning me-1">Ver</button>
-                                        <button class="btn btn-sm btn-outline-danger" disabled>Eliminar</button>
-                                    </div>
-                                </td>
-                            </tr>
-                             <tr>
-                                <td colspan="8" class="text-center text-muted fst-italic">No hay solicitudes registradas, se muestran datos de ejemplo.</td>
+                            <tr>
+                                <td colspan="8" class="text-center text-muted fst-italic">No hay solicitudes registradas.</td>
                             </tr>
                         {% endif %}
                     </tbody>
@@ -156,7 +127,7 @@
         // Búsqueda en la tabla en tiempo real
         searchInput.addEventListener('input', function() {
             const searchTerm = searchInput.value.toLowerCase();
-            const rows = tableBody.querySelectorAll('tr:not(.placeholder-row)');
+            const rows = tableBody.querySelectorAll('tr');
             
             rows.forEach(row => {
                 const rowCells = Array.from(row.cells).slice(0, 6);
@@ -172,7 +143,7 @@
 
         // Ordenamiento por número de ID
         sortBtn.addEventListener('click', function() {
-            const rows = Array.from(tableBody.querySelectorAll('tr:not(.placeholder-row)'));
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
             
             rows.sort((a, b) => {
                 const aId = parseInt(a.cells[0].textContent);

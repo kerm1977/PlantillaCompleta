@@ -6,7 +6,7 @@
 <div class="container my-5">
     <div class="card bg-white rounded-lg border-0 shadow-none">
         <div class="card-body">
-            <h1 class="card-title text-center mb-4 text-primary">Solicitud de Viaje</h1>
+            <h1 class="card-title text-center mb-4 text-warning">Solicitud de Viaje</h1>
             <p class="text-center text-muted fst-italic">
                 Todo viaje se debe reservar con un 15% del total del servicio. Si se requiere cancelar un viaje, debe realizarse 5 días hábiles antes de la fecha ocupada.
             </p>
@@ -15,7 +15,6 @@
             <!-- Enlaces a los registros -->
             <div class="text-center mb-4">
                 <a href="{{ url_for('solicitud.registro_solicitudes') }}" class="btn btn-sm btn-outline-secondary me-2">Ver Solicitudes</a>
-                <a href="{{ url_for('solicitud.registro_usuarios') }}" class="btn btn-sm btn-outline-secondary">Ver Usuarios de Solicitud</a>
             </div>
 
             <form id="solicitudForm" method="post" enctype="multipart/form-data">
@@ -25,10 +24,10 @@
                         <h4 class="mb-3">¿Tienes un Número de Usuario?</h4>
                         <div class="btn-group" role="group" aria-label="Opciones de usuario">
                             <input type="radio" class="btn-check" name="user_type" id="user_si" autocomplete="off" value="si" checked>
-                            <label class="btn btn-outline-primary" for="user_si">Sí</label>
+                            <label class="btn btn-outline-warning" for="user_si">Sí</label>
                             
                             <input type="radio" class="btn-check" name="user_type" id="user_no" autocomplete="off" value="no">
-                            <label class="btn btn-outline-primary" for="user_no">No</label>
+                            <label class="btn btn-outline-warning" for="user_no">No</label>
                         </div>
                     </div>
                 </div>
@@ -38,7 +37,7 @@
                     <label for="numero_usuario" class="form-label">Ingrese su Número</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="numero_usuario" name="numero_usuario" placeholder="Número de Usuario o Teléfono">
-                        <button class="btn btn-primary" type="button" id="checkUserBtn">Verificar</button>
+                        <button class="btn btn-warning" type="button" id="checkUserBtn">Verificar</button>
                     </div>
                     <div id="user_info_card" class="card mt-3 d-none">
                         <div class="card-body">
@@ -46,10 +45,10 @@
                             <p class="card-text mb-1"><strong class="me-2">Teléfono:</strong> <span id="user_info_telefono"></span></p>
                             <p class="card-text mb-1"><strong class="me-2">Servicio:</strong> <span id="user_info_servicio"></span></p>
                             <hr>
-                            <h6>Tus Viajes Pendientes:</h6>
-                            <ul id="viajes_list" class="list-group list-group-flush">
-                                <!-- La lista de viajes se insertará aquí con JS -->
-                            </ul>
+                            <div class="btn-group w-100" role="group">
+                                <button type="button" class="btn btn-warning" id="solicitarViajeBtn">Solicitar otro Viaje</button>
+                                <button type="button" class="btn btn-info" id="consultarViajesBtn">Consultar mis Viajes</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -68,7 +67,7 @@
                     <!-- FORMULARIO PERSONAL (si el servicio es Particular) -->
                     <div id="form_personal" class="card mt-3 border-0 shadow-none">
                         <div class="card-body">
-                            <h5 class="card-title text-primary">Datos Personales</h5>
+                            <h5 class="card-title text-warning">Datos Personales</h5>
                             <div class="mb-3">
                                 <label for="nombre_personal" class="form-label">Nombre</label>
                                 <input type="text" class="form-control" id="nombre_personal" name="nombre_personal">
@@ -92,7 +91,7 @@
                     <!-- FORMULARIO EMPRESARIAL (si el servicio es Empresarial) -->
                     <div id="form_empresarial" class="card mt-3 border-0 shadow-none d-none">
                         <div class="card-body">
-                            <h5 class="card-title text-primary">Datos Empresariales</h5>
+                            <h5 class="card-title text-warning">Datos Empresariales</h5>
                             <p class="text-muted">Para una mejor atención nos comunicaremos con ustedes prontamente en horario de oficina 8:00am a 6:00pm.</p>
                             <div class="mb-3">
                                 <label for="nombre_empresa" class="form-label">Nombre de la Empresa</label>
@@ -131,78 +130,78 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- SECCIÓN: RESTO DEL FORMULARIO -->
-                <div id="resto_formulario" class="d-none">
-                    <hr class="my-4">
-                    <h4 class="text-primary mb-4">Detalles del Viaje</h4>
-                    
-                    <div class="mb-3">
-                        <label for="a_donde_va" class="form-label">¿A Dónde Va?</label>
-                        <input type="text" class="form-control" id="a_donde_va" name="a_donde_va">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="cantidad_personas" class="form-label">Cantidad de Personas</label>
-                        <input type="number" class="form-control" id="cantidad_personas" name="cantidad_personas" min="1">
-                        <div id="buseta_warning" class="alert alert-warning mt-2 d-none">
-                            Vas a necesitar más de una buseta
+                
+                <!-- SECCIÓN: FORMULARIO DE VIAJE -->
+                <div id="viaje_opciones_section" class="mt-4">
+                    <div id="resto_formulario">
+                        <h4 class="text-warning mb-4">Detalles del Viaje</h4>
+                        <div class="mb-3">
+                            <label for="a_donde_va" class="form-label">¿A Dónde Va?</label>
+                            <input type="text" class="form-control" id="a_donde_va" name="a_donde_va">
                         </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="actividad_select" class="form-label">Indicar su Actividad</label>
-                        <select class="form-select" id="actividad_select" name="actividad_select">
-                            {% for actividad in actividad_opciones %}
-                            <option value="{{ actividad }}">{{ actividad }}</option>
-                            {% endfor %}
-                            <option value="Otro">Otro</option>
-                        </select>
-                        <input type="text" class="form-control mt-2 d-none" id="otra_actividad" name="otra_actividad" placeholder="Especifique la actividad">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="lugar_salida" class="form-label">Lugar de Salida</label>
-                        <input type="text" class="form-control" id="lugar_salida" name="lugar_salida">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="lugar_destino" class="form-label">Lugar de Destino</label>
-                        <input type="text" class="form-control" id="lugar_destino" name="lugar_destino">
-                    </div>
-
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="puntos_encuentro_checkbox" name="puntos_encuentro_checkbox">
-                        <label class="form-check-label" for="puntos_encuentro_checkbox">
-                            Se requiere Puntos de Encuentro
-                        </label>
-                        <textarea class="form-control mt-2 d-none" id="puntos_encuentro_text" name="puntos_encuentro" placeholder="Describa los puntos de encuentro"></textarea>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="hora_salida" class="form-label">Hora de Salida</label>
-                            <input type="time" class="form-control" id="hora_salida" name="hora_salida">
+                        
+                        <div class="mb-3">
+                            <label for="cantidad_personas" class="form-label">Cantidad de Personas</label>
+                            <input type="number" class="form-control" id="cantidad_personas" name="cantidad_personas" min="1">
+                            <div id="buseta_warning" class="alert alert-warning mt-2 d-none">
+                                Vas a necesitar más de una buseta
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="hora_retorno" class="form-label">Hora de Retorno</label>
-                            <input type="time" class="form-control" id="hora_retorno" name="hora_retorno">
+                        
+                        <div class="mb-3">
+                            <label for="actividad_select" class="form-label">Indicar su Actividad</label>
+                            <select class="form-select" id="actividad_select" name="actividad_select">
+                                {% for actividad in actividad_opciones %}
+                                <option value="{{ actividad }}">{{ actividad }}</option>
+                                {% endfor %}
+                                <option value="Otro">Otro</option>
+                            </select>
+                            <input type="text" class="form-control mt-2 d-none" id="otra_actividad" name="otra_actividad" placeholder="Especifique la actividad">
                         </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="fecha" class="form-label">Fecha</label>
-                        <input type="date" class="form-control" id="fecha" name="fecha">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="enlace_mapa" class="form-label">Si cuentas con un mapa, agrega el enlace de la ruta</label>
-                        <input type="url" class="form-control" id="enlace_mapa" name="enlace_mapa" placeholder="Ej: https://maps.google.com/...">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="mapa_adjunto" class="form-label">O sube un mapa en formato GPX, KML o KMZ</label>
-                        <input type="file" class="form-control" id="mapa_adjunto" name="mapa_adjunto_file" accept=".gpx,.kml,.kmz">
+
+                        <div class="mb-3">
+                            <label for="lugar_salida" class="form-label">Lugar de Salida</label>
+                            <input type="text" class="form-control" id="lugar_salida" name="lugar_salida">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="lugar_destino" class="form-label">Lugar de Destino</label>
+                            <input type="text" class="form-control" id="lugar_destino" name="lugar_destino">
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="puntos_encuentro_checkbox" name="puntos_encuentro_checkbox">
+                            <label class="form-check-label" for="puntos_encuentro_checkbox">
+                                Se requiere Puntos de Encuentro
+                            </label>
+                            <textarea class="form-control mt-2 d-none" id="puntos_encuentro_text" name="puntos_encuentro" placeholder="Describa los puntos de encuentro"></textarea>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="hora_salida" class="form-label">Hora de Salida</label>
+                                <input type="time" class="form-control" id="hora_salida" name="hora_salida">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="hora_retorno" class="form-label">Hora de Retorno</label>
+                                <input type="time" class="form-control" id="hora_retorno" name="hora_retorno">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="enlace_mapa" class="form-label">Si cuentas con un mapa, agrega el enlace de la ruta</label>
+                            <input type="url" class="form-control" id="enlace_mapa" name="enlace_mapa" placeholder="Ej: https://maps.google.com/...">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="mapa_adjunto" class="form-label">O sube un mapa en formato GPX, KML o KMZ</label>
+                            <input type="file" class="form-control" id="mapa_adjunto" name="mapa_adjunto_file" accept=".gpx,.kml,.kmz">
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-warning w-100 mt-4" id="guardarSolicitudBtn">
@@ -247,64 +246,42 @@
         const formPersonal = document.getElementById('form_personal');
         const formEmpresarial = document.getElementById('form_empresarial');
         const tipoServicioNuevo = document.getElementById('tipo_servicio_nuevo');
-        const restoFormulario = document.getElementById('resto_formulario');
+        const viajeOpcionesSection = document.getElementById('viaje_opciones_section');
         const checkUserBtn = document.getElementById('checkUserBtn');
         const numeroUsuarioInput = document.getElementById('numero_usuario');
         const userInfoCard = document.getElementById('user_info_card');
-        const viajesList = document.getElementById('viajes_list');
-        const cantidadPersonasInput = document.getElementById('cantidad_personas');
-        const busetaWarning = document.getElementById('buseta_warning');
-        const actividadSelect = document.getElementById('actividad_select');
-        const otraActividadInput = document.getElementById('otra_actividad');
-
-        // Función para mostrar/ocultar secciones al cambiar el radio de usuario
-        function toggleUserSections() {
+        const solicitarViajeBtn = document.getElementById('solicitarViajeBtn');
+        const consultarViajesBtn = document.getElementById('consultarViajesBtn');
+        const formElement = document.getElementById('solicitudForm');
+        
+        // Función para manejar el estado del formulario dinámico
+        function handleFormState() {
             if (userSiRadio.checked) {
                 userSiSection.classList.remove('d-none');
                 userNoSection.classList.add('d-none');
-                restoFormulario.classList.add('d-none'); // Ocultar por defecto hasta que se verifique
                 userInfoCard.classList.add('d-none');
-                viajesList.innerHTML = ''; // Limpiar lista de viajes
-            } else {
+                viajeOpcionesSection.classList.add('d-none');
+            } else { // userNoRadio.checked
                 userSiSection.classList.add('d-none');
                 userNoSection.classList.remove('d-none');
-                // La lógica del resto del formulario para el "no" se maneja en toggleServiceForms
-                toggleServiceForms();
-            }
-        }
-
-        // Función para mostrar/ocultar formularios de servicio
-        function toggleServiceForms() {
-            if (tipoServicioNuevo.value === 'Particular') {
-                formPersonal.classList.remove('d-none');
-                formEmpresarial.classList.add('d-none');
-                restoFormulario.classList.remove('d-none'); // Mostrar el resto del formulario para Particular
-            } else {
-                formPersonal.classList.add('d-none');
-                formEmpresarial.classList.remove('d-none');
-                restoFormulario.classList.add('d-none'); // Ocultar el resto del formulario para Empresarial
+                if (tipoServicioNuevo.value === 'Particular') {
+                    formPersonal.classList.remove('d-none');
+                    formEmpresarial.classList.add('d-none');
+                    viajeOpcionesSection.classList.remove('d-none');
+                } else { // Empresarial
+                    formPersonal.classList.add('d-none');
+                    formEmpresarial.classList.remove('d-none');
+                    viajeOpcionesSection.classList.remove('d-none'); // Mostrar viaje para empresas también
+                }
             }
         }
         
-        // Función para mostrar/ocultar el campo "Otro" de la actividad
-        function toggleOtraActividad() {
-            if (actividadSelect.value === 'Otro') {
-                otraActividadInput.classList.remove('d-none');
-            } else {
-                otraActividadInput.classList.add('d-none');
-            }
-        }
-
         // Manejar el evento de cambio en los radios de usuario
-        userSiRadio.addEventListener('change', toggleUserSections);
-        userNoRadio.addEventListener('change', toggleUserSections);
+        userSiRadio.addEventListener('change', handleFormState);
+        userNoRadio.addEventListener('change', handleFormState);
 
         // Manejar el evento de cambio en el select de tipo de servicio (si no es cuenta)
-        tipoServicioNuevo.addEventListener('change', toggleServiceForms);
-        
-        // Manejar el evento de cambio en el select de actividad
-        actividadSelect.addEventListener('change', toggleOtraActividad);
-
+        tipoServicioNuevo.addEventListener('change', handleFormState);
 
         // Lógica de verificación de usuario
         checkUserBtn.addEventListener('click', function() {
@@ -324,42 +301,22 @@
                     document.getElementById('user_info_nombre').textContent = data.nombre;
                     document.getElementById('user_info_telefono').textContent = data.telefono;
                     document.getElementById('user_info_servicio').textContent = data.es_empresarial ? 'Empresarial' : 'Particular';
-                    userInfoCard.classList.remove('d-none');
-                    restoFormulario.classList.remove('d-none'); // Mostrar el resto del formulario
                     
-                    viajesList.innerHTML = ''; // Limpiar la lista antes de añadir nuevos items
-                    if (data.viajes && data.viajes.length > 0) {
-                        data.viajes.forEach(viaje => {
-                            const li = document.createElement('li');
-                            li.className = 'list-group-item d-flex justify-content-between align-items-center';
-                            li.innerHTML = `
-                                <div class="me-auto">
-                                    <strong>Destino:</strong> ${viaje.destino} <br>
-                                    <strong>Fecha:</strong> ${viaje.fecha_viaje}
-                                </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-primary btn-sm me-2 editar-viaje-btn" data-id="${viaje.id}">Editar Viaje</button>
-                                    ${viaje.cancelable ? `<button type="button" class="btn btn-danger btn-sm cancelar-viaje-btn" data-id="${viaje.id}" data-bs-toggle="modal" data-bs-target="#cancelarModal">Cancelar Viaje</button>` : `<button type="button" class="btn btn-danger btn-sm" disabled>Cancelar Viaje</button>`}
-                                </div>
-                            `;
-                            viajesList.appendChild(li);
-
-                            if (!viaje.cancelable) {
-                                const disabledBtn = li.querySelector('.btn-danger');
-                                const legend = document.createElement('p');
-                                legend.className = 'text-danger mt-1 mb-0';
-                                legend.textContent = 'No es posible cancelar este viaje. Comuníquese con nosotros.';
-                                li.appendChild(legend);
-                            }
-                        });
-                    } else {
-                        viajesList.innerHTML = '<li class="list-group-item text-center text-muted">No tienes viajes pendientes.</li>';
-                    }
+                    userInfoCard.dataset.userId = data.id;
+                    userInfoCard.dataset.userName = data.nombre;
+                    userInfoCard.dataset.userLastName = data.primer_apellido;
+                    userInfoCard.dataset.userSecondLastName = data.segundo_apellido;
+                    userInfoCard.dataset.userPhone = data.telefono;
+                    
+                    userInfoCard.classList.remove('d-none');
+                    viajeOpcionesSection.classList.add('d-none'); // Ocultar por defecto
+                    
+                    window.userViajes = data.viajes;
 
                 } else {
                     alert(data.message);
                     userInfoCard.classList.add('d-none');
-                    restoFormulario.classList.add('d-none');
+                    viajeOpcionesSection.classList.add('d-none');
                 }
             })
             .catch(error => {
@@ -367,34 +324,162 @@
                 alert('Ocurrió un error al verificar el usuario.');
             });
         });
+        
+        // Lógica para poblar y mostrar el formulario de viaje para usuarios existentes
+        solicitarViajeBtn.addEventListener('click', function() {
+            const userId = userInfoCard.dataset.userId;
+            const userName = userInfoCard.dataset.userName;
+            const userLastName = userInfoCard.dataset.userLastName;
+            const userSecondLastName = userInfoCard.dataset.userSecondLastName;
+            const userPhone = userInfoCard.dataset.userPhone;
 
-        // Lógica para mostrar el formulario de cancelación
-        const cancelarModal = document.getElementById('cancelarModal');
-        cancelarModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const solicitudId = button.getAttribute('data-id');
-            const modalTitle = cancelarModal.querySelector('.modal-title');
-            const modalForm = cancelarModal.querySelector('#cancelarForm');
-            const solicitudInput = modalForm.querySelector('#cancel_solicitud_id');
+            // Limpiar el formulario de viaje antes de mostrarlo
+            formElement.reset();
+            
+            // Llenar campos ocultos o dinámicos para el envío
+            const hiddenUserIdInput = document.createElement('input');
+            hiddenUserIdInput.type = 'hidden';
+            hiddenUserIdInput.name = 'id';
+            hiddenUserIdInput.value = userId;
+            formElement.appendChild(hiddenUserIdInput);
+            
+            const hiddenUserHasAccountInput = document.createElement('input');
+            hiddenUserHasAccountInput.type = 'hidden';
+            hiddenUserHasAccountInput.name = 'userHasAccount';
+            hiddenUserHasAccountInput.value = 'true';
+            formElement.appendChild(hiddenUserHasAccountInput);
 
-            solicitudInput.value = solicitudId;
-
-            fetch(`{{ url_for('solicitud.get_solicitud', solicitud_id=0) }}`.replace('0', solicitudId))
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('cancel_solicitud_numero').textContent = data.solicitud.numero_solicitud;
-                        modalTitle.textContent = `Cancelar Servicio (ID: ${data.solicitud.numero_solicitud})`;
-                    }
-                });
+            // Mostrar la sección de viaje
+            viajeOpcionesSection.classList.remove('d-none');
         });
 
+        // Manejar el click en "Consultar mis Viajes"
+        consultarViajesBtn.addEventListener('click', function() {
+            let htmlContent = '';
+            const viajes = window.userViajes || [];
+            const viajesPendientes = viajes.filter(viaje => viaje.estado === 'Pendiente');
+            const viajesCulminados = viajes.filter(viaje => viaje.estado === 'Culminado');
+
+            if (viajesPendientes.length > 0) {
+                htmlContent += `<h4 class="text-warning mb-4">Tus Viajes Pendientes</h4>`;
+                viajesPendientes.forEach(viaje => {
+                    htmlContent += `
+                        <div class="card mb-3">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="card-title">${viaje.destino}</h5>
+                                    <p class="card-text text-muted">Fecha: ${viaje.fecha_viaje}</p>
+                                </div>
+                                <div>
+                                    <a href="{{ url_for('solicitud.ver_detalle_solicitud', solicitud_id=0) }}".replace('0', viaje.id)" class="btn btn-sm btn-outline-info me-2">Ver detalles</a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger cancelar-viaje-btn" data-id="${viaje.id}" data-bs-toggle="modal" data-bs-target="#cancelarModal">Cancelar Viaje</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (viajesCulminados.length > 0) {
+                htmlContent += `<h4 class="text-warning mt-4 mb-4">Viajes Culminados</h4>`;
+                viajesCulminados.forEach(viaje => {
+                    htmlContent += `
+                        <div class="card mb-3">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="card-title">${viaje.destino}</h5>
+                                    <p class="card-text text-muted">Fecha: ${viaje.fecha_viaje}</p>
+                                </div>
+                                <div>
+                                    <a href="{{ url_for('solicitud.ver_detalle_solicitud', solicitud_id=0) }}".replace('0', viaje.id)" class="btn btn-sm btn-outline-info me-2">Ver detalles</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (viajesPendientes.length === 0 && viajesCulminados.length === 0) {
+                htmlContent = '<p class="text-center text-muted fst-italic">No tienes viajes registrados.</p>';
+            }
+            
+            viajeOpcionesSection.innerHTML = htmlContent;
+            viajeOpcionesSection.classList.remove('d-none');
+        });
+        
+        // Obtener el botón de enviar
+        const guardarSolicitudBtn = document.getElementById('guardarSolicitudBtn');
+
+        // Evento para enviar el formulario con fetch (POST)
+        guardarSolicitudBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const data = {};
+            const userHasAccount = userSiRadio.checked;
+
+            // Recopilar datos de todas las secciones visibles
+            const formSections = [userSiSection, userNoSection, viajeOpcionesSection];
+            formSections.forEach(section => {
+                if (!section.classList.contains('d-none')) {
+                    const inputs = section.querySelectorAll('input, select, textarea');
+                    inputs.forEach(input => {
+                        if (input.name && input.type !== 'file') {
+                            data[input.name] = input.value;
+                        }
+                    });
+                }
+            });
+            
+            data.userHasAccount = userHasAccount;
+            
+            fetch('{{ url_for("solicitud.guardar_solicitud") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const statusDiv = document.getElementById('solicitud_status');
+                if (data.success) {
+                    statusDiv.textContent = data.message;
+                    statusDiv.className = 'mt-3 text-center text-success';
+                    // Redirigir al registro
+                    setTimeout(() => {
+                        window.location.href = '{{ url_for("solicitud.registro_solicitudes") }}';
+                    }, 2000);
+                } else {
+                    statusDiv.textContent = data.message;
+                    statusDiv.className = 'mt-3 text-center text-danger';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const statusDiv = document.getElementById('solicitud_status');
+                statusDiv.textContent = 'Ocurrió un error al procesar su solicitud.';
+                statusDiv.className = 'mt-3 text-center text-danger';
+            });
+        });
+
+        // Llamada inicial para configurar la vista
+        handleFormState();
+
         // Lógica de validación de cantidad de personas
-        cantidadPersonasInput.addEventListener('input', function() {
+        document.getElementById('cantidad_personas').addEventListener('input', function() {
+            const busetaWarning = document.getElementById('buseta_warning');
             if (this.value > 17) {
                 busetaWarning.classList.remove('d-none');
             } else {
                 busetaWarning.classList.add('d-none');
+            }
+        });
+
+        // Lógica para mostrar/ocultar el campo "Otro"
+        document.getElementById('actividad_select').addEventListener('change', function() {
+            const otraActividadInput = document.getElementById('otra_actividad');
+            if (this.value === 'Otro') {
+                otraActividadInput.classList.remove('d-none');
+            } else {
+                otraActividadInput.classList.add('d-none');
             }
         });
 
@@ -407,69 +492,6 @@
                 textarea.classList.add('d-none');
             }
         });
-
-        // Evento para enviar el formulario con fetch (POST)
-        const form = document.getElementById('solicitudForm');
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(form);
-            const userHasAccount = userSiRadio.checked;
-            let data = {};
-            
-            // Recoger todos los datos del formulario, incluyendo los ocultos
-            for (let [key, value] of formData.entries()) {
-                data[key] = value;
-            }
-            
-            data['userHasAccount'] = userHasAccount;
-            
-            // Envío del formulario
-            fetch('{{ url_for("solicitud.guardar_solicitud") }}', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Exportar a WhatsApp
-                    if (data.solicitud_id) {
-                        const mensaje = `Hola, he solicitado un viaje. Mi número de solicitud es: ${data.numero_solicitud}. Por favor, contáctenme para más detalles.`;
-                        const whatsappUrl = `https://wa.me/50686227500?text=${encodeURIComponent(mensaje)}`; // Reemplaza el número
-                        window.open(whatsappUrl, '_blank');
-                    }
-                    
-                    document.getElementById('solicitud_status').textContent = data.message;
-                    // Mock de exportación a PDF, JPG, etc.
-                    exportFiles(data); // Llama a la función de exportación
-                    // Limpiar formulario y reiniciar vista
-                    form.reset();
-                    toggleUserSections();
-                } else {
-                    document.getElementById('solicitud_status').textContent = data.message;
-                    document.getElementById('solicitud_status').className = 'mt-3 text-center text-danger';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('solicitud_status').textContent = 'Ocurrió un error al procesar su solicitud.';
-                document.getElementById('solicitud_status').className = 'mt-3 text-center text-danger';
-            });
-        });
-
-        // Función de exportación (Mock)
-        function exportFiles(data) {
-            // Lógica para exportar a JPG, PDF, TXT
-            // La generación de código de barras requiere una librería como jsbarcode
-            // El resto de la exportación es compleja y se maneja en el servidor
-            // Se puede simular con un mensaje al usuario
-            console.log('Exportando a PDF/JPG/TXT...');
-            alert(`Simulando exportación para la solicitud ${data.numero_solicitud}.`);
-        }
-
-        // Llamada inicial para configurar la vista
-        toggleUserSections();
     });
 </script>
 {% endblock %}

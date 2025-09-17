@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Solicitud{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card bg-white rounded-lg border-0 shadow-none">
+        <div class="card-body">
+            <h1 class="card-title text-center mb-4 text-warning">Editar Solicitud</h1>
+            <p class="text-center text-muted fst-italic">
+                Modifica los detalles del viaje y actualiza la solicitud.
+            </p>
+            <hr class="my-4">
+
+            <form id="solicitudForm" method="post" enctype="multipart/form-data">
+                <!-- Se ocultan las secciones de usuario/tipo de servicio porque la solicitud ya existe -->
+                <input type="hidden" name="solicitud_id" value="{{ solicitud.id }}">
+                <input type="hidden" name="user_type" value="si">
+                <input type="hidden" name="numero_usuario" value="{{ solicitud.telefono }}">
+                
+                <h4 class="text-warning mb-4">Detalles del Viaje</h4>
+                
+                <div class="mb-3">
+                    <label for="a_donde_va" class="form-label">¿A Dónde Va?</label>
+                    <input type="text" class="form-control" id="a_donde_va" name="a_donde_va" value="{{ solicitud.destino or '' }}">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="cantidad_personas" class="form-label">Cantidad de Personas</label>
+                    <input type="number" class="form-control" id="cantidad_personas" name="cantidad_personas" min="1" value="{{ solicitud.cantidad_personas or '' }}">
+                    <div id="buseta_warning" class="alert alert-warning mt-2 d-none">
+                        Vas a necesitar más de una buseta
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="actividad_select" class="form-label">Indicar su Actividad</label>
+                    <select class="form-select" id="actividad_select" name="actividad_select">
+                        {% for actividad in actividad_opciones %}
+                        <option value="{{ actividad }}" {% if solicitud.actividad == actividad %}selected{% endif %}>{{ actividad }}</option>
+                        {% endfor %}
+                        <option value="Otro" {% if solicitud.actividad not in actividad_opciones %}selected{% endif %}>Otro</option>
+                    </select>
+                    <input type="text" class="form-control mt-2 {% if solicitud.actividad not in actividad_opciones %}d-block{% else %}d-none{% endif %}" id="otra_actividad" name="otra_actividad" placeholder="Especifique la actividad" value="{% if solicitud.actividad not in actividad_opciones %}{{ solicitud.actividad or '' }}{% endif %}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="lugar_salida" class="form-label">Lugar de Salida</label>
+                    <input type="text" class="form-control" id="lugar_salida" name="lugar_salida" value="{{ solicitud.lugar_salida or '' }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="lugar_destino" class="form-label">Lugar de Destino</label>
+                    <input type="text" class="form-control" id="lugar_destino" name="lugar_destino" value="{{ solicitud.lugar_destino or '' }}">
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="puntos_encuentro_checkbox" name="puntos_encuentro_checkbox" {% if solicitud.puntos_encuentro %}checked{% endif %}>
+                    <label class="form-check-label" for="puntos_encuentro_checkbox">
+                        Se requiere Puntos de Encuentro
+                    </label>
+                    <textarea class="form-control mt-2 {% if not solicitud.puntos_encuentro %}d-none{% endif %}" id="puntos_encuentro_text" name="puntos_encuentro" placeholder="Describa los puntos de encuentro">{{ solicitud.puntos_encuentro or '' }}</textarea>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="hora_salida" class="form-label">Hora de Salida</label>
+                        <input type="time" class="form-control" id="hora_salida" name="hora_salida" value="{{ solicitud.hora_salida or '' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="hora_retorno" class="form-label">Hora de Retorno</label>
+                        <input type="time" class="form-control" id="hora_retorno" name="hora_retorno" value="{{ solicitud.hora_retorno or '' }}">
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    <input type="date" class="form-control" id="fecha" name="fecha" value="{{ solicitud.fecha_viaje.strftime('%Y-%m-%d') if solicitud.fecha_viaje else '' }}">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="enlace_mapa" class="form-label">Si cuentas con un mapa, agrega el enlace de la ruta</label>
+                    <input type="url" class="form-control" id="enlace_mapa" name="enlace_mapa" placeholder="Ej: https://maps.google.com/..." value="{{ solicitud.enlace_mapa or '' }}">
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-warning w-100">Actualizar Solicitud</button>
+                    <a href="{{ url_for('solicitud.registro_solicitudes') }}" class="btn btn-secondary w-100 mt-2">Cancelar</a>
+                </div>
+                <div id="solicitud_status" class="mt-3 text-center"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const actividadSelect = document.getElementById('actividad_select');
+        const otraActividadInput = document.getElementById('otra_actividad');
+        const puntosEncuentroCheckbox = document.getElementById('puntos_encuentro_checkbox');
+        const puntosEncuentroTextarea = document.getElementById('puntos_encuentro_text');
+        const cantidadPersonasInput = document.getElementById('cantidad_personas');
+        const busetaWarning = document.getElementById('buseta_warning');
+        const form = document.getElementById('solicitudForm');
+        
+        // Función para mostrar/ocultar el campo "Otro" de la actividad
+        function toggleOtraActividad() {
+            if (actividadSelect.value === 'Otro') {
+                otraActividadInput.classList.remove('d-none');
+            } else {
+                otraActividadInput.classList.add('d-none');
+            }
+        }
+        
+        // Lógica para el checkbox de puntos de encuentro
+        function togglePuntosEncuentro() {
+            if (puntosEncuentroCheckbox.checked) {
+                puntosEncuentroTextarea.classList.remove('d-none');
+            } else {
+                puntosEncuentroTextarea.classList.add('d-none');
+            }
+        }
+        
+        // Lógica de validación de cantidad de personas
+        function toggleBusetaWarning() {
+            if (cantidadPersonasInput.value > 17) {
+                busetaWarning.classList.remove('d-none');
+            } else {
+                busetaWarning.classList.add('d-none');
+            }
+        }
+
+        // Event Listeners
+        actividadSelect.addEventListener('change', toggleOtraActividad);
+        puntosEncuentroCheckbox.addEventListener('change', togglePuntosEncuentro);
+        cantidadPersonasInput.addEventListener('input', toggleBusetaWarning);
+
+        // Llamadas iniciales para configurar la vista según la data cargada
+        toggleOtraActividad();
+        togglePuntosEncuentro();
+        toggleBusetaWarning();
+
+        // Manejar el envío del formulario de edición
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            // Envío del formulario
+            fetch('{{ url_for("solicitud.guardar_solicitud") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const statusDiv = document.getElementById('solicitud_status');
+                if (data.success) {
+                    statusDiv.textContent = data.message;
+                    statusDiv.className = 'mt-3 text-center text-success';
+                    // Redirigir al registro después de 2 segundos para ver el cambio
+                    setTimeout(() => {
+                        window.location.href = '{{ url_for("solicitud.registro_solicitudes") }}';
+                    }, 2000);
+                } else {
+                    statusDiv.textContent = data.message;
+                    statusDiv.className = 'mt-3 text-center text-danger';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const statusDiv = document.getElementById('solicitud_status');
+                statusDiv.textContent = 'Ocurrió un error al procesar su solicitud.';
+                statusDiv.className = 'mt-3 text-center text-danger';
+            });
+        });
+    });
+</script>
+{% endblock %}

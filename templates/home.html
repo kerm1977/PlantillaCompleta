@@ -17,4 +17,30 @@
         </p>
     {% endif %}
 </div>
+
+<!-- Botón flotante para solicitar un viaje -->
+<a href="{{ url_for('solicitud.crear_solicitud') }}" class="solicitud-fab-button btn btn-warning" title="Solicitar un viaje">
+    Solicitar un viaje
+</a>
+
+<style>
+    .solicitud-fab-button {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        width: auto;
+        padding: 15px 30px;
+        border-radius: 50px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .solicitud-fab-button:hover {
+        transform: translateX(-50%) scale(1.05);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+</style>
 {% endblock %}

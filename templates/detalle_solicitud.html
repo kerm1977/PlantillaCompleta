@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Solicitud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .list-group-item {
+            border-left: none;
+            border-right: none;
+        }
+        .list-group-item strong {
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <div class="card bg-white p-4">
+        <h1 class="card-title text-center mb-4 text-primary">Detalle de Solicitud</h1>
+        <p class="text-center text-muted">Información completa de la solicitud **{{ solicitud.numero_solicitud }}**</p>
+        <hr class="my-4">
+
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Número de Solicitud:</strong> {{ solicitud.numero_solicitud }}</li>
+            <li class="list-group-item"><strong>Tipo de Servicio:</strong> {{ solicitud.tipo_servicio }}</li>
+            <li class="list-group-item"><strong>Fecha de Solicitud:</strong> {{ solicitud.fecha_solicitud.strftime('%Y-%m-%d %H:%M:%S') }}</li>
+
+            {% if solicitud.tipo_servicio == "Particular" %}
+                <li class="list-group-item"><strong>Nombre:</strong> {{ solicitud.nombre }} {{ solicitud.primer_apellido }} {{ solicitud.segundo_apellido }}</li>
+                <li class="list-group-item"><strong>Teléfono:</strong> {{ solicitud.telefono }}</li>
+                <li class="list-group-item"><strong>Email:</strong> {{ solicitud.email or 'N/A' }}</li>
+            {% else %}
+                <li class="list-group-item"><strong>Nombre de Empresa:</strong> {{ solicitud.nombre_empresa }}</li>
+                <li class="list-group-item"><strong>Nombre de Contacto:</strong> {{ solicitud.nombre_contacto }}</li>
+                <li class="list-group-item"><strong>Teléfono de Empresa:</strong> {{ solicitud.telefono_empresa }}</li>
+                <li class="list-group-item"><strong>Extensión:</strong> {{ solicitud.extension or 'N/A' }}</li>
+                <li class="list-group-item"><strong>Whatsapp:</strong> {{ solicitud.whatsapp or 'N/A' }}</li>
+                <li class="list-group-item"><strong>Email:</strong> {{ solicitud.email or 'N/A' }}</li>
+                <li class="list-group-item"><strong>Horario de Atención:</strong> {{ solicitud.horario_atencion or 'N/A' }}</li>
+                <li class="list-group-item"><strong>Nota:</strong> {{ solicitud.nota or 'N/A' }}</li>
+            {% endif %}
+
+            <li class="list-group-item mt-4"><strong>Detalles del Viaje</strong></li>
+            <li class="list-group-item"><strong>Destino:</strong> {{ solicitud.destino or 'N/A' }}</li>
+            <li class="list-group-item"><strong>Cantidad de Personas:</strong> {{ solicitud.cantidad_personas or 'N/A' }}</li>
+            <li class="list-group-item"><strong>Actividad:</strong> {{ solicitud.actividad or 'N/A' }}</li>
+            <li class="list-group-item"><strong>Lugar de Salida:</strong> {{ solicitud.lugar_salida or 'N/A' }}</li>
+            <li class="list-group-item"><strong>Lugar de Destino:</strong> {{ solicitud.lugar_destino or 'N/A' }}</li>
+            <li class="list-group-item"><strong>Puntos de Encuentro:</strong> {{ solicitud.puntos_encuentro or 'N/A' }}</li>
+            <li class="list-group-item"><strong>Hora de Salida:</strong> {{ solicitud.hora_salida or 'N/A' }}</li>
+            <li class="list-group-item"><strong>Hora de Retorno:</strong> {{ solicitud.hora_retorno or 'N/A' }}</li>
+            <li class="list-group-item"><strong>Fecha del Viaje:</strong> {{ solicitud.fecha_viaje.strftime('%Y-%m-%d') if solicitud.fecha_viaje else 'N/A' }}</li>
+            <li class="list-group-item"><strong>Enlace del Mapa:</strong> 
+                {% if solicitud.enlace_mapa %}
+                    <a href="{{ solicitud.enlace_mapa }}" target="_blank">{{ solicitud.enlace_mapa }}</a>
+                {% else %}
+                    N/A
+                {% endif %}
+            </li>
+            
+            {% if solicitud.motivo_cancelacion %}
+                <li class="list-group-item mt-4 text-danger"><strong>Motivo de Cancelación:</strong> {{ solicitud.motivo_cancelacion }}</li>
+                <li class="list-group-item text-danger"><strong>Fecha de Cancelación:</strong> {{ solicitud.fecha_cancelacion.strftime('%Y-%m-%d %H:%M:%S') }}</li>
+            {% endif %}
+        </ul>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('solicitud.registro_solicitudes') }}" class="btn btn-primary">Volver al Registro</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

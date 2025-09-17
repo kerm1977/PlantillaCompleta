@@ -75,3 +75,135 @@ select Categoría (Etapa 1a, Etapa 1b, Etapas 1a&1b, Etapa 2, Etapa 3, Etapa 4, 
 
 Al seleccionar una categoría 
 permite ver toda su información ingresada en crear_viaje.html y agregar un campo numérico llamado Precio sin decimales y restringido a texto y un botón guardar que luego se pueda ver en detalle_viaje.html como texto plano 
+
+
+
+
+
+
+
+
+
+
+
+AREA 2
+Solo se va a exportar lo necesario a app.py
+Todos los botones de borrar o eliminar tienen que ser construidos con Flask y Flash y el Modal con bootstrap
+las opciones de exportar a jpg, pdf, txt con utf-8 para que reconozca la ñ y las tildes (solo en caso de que existiera)
+cada archivo y cada vista vas a darmelo cuando te diga ok
+Los cards no pueden contener sombras. los botones de crear deben tener color warning.
+Al exportar Nunca mostrar,  campos vacios, costos en 0, precios en 0 ni campos que tengan N/A ni divisiones en Cero
+Absolutamente todos los totales van a tener el precio en colon y en dolar multiplicado por la casilla llamada tipo de cambio
+Que esta app Cambie todo a CRC o a USD según el tipo de cambio en caso de que tuviera tipo de cambio
+app.py va a contener únicamente lo necesario
+Todo hereda o extiende de base.html
+Toda la lógica se va a llamar solicitud.py
+las vistas van a ser
+crear_solicitud.html que va a contener lo siguiente:
+
+AHORA NECESITO CREAR UN sistema de solicitud de viaje
+ojo... El botón que dice solicitar un viaje siempre va a ser fixed y centrado.
+va a existir un botón en el home que diga solicitar un viaje
+
+este va a una nueva página que contiene un formulario CON UN TITULO QUE DIGA SOLICITUD DE VIAJE
+además un parrafo que diga, Todo viaje se debe reservar con un 15% del total de el servicio. Si se requiere cancelar un viaje debe realizarse 5 días habiles antes de la fecha ocupada.
+
+
+
+ESTE FORMULARIO VA A CONTENER LO SIGUIENTE
+Tienes un Número de Usuario? == (si)
+
+
+Tienes un Número de Usuario? == (si, no)
+
+	Un input que diga: Ingrese su Número. Al agregar el usuario y si existe debe cargar el nombre del usuario, teléfono, si es particular o empresarial y va a cargar la lista de viajes a su nombre: con un botón que diga Editar viaje,  Cancelar Viaje 
+
+	(si faltan 5 días antes de la fecha de la caminata en la lista el botón de Cancelar Viaje se desabilita). Y abajo debe aparecer una leyenda que diga, No es posible cancelar este viaje. Comuniquese con nosotros, 
+
+	si el tiempo es mayor a 5 días aparece un formulario que diga  Cancelar un  Servicio (con número de solicitud) 
+	y un textarea ckedit  que diga: Razón de Su cancelación. 
+
+	Si no es cancelación se va a mantener en el formulario donde se ven estos datos del usuario y el botón flotante solicitar un viaje que al precionarlo hace aparecer el resto del formulario
+
+	((Resto del formulario))
+	A donde va?
+	Cantidad Personas:( en este campo Solo aceptar número no permite agregar texto ni caracteres)
+	indicar su actividad Select(Senderismo, Comparsa, Disciplina Deportiva, Turismo, Paseo)
+	Lugar de Salida
+	Lugar de Destino y
+	Se requiere puntos de encuetro
+	si Capacidad es > a 17  Aparece un mensaje que diga, Se requiere más de una Buseta para este viane
+	Hora de Salida, Hora de retorno
+	Fecha
+	Si cuentas con un  mapa agrega el enlace de la ruta
+	un input que soporte enlaces de google maps, waze, openstreetmaps
+	Input que permita subir mapa en formatos gpx, kml, kmz
+
+
+
+
+
+tienes un Número de Usuario? == (no)
+EL servicio que requiere es select(Empresarial,Particular)
+Genera automáticamente un número de solicitud, dígitos alfanuméricos que son las iniciales del nombre + primer apellido + segundo apellido y los 8 dígitos del teléfono. Este lo guarda en la base de datos e indica Su número de usuario es el siguiente y Guardalo bien. En caso de olvidarlo Comunicate a nuestro whatsapp para recuperarlo. 
+
+
+
+	si Personal
+	Digite su nombre
+	Digite su Primer Apellido
+	Digite su Segundo Apellido
+	Digite su Teléfono ( en este campo Solo aceptar número no permite agregar texto ni caracteres y no mayor a 8 dígitos ni menor a 8 dígitos) 
+	A donde va?
+	Cantidad Personas:( en este campo Solo aceptar número no permite agregar texto ni caracteres)
+	indicar su actividad Select(Senderismo, Comparsa, Disciplina Deportiva, Turismo, Paseo)
+	Lugar de Salida
+	Lugar de Destino y
+	Se requiere puntos de encuetro
+	si Capacidad es > a 17  Aparece un mensaje que diga, Se requiere más de una Buseta para este viane
+	Hora de Salida, Hora de retorno
+	Fecha
+	Si cuentas con un  mapa agrega el enlace de la ruta
+	un input que soporte enlaces de google maps, waze, openstreetmaps
+	Input que permita subir mapa en formatos gpx, kml, kmz
+
+
+
+
+	si Empresarial
+	parrafo que diga: Para una mejor atención nos comunicaremos con ustedes prontamente en horario de oficina 8:00am a 6:00pm.
+
+	Digite el Nombre de la Empresa
+	Nombre de Contacto o Encargado(a)
+	Teléfono Empresa: ( en este campo Solo aceptar número no permite agregar texto ni caracteres y no mayor a 8 dígitos ni menor a 8 dígitos) 
+	Extensión: ( en este campo Solo aceptar número no permite agregar texto ni caracteres y no mayor a 8 dígitos ni menor a 8 dígitos) 
+	Whatsapp: ( en este campo Solo aceptar número no permite agregar texto ni caracteres y no mayor a 8 dígitos ni menor a 8 dígitos) 
+	Email:
+	Horario de Atención:
+	Nota: textarea con ckedit (Con un placeholder que diga (Si requiere puedes dejarnos una nota))
+
+	
+
+
+	Un bótón de guardar que dice El número de usuario has guardado el número de solicitud es ==  las iniciales del usuario con un consecutivo 0001))
+	Agrega un botón Exportar un a jpg o png y agrega un código de barras con absolutamente toda la información
+	Informanos de tu viaje  (exportar a whatsapp) (Teléfono registrado)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

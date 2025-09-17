@@ -19,6 +19,8 @@ from version import version_bp, Version
 from btns import btns_bp
 from flask_babel import Babel  # <-- CAMBIO CLAVE: Usa la importación de Flask-Babel
 from colaboradores import colaboradores_bp
+from solicitud import solicitud_bp # NUEVO: Importación del Blueprint de solicitud
+
 
 # --- Instanciar las extensiones globalmente ---
 mail = Mail()
@@ -217,8 +219,8 @@ def check_for_first_user():
 @app.route('/')
 @app.route('/home') # Añadido /home como ruta alternativa para la página de inicio
 def home():
-    # Redirige a la página 'Acerca de nosotros' como la nueva página de inicio
-    return redirect(url_for('aboutus.ver_aboutus'))
+    # CAMBIO: Ahora renderiza directamente la plantilla home.html
+    return render_template('home.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -559,6 +561,7 @@ app.register_blueprint(aboutus_bp, url_prefix='/aboutus')
 app.register_blueprint(version_bp, url_prefix='/version')
 app.register_blueprint(btns_bp) # REGISTRO DEL BLUEPRINT DE BTNS
 app.register_blueprint(colaboradores_bp) # NUEVO: REGISTRO DEL BLUEPRINT DE COLABORADORES
+app.register_blueprint(solicitud_bp) # NUEVO: REGISTRO DEL BLUEPRINT DE SOLICITUDES
 
 
 
@@ -623,15 +626,9 @@ if __name__ == '__main__':
 # 21:56 ~/LATRIBU1 (main)$ source env/Scripts/activate <-- Entra al entorno virtual
 # (env) 21:57 ~/LATRIBU1 (main)$
 # (env) 23:30 ~/LATRIBU1 (main)$ cd /home/kenth1977/LATRIBU1
-# (env) 23:31 ~/LATRIBU1 (main)$ rm -f instance/db.db
+# (env) 23:32 ~/LATRIBU1 (main)$ rm -f instance/db.db
 # (env) 23:32 ~/LATRIBU1 (main)$ rm -rf migrations
-# (env) 23:32 ~/LATRIBU1 (main)$ flask db init
-# (env) 23:33 ~/LATRIBU1 (main)$ flask db migrate -m "Initial migration with all models"
+# (env) 23:33 ~/LATRIBU1 (main)$ flask db init
+# (env) 23:34 ~/LATRIBU1 (main)$ flask db migrate -m "Initial migration with all models"
 # (env) 23:34 ~/LATRIBU1 (main)$ flask db upgrade
 # (env) 23:34 ~/LAT
-
-
-# GUARDA  todas las dependecias para utilizar offline luego
-# pip download -r requirements.txt -d librerias_offline
-# INSTALA  todas las dependecias para utilizar offline luego
-# pip install --no-index --find-links=./librerias_offline -r requirements.txt

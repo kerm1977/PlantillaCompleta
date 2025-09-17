@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Solicitudes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .table thead th {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .btn-sm {
+            padding: .25rem .5rem;
+            font-size: .875rem;
+            border-radius: .2rem;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <div class="card bg-white p-4">
+        <h1 class="card-title text-center mb-4 text-primary">Registro de Solicitudes</h1>
+        <p class="text-center text-muted">A continuación se muestra el historial de todas las solicitudes enviadas.</p>
+        <hr class="my-4">
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Número de Solicitud</th>
+                        <th scope="col">Tipo de Servicio</th>
+                        <th scope="col">Nombre de Contacto</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Fecha del Viaje</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for solicitud in solicitudes %}
+                    <tr>
+                        <th scope="row">{{ solicitud.id }}</th>
+                        <td>{{ solicitud.numero_solicitud }}</td>
+                        <td>{{ solicitud.tipo_servicio }}</td>
+                        <td>
+                            {% if solicitud.tipo_servicio == "Particular" %}
+                                {{ solicitud.nombre }} {{ solicitud.primer_apellido }}
+                            {% else %}
+                                {{ solicitud.nombre_contacto }}
+                            {% endif %}
+                        </td>
+                        <td>
+                             {% if solicitud.tipo_servicio == "Particular" %}
+                                {{ solicitud.telefono }}
+                            {% else %}
+                                {{ solicitud.telefono_empresa }}
+                            {% endif %}
+                        </td>
+                        <td>{{ solicitud.fecha_viaje.strftime('%Y-%m-%d') if solicitud.fecha_viaje else 'N/A' }}</td>
+                        <td>{{ "Activo" if not solicitud.motivo_cancelacion else "Cancelado" }}</td>
+                        <td>
+                            <a href="{{ url_for('solicitud.ver_solicitud', solicitud_id=solicitud.id) }}" class="btn btn-info btn-sm">Ver Detalles</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('solicitud.crear_solicitud') }}" class="btn btn-primary">Volver al Formulario</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

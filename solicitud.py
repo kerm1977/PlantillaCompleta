@@ -383,7 +383,7 @@ def exportar_solicitud(solicitud_id, formato):
     
     return jsonify({'success': False, 'message': 'Formato de exportación no válido.'})
 
-# --- NUEVAS RUTAS AÑADIDAS ---
+# --- RUTAS AÑADIDAS/MODIFICADAS ---
 
 @solicitud_bp.route('/registro')
 def registro_solicitudes():
@@ -397,6 +397,16 @@ def ver_solicitud(solicitud_id):
 
 @solicitud_bp.route('/registro_usuarios')
 def registro_usuarios():
-    # Usamos un join para obtener solo los usuarios que tienen un registro en SolicitudUsuario
     users = db.session.query(User).join(SolicitudUsuario).order_by(User.id.desc()).all()
     return render_template('registro_usuarios.html', users=users)
+
+@solicitud_bp.route('/eliminar_solicitud/<int:solicitud_id>', methods=['POST'])
+def eliminar_solicitud(solicitud_id):
+    solicitud = Solicitud.query.get_or_404(solicitud_id)
+    try:
+        db.session.delete(solicitud)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Solicitud eliminada correctamente.'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': f'Error al eliminar la solicitud: {e}'})

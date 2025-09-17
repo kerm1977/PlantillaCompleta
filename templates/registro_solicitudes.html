@@ -1,104 +1,259 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Solicitudes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .container {
-            max-width: 1200px;
-        }
-        .card {
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .table-responsive {
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .table thead th {
-            background-color: #0d6efd;
-            color: white;
-        }
-        .btn-sm {
-            padding: .25rem .5rem;
-            font-size: .875rem;
-            border-radius: .2rem;
-        }
-        .btn-info {
-            background-color: #17a2b8;
-            border-color: #17a2b8;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block title %}Registro de Solicitudes{% endblock %}
+
+{% block content %}
 <div class="container my-5">
-    <div class="card bg-white p-4">
-        <h1 class="card-title text-center mb-4 text-primary">Registro de Solicitudes</h1>
-        <p class="text-center text-muted">A continuación se muestra el historial de todas las solicitudes enviadas.</p>
-        <hr class="my-4">
+    <div class="card bg-white rounded-lg border-0 shadow-none">
+        <div class="card-body">
+            <h1 class="card-title text-center mb-4 text-warning">Registro de Solicitudes</h1>
+            <p class="text-center text-muted fst-italic">
+                Listado de todas las solicitudes de viaje registradas en el sistema.
+            </p>
+            <hr class="my-4">
 
-        <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Número de Solicitud</th>
-                        <th scope="col">Tipo de Servicio</th>
-                        <th scope="col">Nombre de Contacto</th>
-                        <th scope="col">Teléfono</th>
-                        <th scope="col">Fecha del Viaje</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for solicitud in solicitudes %}
-                    <tr>
-                        <th scope="row">{{ solicitud.id }}</th>
-                        <td>{{ solicitud.numero_solicitud }}</td>
-                        <td>{{ solicitud.tipo_servicio }}</td>
-                        <td>
-                            {% if solicitud.tipo_servicio == "Particular" %}
-                                {{ solicitud.nombre }} {{ solicitud.primer_apellido }}
-                            {% else %}
-                                {{ solicitud.nombre_contacto }}
-                            {% endif %}
-                        </td>
-                        <td>
-                             {% if solicitud.tipo_servicio == "Particular" %}
-                                {{ solicitud.telefono }}
-                            {% else %}
-                                {{ solicitud.telefono_empresa }}
-                            {% endif %}
-                        </td>
-                        <td>{{ solicitud.fecha_viaje.strftime('%Y-%m-%d') if solicitud.fecha_viaje else 'N/A' }}</td>
-                        <td>{{ "Activo" if not solicitud.motivo_cancelacion else "Cancelado" }}</td>
-                        <td>
-                            <a href="{{ url_for('solicitud.ver_solicitud', solicitud_id=solicitud.id) }}" class="btn btn-info btn-sm">Ver Detalles</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            <!-- Formulario de búsqueda -->
+            <form id="searchForm" class="row g-3 mb-4">
+                <div class="col-md-9">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar por ID, Número de Solicitud...">
+                </div>
+                <div class="col-md-3 d-flex">
+                    <button type="button" class="btn btn-outline-warning" id="sortBtn">
+                        Ordenar por ID <i class="bi bi-sort-numeric-down"></i>
+                    </button>
+                </div>
+            </form>
 
-        <div class="text-center mt-4">
-            <a href="{{ url_for('solicitud.crear_solicitud') }}" class="btn btn-primary">Volver al Formulario</a>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="bg-warning text-white">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Número de Solicitud</th>
+                            <th scope="col">Tipo de Servicio</th>
+                            <th scope="col">Nombre de Contacto</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Fecha del Viaje</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="solicitudesTableBody">
+                        {% if solicitudes %}
+                            {% for solicitud in solicitudes %}
+                            <tr>
+                                <td>{{ solicitud.id }}</td>
+                                <td>{{ solicitud.numero_solicitud }}</td>
+                                <td>{{ solicitud.tipo_servicio }}</td>
+                                <td>{{ solicitud.nombre or solicitud.nombre_contacto or '' }}</td>
+                                <td>{{ solicitud.telefono or solicitud.telefono_empresa or '' }}</td>
+                                <td>{{ solicitud.fecha_viaje.strftime('%Y-%m-%d') if solicitud.fecha_viaje else '' }}</td>
+                                <td>Pendiente</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <a href="{{ url_for('solicitud.ver_solicitud', solicitud_id=solicitud.id) }}" class="btn btn-sm btn-outline-warning me-1">Ver</a>
+                                        <button class="btn btn-sm btn-outline-danger delete-btn" data-id="{{ solicitud.id }}" data-url="{{ url_for('solicitud.eliminar_solicitud', solicitud_id=solicitud.id) }}" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Eliminar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="placeholder-row">
+                                <td>1</td>
+                                <td>KRM86227500-abcd1234</td>
+                                <td>Particular</td>
+                                <td>Juan Pérez</td>
+                                <td>86227500</td>
+                                <td>2024-10-25</td>
+                                <td>Pendiente</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button class="btn btn-sm btn-outline-warning me-1">Ver</button>
+                                        <button class="btn btn-sm btn-outline-danger" disabled>Eliminar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                             <tr class="placeholder-row">
+                                <td>2</td>
+                                <td>ABC78945612-efgh5678</td>
+                                <td>Empresarial</td>
+                                <td>María López</td>
+                                <td>78945612</td>
+                                <td>2024-11-10</td>
+                                <td>Pendiente</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button class="btn btn-sm btn-outline-warning me-1">Ver</button>
+                                        <button class="btn btn-sm btn-outline-danger" disabled>Eliminar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td colspan="8" class="text-center text-muted fst-italic">No hay solicitudes registradas, se muestran datos de ejemplo.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Modal de Confirmación de Eliminación 1 -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar esta solicitud? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmFirstDeleteBtn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+<!-- Modal de Confirmación de Eliminación 2 -->
+<div class="modal fade" id="confirmSecondDeleteModal" tabindex="-1" aria-labelledby="confirmSecondDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="confirmSecondDeleteModalLabel">¡Advertencia! Confirmación Final</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Esta es la confirmación final.</strong> ¿Estás absolutamente seguro de que deseas eliminar este registro?</p>
+                <p class="text-danger">Esta acción es irreversible.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="finalDeleteBtn">Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tableBody = document.getElementById('solicitudesTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const sortBtn = document.getElementById('sortBtn');
+        const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        const confirmSecondDeleteModal = new bootstrap.Modal(document.getElementById('confirmSecondDeleteModal'));
+        
+        const confirmFirstDeleteBtn = document.getElementById('confirmFirstDeleteBtn');
+        const finalDeleteBtn = document.getElementById('finalDeleteBtn');
+        
+        let sortedAsc = false;
+        let solicitudIdToDelete = null;
+        let solicitudRowToDelete = null;
+
+        // Búsqueda en la tabla en tiempo real
+        searchInput.addEventListener('input', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const rows = tableBody.querySelectorAll('tr:not(.placeholder-row)');
+            
+            rows.forEach(row => {
+                const rowCells = Array.from(row.cells).slice(0, 6);
+                const cellText = rowCells.map(cell => cell.textContent.toLowerCase()).join(' ');
+                
+                if (cellText.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Ordenamiento por número de ID
+        sortBtn.addEventListener('click', function() {
+            const rows = Array.from(tableBody.querySelectorAll('tr:not(.placeholder-row)'));
+            
+            rows.sort((a, b) => {
+                const aId = parseInt(a.cells[0].textContent);
+                const bId = parseInt(b.cells[0].textContent);
+                return sortedAsc ? aId - bId : bId - aId;
+            });
+            
+            rows.forEach(row => tableBody.appendChild(row));
+            
+            sortedAsc = !sortedAsc;
+            const icon = sortBtn.querySelector('i');
+            if (sortedAsc) {
+                icon.classList.remove('bi-sort-numeric-down');
+                icon.classList.add('bi-sort-numeric-up');
+            } else {
+                icon.classList.remove('bi-sort-numeric-up');
+                icon.classList.add('bi-sort-numeric-down');
+            }
+        });
+
+        // Lógica para mostrar el primer modal de confirmación
+        tableBody.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-btn')) {
+                solicitudIdToDelete = e.target.getAttribute('data-id');
+                solicitudRowToDelete = e.target.closest('tr');
+                confirmDeleteModal.show();
+            }
+        });
+
+        // Lógica para mostrar el segundo modal al hacer clic en "Eliminar" en el primer modal
+        confirmFirstDeleteBtn.addEventListener('click', function() {
+            confirmDeleteModal.hide();
+            confirmSecondDeleteModal.show();
+        });
+
+        // Lógica final de eliminación al hacer clic en "Sí, eliminar" en el segundo modal
+        finalDeleteBtn.addEventListener('click', function() {
+            const deleteUrl = solicitudRowToDelete.querySelector('.delete-btn').getAttribute('data-url');
+            
+            fetch(deleteUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                confirmSecondDeleteModal.hide();
+                if (data.success) {
+                    if (solicitudRowToDelete) {
+                        solicitudRowToDelete.remove();
+                        // Opcional: mostrar un mensaje de éxito
+                        const successAlert = document.createElement('div');
+                        successAlert.className = 'alert alert-success mt-3';
+                        successAlert.textContent = data.message;
+                        document.querySelector('.container').prepend(successAlert);
+                        setTimeout(() => successAlert.remove(), 5000);
+                    }
+                } else {
+                    const errorAlert = document.createElement('div');
+                    errorAlert.className = 'alert alert-danger mt-3';
+                    errorAlert.textContent = data.message;
+                    document.querySelector('.container').prepend(errorAlert);
+                    setTimeout(() => errorAlert.remove(), 5000);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                confirmSecondDeleteModal.hide();
+                const errorAlert = document.createElement('div');
+                errorAlert.className = 'alert alert-danger mt-3';
+                errorAlert.textContent = 'Ocurrió un error al eliminar la solicitud.';
+                document.querySelector('.container').prepend(errorAlert);
+                setTimeout(() => errorAlert.remove(), 5000);
+            });
+        });
+    });
+</script>
+{% endblock %}
